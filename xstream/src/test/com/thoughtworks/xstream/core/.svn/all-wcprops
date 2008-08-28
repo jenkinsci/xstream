@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/xstream/core
+END
+ReferenceByXPathMarshallingStrategyTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 131
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/xstream/core/ReferenceByXPathMarshallingStrategyTest.java
+END
+DefaultConverterLookupTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/xstream/core/DefaultConverterLookupTest.java
+END
+TreeMarshallerTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/xstream/core/TreeMarshallerTest.java
+END
+ReferenceByIDMarshallingStrategyTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 128
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/xstream/core/ReferenceByIDMarshallingStrategyTest.java
+END
+JVMTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/xstream/core/JVMTest.java
+END
+TreeUnmarshallerTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/xstream/core/TreeUnmarshallerTest.java
+END

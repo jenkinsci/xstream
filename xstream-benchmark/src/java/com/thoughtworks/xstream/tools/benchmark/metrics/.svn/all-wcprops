@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream-benchmark/src/java/com/thoughtworks/xstream/tools/benchmark/metrics
+END
+SerializationSpeedMetric.java
+K 25
+svn:wc:ra_dav:version-url
+V 145
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream-benchmark/src/java/com/thoughtworks/xstream/tools/benchmark/metrics/SerializationSpeedMetric.java
+END
+DeserializationSpeedMetric.java
+K 25
+svn:wc:ra_dav:version-url
+V 147
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream-benchmark/src/java/com/thoughtworks/xstream/tools/benchmark/metrics/DeserializationSpeedMetric.java
+END
+SizeMetric.java
+K 25
+svn:wc:ra_dav:version-url
+V 131
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream-benchmark/src/java/com/thoughtworks/xstream/tools/benchmark/metrics/SizeMetric.java
+END

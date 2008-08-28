@@ -1,0 +1,113 @@
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/core/util
+END
+PrioritizedList.java
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/core/util/PrioritizedList.java
+END
+Fields.java
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/core/util/Fields.java
+END
+DependencyInjectionFactory.java
+K 25
+svn:wc:ra_dav:version-url
+V 123
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/core/util/DependencyInjectionFactory.java
+END
+ObjectIdDictionary.java
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/core/util/ObjectIdDictionary.java
+END
+Pool.java
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/core/util/Pool.java
+END
+QuickWriter.java
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/core/util/QuickWriter.java
+END
+OrderRetainingMap.java
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/core/util/OrderRetainingMap.java
+END
+ClassLoaderReference.java
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/core/util/ClassLoaderReference.java
+END
+XmlHeaderAwareReader.java
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/core/util/XmlHeaderAwareReader.java
+END
+CompositeClassLoader.java
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/core/util/CompositeClassLoader.java
+END
+TypedNull.java
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/core/util/TypedNull.java
+END
+ThreadSafePropertyEditor.java
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/core/util/ThreadSafePropertyEditor.java
+END
+FastStack.java
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/core/util/FastStack.java
+END
+Base64Encoder.java
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/core/util/Base64Encoder.java
+END
+ThreadSafeSimpleDateFormat.java
+K 25
+svn:wc:ra_dav:version-url
+V 123
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/core/util/ThreadSafeSimpleDateFormat.java
+END
+Primitives.java
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/core/util/Primitives.java
+END
+CustomObjectInputStream.java
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/core/util/CustomObjectInputStream.java
+END
+CustomObjectOutputStream.java
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/core/util/CustomObjectOutputStream.java
+END

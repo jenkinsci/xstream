@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream-distribution/src/assembly
+END
+assembly-src.xml
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream-distribution/src/assembly/assembly-src.xml
+END
+assembly-bin.xml
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream-distribution/src/assembly/assembly-bin.xml
+END

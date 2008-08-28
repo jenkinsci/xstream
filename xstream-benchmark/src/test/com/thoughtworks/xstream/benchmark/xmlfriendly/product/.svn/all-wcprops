@@ -1,0 +1,53 @@
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream-benchmark/src/test/com/thoughtworks/xstream/benchmark/xmlfriendly/product
+END
+AbstractXmlFriendlyReplacer.java
+K 25
+svn:wc:ra_dav:version-url
+V 154
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream-benchmark/src/test/com/thoughtworks/xstream/benchmark/xmlfriendly/product/AbstractXmlFriendlyReplacer.java
+END
+XStream122Replacer.java
+K 25
+svn:wc:ra_dav:version-url
+V 145
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream-benchmark/src/test/com/thoughtworks/xstream/benchmark/xmlfriendly/product/XStream122Replacer.java
+END
+CombinedLookupReplacer.java
+K 25
+svn:wc:ra_dav:version-url
+V 149
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream-benchmark/src/test/com/thoughtworks/xstream/benchmark/xmlfriendly/product/CombinedLookupReplacer.java
+END
+CombinedLookupAppender.java
+K 25
+svn:wc:ra_dav:version-url
+V 149
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream-benchmark/src/test/com/thoughtworks/xstream/benchmark/xmlfriendly/product/CombinedLookupAppender.java
+END
+IterativeReplacer.java
+K 25
+svn:wc:ra_dav:version-url
+V 144
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream-benchmark/src/test/com/thoughtworks/xstream/benchmark/xmlfriendly/product/IterativeReplacer.java
+END
+NoReplacer.java
+K 25
+svn:wc:ra_dav:version-url
+V 137
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream-benchmark/src/test/com/thoughtworks/xstream/benchmark/xmlfriendly/product/NoReplacer.java
+END
+IterativeAppender.java
+K 25
+svn:wc:ra_dav:version-url
+V 144
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream-benchmark/src/test/com/thoughtworks/xstream/benchmark/xmlfriendly/product/IterativeAppender.java
+END
+SeparateLookupReplacer.java
+K 25
+svn:wc:ra_dav:version-url
+V 149
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream-benchmark/src/test/com/thoughtworks/xstream/benchmark/xmlfriendly/product/SeparateLookupReplacer.java
+END

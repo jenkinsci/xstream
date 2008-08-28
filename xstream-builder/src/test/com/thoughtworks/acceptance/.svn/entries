@@ -1,0 +1,55 @@
+8
+
+dir
+1494
+http://svn.codehaus.org/xstream/tags/XSTREAM_1_3/xstream-builder/src/test/com/thoughtworks/acceptance
+http://svn.codehaus.org/xstream
+
+
+
+2007-12-11T22:18:41.322407Z
+1347
+joehni
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+9830eeb5-ddf4-0310-9ef7-f4b9a3e3227e
+
+AbstractBuilderAcceptanceTest.java
+file
+
+
+
+
+2008-08-28T16:34:34.000000Z
+ae90b4ea3b6beadd92ff1ecd832e7124
+2007-12-11T22:18:41.322407Z
+1347
+joehni
+
+XStreamBuilderTest.java
+file
+
+
+
+
+2008-08-28T16:34:34.000000Z
+28420d2d8c5f2612546dee673715e5e5
+2007-12-11T22:18:41.322407Z
+1347
+joehni
+
+annotations
+dir
+

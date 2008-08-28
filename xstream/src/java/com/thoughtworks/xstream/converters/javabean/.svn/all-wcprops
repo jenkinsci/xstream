@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/converters/javabean
+END
+JavaBeanConverter.java
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/converters/javabean/JavaBeanConverter.java
+END
+BeanProvider.java
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/converters/javabean/BeanProvider.java
+END
+BeanProperty.java
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/converters/javabean/BeanProperty.java
+END
+PropertyDictionary.java
+K 25
+svn:wc:ra_dav:version-url
+V 125
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/converters/javabean/PropertyDictionary.java
+END

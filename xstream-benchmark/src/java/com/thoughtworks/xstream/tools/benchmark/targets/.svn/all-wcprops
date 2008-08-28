@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream-benchmark/src/java/com/thoughtworks/xstream/tools/benchmark/targets
+END
+JTreeTarget.java
+K 25
+svn:wc:ra_dav:version-url
+V 132
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream-benchmark/src/java/com/thoughtworks/xstream/tools/benchmark/targets/JTreeTarget.java
+END
+ListTarget.java
+K 25
+svn:wc:ra_dav:version-url
+V 131
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream-benchmark/src/java/com/thoughtworks/xstream/tools/benchmark/targets/ListTarget.java
+END
+Person.java
+K 25
+svn:wc:ra_dav:version-url
+V 127
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream-benchmark/src/java/com/thoughtworks/xstream/tools/benchmark/targets/Person.java
+END
+UserDefinedClassTarget.java
+K 25
+svn:wc:ra_dav:version-url
+V 143
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream-benchmark/src/java/com/thoughtworks/xstream/tools/benchmark/targets/UserDefinedClassTarget.java
+END
+StringTarget.java
+K 25
+svn:wc:ra_dav:version-url
+V 133
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream-benchmark/src/java/com/thoughtworks/xstream/tools/benchmark/targets/StringTarget.java
+END

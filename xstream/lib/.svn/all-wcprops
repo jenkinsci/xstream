@@ -1,0 +1,167 @@
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/lib
+END
+xml-writer-0.2.jar
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/lib/xml-writer-0.2.jar
+END
+woodstox-license.txt
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/lib/woodstox-license.txt
+END
+joda-time-1.5.1.jar
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/lib/joda-time-1.5.1.jar
+END
+stax-1.2.0.jar
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/lib/stax-1.2.0.jar
+END
+jdom-license.txt
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/lib/jdom-license.txt
+END
+junit-license.txt
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/lib/junit-license.txt
+END
+xpp3-license.txt
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/lib/xpp3-license.txt
+END
+commons-lang-license.txt
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/lib/commons-lang-license.txt
+END
+dom4j-1.6.1.jar
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/lib/dom4j-1.6.1.jar
+END
+jettison-1.0-RC2.jar
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/lib/jettison-1.0-RC2.jar
+END
+stax-api-1.0.1.jar
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/lib/stax-api-1.0.1.jar
+END
+oro-license.txt
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/lib/oro-license.txt
+END
+jettison-license.txt
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/lib/jettison-license.txt
+END
+wstx-asl-3.2.3.jar
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/lib/wstx-asl-3.2.3.jar
+END
+jdom-1.0.jar
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/lib/jdom-1.0.jar
+END
+xom-license.txt
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/lib/xom-license.txt
+END
+commons-lang-2.1.jar
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/lib/commons-lang-2.1.jar
+END
+joda-time-license.txt
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/lib/joda-time-license.txt
+END
+junit-3.8.1.jar
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/lib/junit-3.8.1.jar
+END
+jmock-1.0.1.jar
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/lib/jmock-1.0.1.jar
+END
+xpp3_min-1.1.4c.jar
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/lib/xpp3_min-1.1.4c.jar
+END
+dom4j-license.txt
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/lib/dom4j-license.txt
+END
+xom-1.1.jar
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/lib/xom-1.1.jar
+END
+oro-2.0.8.jar
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/lib/oro-2.0.8.jar
+END
+stax-license.txt
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/lib/stax-license.txt
+END
+cglib-nodep-2.1_3.jar
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/lib/cglib-nodep-2.1_3.jar
+END
+cglib-license.txt
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/lib/cglib-license.txt
+END

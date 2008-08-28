@@ -1,0 +1,44 @@
+8
+
+dir
+1494
+http://svn.codehaus.org/xstream/tags/XSTREAM_1_3/xstream-benchmark
+http://svn.codehaus.org/xstream
+
+
+
+2008-02-26T22:47:19.219062Z
+1452
+joehni
+has-props
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+9830eeb5-ddf4-0310-9ef7-f4b9a3e3227e
+
+src
+dir
+
+pom.xml
+file
+
+
+
+
+2008-08-28T16:34:34.000000Z
+9d61497abbe4a6de9de4b95d4bb884d2
+2008-02-26T22:47:19.219062Z
+1452
+joehni
+has-props
+

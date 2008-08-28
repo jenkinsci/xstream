@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream-benchmark/src/java/com/thoughtworks/xstream/tools/benchmark
+END
+Product.java
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream-benchmark/src/java/com/thoughtworks/xstream/tools/benchmark/Product.java
+END
+Reporter.java
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream-benchmark/src/java/com/thoughtworks/xstream/tools/benchmark/Reporter.java
+END
+Harness.java
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream-benchmark/src/java/com/thoughtworks/xstream/tools/benchmark/Harness.java
+END
+Metric.java
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream-benchmark/src/java/com/thoughtworks/xstream/tools/benchmark/Metric.java
+END
+Target.java
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream-benchmark/src/java/com/thoughtworks/xstream/tools/benchmark/Target.java
+END
+package.html
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream-benchmark/src/java/com/thoughtworks/xstream/tools/benchmark/package.html
+END

@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream-benchmark/src/test/com/thoughtworks/xstream/benchmark/strings/products
+END
+StringWithSynchronizedWeakHashMapConverter.java
+K 25
+svn:wc:ra_dav:version-url
+V 166
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream-benchmark/src/test/com/thoughtworks/xstream/benchmark/strings/products/StringWithSynchronizedWeakHashMapConverter.java
+END
+StringWithWeakHashMapConverter.java
+K 25
+svn:wc:ra_dav:version-url
+V 154
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream-benchmark/src/test/com/thoughtworks/xstream/benchmark/strings/products/StringWithWeakHashMapConverter.java
+END
+StringNonCachingConverter.java
+K 25
+svn:wc:ra_dav:version-url
+V 149
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream-benchmark/src/test/com/thoughtworks/xstream/benchmark/strings/products/StringNonCachingConverter.java
+END
+StringInternConverter.java
+K 25
+svn:wc:ra_dav:version-url
+V 145
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream-benchmark/src/test/com/thoughtworks/xstream/benchmark/strings/products/StringInternConverter.java
+END

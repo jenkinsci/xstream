@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/io/path
+END
+PathTrackingReader.java
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/io/path/PathTrackingReader.java
+END
+PathTracker.java
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/io/path/PathTracker.java
+END
+Path.java
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/io/path/Path.java
+END
+PathTrackingWriter.java
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/io/path/PathTrackingWriter.java
+END
+package.html
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/io/path/package.html
+END

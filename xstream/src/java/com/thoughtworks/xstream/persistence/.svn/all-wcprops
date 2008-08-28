@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/persistence
+END
+XmlArrayList.java
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/persistence/XmlArrayList.java
+END
+XmlSet.java
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/persistence/XmlSet.java
+END
+FileStreamStrategy.java
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/persistence/FileStreamStrategy.java
+END
+StreamStrategy.java
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/persistence/StreamStrategy.java
+END
+XmlMap.java
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/persistence/XmlMap.java
+END

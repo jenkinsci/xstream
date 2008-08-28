@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/converters/enums
+END
+EnumSetConverter.java
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/converters/enums/EnumSetConverter.java
+END
+EnumMapConverter.java
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/converters/enums/EnumMapConverter.java
+END
+EnumSingleValueConverter.java
+K 25
+svn:wc:ra_dav:version-url
+V 128
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/converters/enums/EnumSingleValueConverter.java
+END
+EnumConverter.java
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/converters/enums/EnumConverter.java
+END

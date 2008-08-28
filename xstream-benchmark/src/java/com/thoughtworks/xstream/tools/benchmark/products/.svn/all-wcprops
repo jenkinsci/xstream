@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream-benchmark/src/java/com/thoughtworks/xstream/tools/benchmark/products
+END
+XStreamDom.java
+K 25
+svn:wc:ra_dav:version-url
+V 132
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream-benchmark/src/java/com/thoughtworks/xstream/tools/benchmark/products/XStreamDom.java
+END
+XStreamStax.java
+K 25
+svn:wc:ra_dav:version-url
+V 133
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream-benchmark/src/java/com/thoughtworks/xstream/tools/benchmark/products/XStreamStax.java
+END
+JavaObjectSerialization.java
+K 25
+svn:wc:ra_dav:version-url
+V 145
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream-benchmark/src/java/com/thoughtworks/xstream/tools/benchmark/products/JavaObjectSerialization.java
+END
+XStreamBinary.java
+K 25
+svn:wc:ra_dav:version-url
+V 135
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream-benchmark/src/java/com/thoughtworks/xstream/tools/benchmark/products/XStreamBinary.java
+END
+XStreamCompact.java
+K 25
+svn:wc:ra_dav:version-url
+V 136
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream-benchmark/src/java/com/thoughtworks/xstream/tools/benchmark/products/XStreamCompact.java
+END
+XStreamXpp.java
+K 25
+svn:wc:ra_dav:version-url
+V 132
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream-benchmark/src/java/com/thoughtworks/xstream/tools/benchmark/products/XStreamXpp.java
+END

@@ -1,0 +1,16 @@
+K 14
+fisheye.access
+V 5
+allow
+K 10
+svn:ignore
+V 61
+
+svnlog.cmd
+svnlog.txt
+svnlog.xml
+target
+.project
+.classpath
+
+END

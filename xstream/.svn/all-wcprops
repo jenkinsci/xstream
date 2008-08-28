@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream
+END
+jdk-1.5-minimum.txt
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/jdk-1.5-minimum.txt
+END
+jdk-1.4-specific.txt
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/jdk-1.4-specific.txt
+END
+jdk-1.5-specific.txt
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/jdk-1.5-specific.txt
+END
+pom.xml
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/pom.xml
+END
+build.xml
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/build.xml
+END

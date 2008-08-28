@@ -1,0 +1,71 @@
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/converters
+END
+ConverterRegistry.java
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/converters/ConverterRegistry.java
+END
+ConverterLookup.java
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/converters/ConverterLookup.java
+END
+ConversionException.java
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/converters/ConversionException.java
+END
+SingleValueConverter.java
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/converters/SingleValueConverter.java
+END
+MarshallingContext.java
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/converters/MarshallingContext.java
+END
+ErrorWriter.java
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/converters/ErrorWriter.java
+END
+SingleValueConverterWrapper.java
+K 25
+svn:wc:ra_dav:version-url
+V 125
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/converters/SingleValueConverterWrapper.java
+END
+DataHolder.java
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/converters/DataHolder.java
+END
+Converter.java
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/converters/Converter.java
+END
+UnmarshallingContext.java
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/converters/UnmarshallingContext.java
+END
+ConverterMatcher.java
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/converters/ConverterMatcher.java
+END

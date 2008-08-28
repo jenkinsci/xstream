@@ -1,0 +1,95 @@
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/xstream/converters/extended
+END
+JavaClassConverterTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 129
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/xstream/converters/extended/JavaClassConverterTest.java
+END
+ISO8601DateConverterTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 131
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/xstream/converters/extended/ISO8601DateConverterTest.java
+END
+GregorianCalendarConverterTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 137
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/xstream/converters/extended/GregorianCalendarConverterTest.java
+END
+RegexPatternConverterTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 132
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/xstream/converters/extended/RegexPatternConverterTest.java
+END
+ToStringConverterTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 128
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/xstream/converters/extended/ToStringConverterTest.java
+END
+ISO8601SqlTimestampConverterTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 139
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/xstream/converters/extended/ISO8601SqlTimestampConverterTest.java
+END
+JavaMethodConverterTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 130
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/xstream/converters/extended/JavaMethodConverterTest.java
+END
+EncodedByteArrayConverterTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 136
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/xstream/converters/extended/EncodedByteArrayConverterTest.java
+END
+DurationConverterTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 128
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/xstream/converters/extended/DurationConverterTest.java
+END
+ThrowableConverterTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 129
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/xstream/converters/extended/ThrowableConverterTest.java
+END
+CharsetConverterTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 127
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/xstream/converters/extended/CharsetConverterTest.java
+END
+StackTraceElementConverterTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 137
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/xstream/converters/extended/StackTraceElementConverterTest.java
+END
+ISO8601GregorianCalendarConverterTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 144
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/xstream/converters/extended/ISO8601GregorianCalendarConverterTest.java
+END
+PropertyEditorCapableConverterTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 141
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/xstream/converters/extended/PropertyEditorCapableConverterTest.java
+END
+FontConverterTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/xstream/converters/extended/FontConverterTest.java
+END

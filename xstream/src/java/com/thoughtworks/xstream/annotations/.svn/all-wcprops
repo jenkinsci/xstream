@@ -1,0 +1,71 @@
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/annotations
+END
+XStreamOmitField.java
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/annotations/XStreamOmitField.java
+END
+AnnotationProvider.java
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/annotations/AnnotationProvider.java
+END
+XStreamContainedType.java
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/annotations/XStreamContainedType.java
+END
+XStreamImplicitCollection.java
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/annotations/XStreamImplicitCollection.java
+END
+XStreamAsAttribute.java
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/annotations/XStreamAsAttribute.java
+END
+XStreamConverter.java
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/annotations/XStreamConverter.java
+END
+AnnotationReflectionConverter.java
+K 25
+svn:wc:ra_dav:version-url
+V 128
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/annotations/AnnotationReflectionConverter.java
+END
+Annotations.java
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/annotations/Annotations.java
+END
+XStreamAlias.java
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/annotations/XStreamAlias.java
+END
+XStreamConverters.java
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/annotations/XStreamConverters.java
+END
+XStreamImplicit.java
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/annotations/XStreamImplicit.java
+END

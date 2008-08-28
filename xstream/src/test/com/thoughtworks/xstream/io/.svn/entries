@@ -1,0 +1,69 @@
+8
+
+dir
+1494
+http://svn.codehaus.org/xstream/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/xstream/io
+http://svn.codehaus.org/xstream
+
+
+
+2008-02-21T01:47:27.575167Z
+1441
+joehni
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+9830eeb5-ddf4-0310-9ef7-f4b9a3e3227e
+
+xml
+dir
+
+binary
+dir
+
+StatefulWriterTest.java
+file
+
+
+
+
+2008-08-28T16:34:30.000000Z
+966d0cc62362290b4d687950774a1ce2
+2007-12-11T01:50:12.145301Z
+1345
+joehni
+has-props
+
+DriverEndToEndTestSuite.java
+file
+
+
+
+
+2008-08-28T16:34:30.000000Z
+3cff81d1a26585801f305a0636566e03
+2007-12-11T01:50:12.145301Z
+1345
+joehni
+has-props
+
+json
+dir
+
+copy
+dir
+
+path
+dir
+

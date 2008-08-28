@@ -1,0 +1,40 @@
+8
+
+dir
+1494
+http://svn.codehaus.org/xstream/tags/XSTREAM_1_3/xstream-benchmark/src/test/com/thoughtworks/xstream/benchmark
+http://svn.codehaus.org/xstream
+
+
+
+2008-02-26T16:07:20.536377Z
+1446
+joehni
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+9830eeb5-ddf4-0310-9ef7-f4b9a3e3227e
+
+cache
+dir
+
+strings
+dir
+
+reflection
+dir
+
+xmlfriendly
+dir
+

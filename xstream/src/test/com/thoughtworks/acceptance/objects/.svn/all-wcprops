@@ -1,0 +1,59 @@
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/acceptance/objects
+END
+Product.java
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/acceptance/objects/Product.java
+END
+SampleLists.java
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/acceptance/objects/SampleLists.java
+END
+StandardObject.java
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/acceptance/objects/StandardObject.java
+END
+SampleDynamicProxy.java
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/acceptance/objects/SampleDynamicProxy.java
+END
+StatusEnum.java
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/acceptance/objects/StatusEnum.java
+END
+Software.java
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/acceptance/objects/Software.java
+END
+Category.java
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/acceptance/objects/Category.java
+END
+Hardware.java
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/acceptance/objects/Hardware.java
+END
+OpenSourceSoftware.java
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/acceptance/objects/OpenSourceSoftware.java
+END

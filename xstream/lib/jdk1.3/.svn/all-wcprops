@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/lib/jdk1.3
+END
+xalan-2.7.0.jar
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/lib/jdk1.3/xalan-2.7.0.jar
+END
+xalan-license.txt
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/lib/jdk1.3/xalan-license.txt
+END
+xml-apis-1.3.04.jar
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/lib/jdk1.3/xml-apis-1.3.04.jar
+END
+xerces-license.txt
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/lib/jdk1.3/xerces-license.txt
+END
+xercesImpl-2.8.1.jar
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/lib/jdk1.3/xercesImpl-2.8.1.jar
+END
