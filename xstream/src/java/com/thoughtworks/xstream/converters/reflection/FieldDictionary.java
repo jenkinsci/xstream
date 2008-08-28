@@ -23,6 +23,7 @@ import java.util.WeakHashMap;
 
 import com.thoughtworks.xstream.core.JVM;
 import com.thoughtworks.xstream.core.util.OrderRetainingMap;
+import com.thoughtworks.xstream.core.util.ConcurrentWeakHashMap;
 
 
 /**
@@ -34,8 +35,19 @@ import com.thoughtworks.xstream.core.util.OrderRetainingMap;
  */
 public class FieldDictionary {
 
-    private transient Map keyedByFieldNameCache;
-    private transient Map keyedByFieldKeyCache;
+    static final class Entry {
+        final Map<String,Field> keyedByFieldName;
+        final Map<FieldKey,Field> keyedByFieldKey;
+
+        Entry(Map keyedByFieldName, Map keyedByFieldKey) {
+            this.keyedByFieldName = keyedByFieldName;
+            this.keyedByFieldKey = keyedByFieldKey;
+        }
+    }
+
+    private transient Map<Class,Entry> cache;
+//    private transient Map keyedByFieldNameCache;
+//    private transient Map keyedByFieldKeyCache;
     private final FieldKeySorter sorter;
 
     public FieldDictionary() {
@@ -48,10 +60,12 @@ public class FieldDictionary {
     }
 
     private void init() {
-        keyedByFieldNameCache = new WeakHashMap();
-        keyedByFieldKeyCache = new WeakHashMap();
-        keyedByFieldNameCache.put(Object.class, Collections.EMPTY_MAP);
-        keyedByFieldKeyCache.put(Object.class, Collections.EMPTY_MAP);
+//        keyedByFieldNameCache = new WeakHashMap();
+//        keyedByFieldKeyCache = new WeakHashMap();
+//        keyedByFieldNameCache.put(Object.class, Collections.EMPTY_MAP);
+//        keyedByFieldKeyCache.put(Object.class, Collections.EMPTY_MAP);
+        cache = new ConcurrentWeakHashMap<Class,Entry>();
+        cache.put(Object.class, new Entry(Collections.EMPTY_MAP,Collections.EMPTY_MAP));
     }
 
     /**
@@ -107,8 +121,8 @@ public class FieldDictionary {
 
     private Map buildMap(final Class type, boolean tupleKeyed) {
         Class cls = type;
-        synchronized (this) {
-            if (!keyedByFieldNameCache.containsKey(type)) {
+//        synchronized (this) {
+            if (!cache.containsKey(type)) {
                 final List superClasses = new ArrayList();
                 while (!Object.class.equals(cls)) {
                     superClasses.add(0, cls);
@@ -118,7 +132,7 @@ public class FieldDictionary {
                 Map lastKeyedByFieldKey = Collections.EMPTY_MAP;
                 for (final Iterator iter = superClasses.iterator(); iter.hasNext();) {
                     cls = (Class)iter.next();
-                    if (!keyedByFieldNameCache.containsKey(cls)) {
+                    if (!cache.containsKey(cls)) {
                         final Map keyedByFieldName = new HashMap(lastKeyedByFieldName);
                         final Map keyedByFieldKey = new OrderRetainingMap(lastKeyedByFieldKey);
                         Field[] fields = cls.getDeclaredFields();
@@ -145,16 +159,20 @@ public class FieldDictionary {
                             }
                             keyedByFieldKey.put(fieldKey, field);
                         }
-                        keyedByFieldNameCache.put(cls, keyedByFieldName);
-                        keyedByFieldKeyCache.put(cls, sorter.sort(type, keyedByFieldKey));
+                        cache.put(cls, new Entry(keyedByFieldName,sorter.sort(type, keyedByFieldKey)));
                     }
-                    lastKeyedByFieldName = (Map)keyedByFieldNameCache.get(cls);
-                    lastKeyedByFieldKey = (Map)keyedByFieldKeyCache.get(cls);
+                    Entry e = cache.get(cls);
+                    lastKeyedByFieldName = e.keyedByFieldName;
+                    lastKeyedByFieldKey = e.keyedByFieldKey;
                 }
             }
-        }
-        return (Map)(tupleKeyed ? keyedByFieldKeyCache.get(type) : keyedByFieldNameCache
-            .get(type));
+//        }
+
+        Entry e = cache.get(type);
+        return tupleKeyed ? e.keyedByFieldKey : e.keyedByFieldName;
+
+//        return (Map)(tupleKeyed ? keyedByFieldKeyCache.get(type) : keyedByFieldNameCache
+//            .get(type));
     }
 
     protected Object readResolve() {

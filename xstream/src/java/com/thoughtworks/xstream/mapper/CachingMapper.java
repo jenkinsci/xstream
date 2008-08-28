@@ -17,6 +17,7 @@ import java.lang.ref.WeakReference;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Mapper that caches which names map to which classes. Prevents repetitive searching and class loading.
@@ -55,7 +56,7 @@ public class CachingMapper extends MapperWrapper {
     }
 
     private Object readResolve() {
-        realClassCache = Collections.synchronizedMap(new HashMap(128));
+        realClassCache = new ConcurrentHashMap();
         return this;
     }
 

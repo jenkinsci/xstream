@@ -11,6 +11,8 @@
  */
 package com.thoughtworks.xstream.converters.basic;
 
+import com.thoughtworks.xstream.core.util.ConcurrentWeakHashMap;
+
 import java.lang.ref.WeakReference;
 import java.util.Collections;
 import java.util.Map;
@@ -42,7 +44,7 @@ public class StringConverter extends AbstractSingleValueConverter {
     }
 
     public StringConverter() {
-        this(Collections.synchronizedMap(new WeakHashMap()));
+        this(new ConcurrentWeakHashMap());
     }
 
     public boolean canConvert(final Class type) {

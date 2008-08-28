@@ -20,6 +20,7 @@ import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Convenience wrapper to invoke special serialization methods on objects (and perform reflection caching).
@@ -28,7 +29,7 @@ import java.util.Map;
  */
 public class SerializationMethodInvoker {
 
-    private Map cache = Collections.synchronizedMap(new HashMap());
+    private Map cache = new ConcurrentHashMap();
     private static final Object NO_METHOD = new Object();
     private static final Object[] EMPTY_ARGS = new Object[0];
 

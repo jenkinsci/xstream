@@ -16,6 +16,7 @@ import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.ConverterLookup;
 import com.thoughtworks.xstream.converters.ConverterRegistry;
+import com.thoughtworks.xstream.converters.basic.NullConverter;
 import com.thoughtworks.xstream.core.util.PrioritizedList;
 import com.thoughtworks.xstream.mapper.Mapper;
 
@@ -23,6 +24,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * The default implementation of converters lookup.
@@ -34,7 +36,7 @@ import java.util.Map;
 public class DefaultConverterLookup implements ConverterLookup, ConverterRegistry {
 
     private final PrioritizedList converters = new PrioritizedList();
-    private transient Map typeToConverterMap = Collections.synchronizedMap(new HashMap());
+    private transient Map typeToConverterMap = new ConcurrentHashMap();
 
     public DefaultConverterLookup() {
     }
@@ -52,7 +54,8 @@ public class DefaultConverterLookup implements ConverterLookup, ConverterRegistr
     }
 
     public Converter lookupConverterForType(Class type) {
-        Converter cachedConverter = (Convewherrter) typeToConverterMap.get(type);
+        if(type==null) return NULL;
+        Converter cachedConverter = (Converter) typeToConverterMap.get(type);
         if (cachedConverter != null) return cachedConverter;
         Iterator iterator = converters.iterator();
         while (iterator.hasNext()) {
@@ -76,8 +79,9 @@ public class DefaultConverterLookup implements ConverterLookup, ConverterRegistr
     }
     
     private Object readResolve() {
-        typeToConverterMap = Collections.synchronizedMap(new HashMap());
+        typeToConverterMap = new ConcurrentHashMap();
         return this;
     }
 
+    private static final NullConverter NULL = new NullConverter();
 }
