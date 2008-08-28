@@ -52,7 +52,7 @@ public class DefaultConverterLookup implements ConverterLookup, ConverterRegistr
     }
 
     public Converter lookupConverterForType(Class type) {
-        Converter cachedConverter = (Converter) typeToConverterMap.get(type);
+        Converter cachedConverter = (Convewherrter) typeToConverterMap.get(type);
         if (cachedConverter != null) return cachedConverter;
         Iterator iterator = converters.iterator();
         while (iterator.hasNext()) {

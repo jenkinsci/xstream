@@ -87,14 +87,22 @@ public class FieldDictionary {
      * @return the field itself
      */
     public Field field(Class cls, String name, Class definedIn) {
-        Map fields = buildMap(cls, definedIn != null);
-        Field field = (Field)fields.get(definedIn != null ? (Object)new FieldKey(
-            name, definedIn, 0) : (Object)name);
+        Field field = fieldOrNull(cls,name,definedIn);
         if (field == null) {
             throw new ObjectAccessException("No such field " + cls.getName() + "." + name);
         } else {
             return field;
         }
+    }
+
+    /**
+     * Works like {@link #field(Class, String, Class)} but returns null instead of throwing exception.
+     */
+    public Field fieldOrNull(Class cls, String name, Class definedIn) {
+        Map fields = buildMap(cls, definedIn != null);
+        Field field = (Field)fields.get(definedIn != null ? (Object)new FieldKey(
+            name, definedIn, 0) : (Object)name);
+        return field;
     }
 
     private Map buildMap(final Class type, boolean tupleKeyed) {

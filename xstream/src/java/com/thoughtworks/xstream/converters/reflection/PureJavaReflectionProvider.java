@@ -152,12 +152,9 @@ public class PureJavaReflectionProvider implements ReflectionProvider {
     }
 
     public boolean fieldDefinedInClass(String fieldName, Class type) {
-        try {
-            Field field = fieldDictionary.field(type, fieldName, null);
-            return fieldModifiersSupported(field) || Modifier.isTransient(field.getModifiers());
-        } catch (ObjectAccessException e) {
-            return false;
-        }
+        Field field = fieldDictionary.fieldOrNull(type, fieldName, null);
+        if(field==null)     return false;
+        return fieldModifiersSupported(field) || Modifier.isTransient(field.getModifiers());
     }
 
     protected boolean fieldModifiersSupported(Field field) {
@@ -178,6 +175,10 @@ public class PureJavaReflectionProvider implements ReflectionProvider {
 
     public Field getField(Class definedIn, String fieldName) {
         return fieldDictionary.field(definedIn, fieldName, null);
+    }
+
+    public Field getFieldOrNull(Class definedIn, String fieldName) {
+        return fieldDictionary.fieldOrNull(definedIn, fieldName,  null);
     }
 
     public void setFieldDictionary(FieldDictionary dictionary) {
