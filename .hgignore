@@ -1,0 +1,5 @@
+syntax: glob
+xstream/target
+xstream/*.iml
+xstream/*.iws
+xstream/*.ipr
