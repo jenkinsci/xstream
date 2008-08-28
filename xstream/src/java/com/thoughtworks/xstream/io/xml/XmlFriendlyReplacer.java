@@ -73,10 +73,13 @@ public class XmlFriendlyReplacer {
      * @return The String with unescaped name
      */
     public String unescapeName(String name) {
+        // common path: there's nothing that was escaped
+        if(name.indexOf(underscoreReplacement)<0 && name.indexOf(dollarReplacement)<0)  return name;
+
         final int underscoreReplacementInc = underscoreReplacement.length() - 1;
         final int dollarReplacementInc = dollarReplacement.length() - 1;
         final int length = name.length();
-        final StringBuffer result = new StringBuffer();
+        final StringBuffer result = new StringBuffer(length+4);
         for (int i = 0; i < length; i++) {
             final char c = name.charAt(i);
             if (name.startsWith(dollarReplacement, i)) {
