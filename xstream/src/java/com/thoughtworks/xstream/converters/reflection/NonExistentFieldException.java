@@ -6,11 +6,19 @@ package com.thoughtworks.xstream.converters.reflection;
  * @author Kohsuke Kawaguchi
  */
 public class NonExistentFieldException extends ObjectAccessException {
-    public NonExistentFieldException(String message) {
+    private final String fieldName;
+
+    public NonExistentFieldException(String message, String fieldName) {
         super(message);
+        this.fieldName = fieldName;
     }
 
-    public NonExistentFieldException(String message, Throwable cause) {
+    public NonExistentFieldException(String message, Throwable cause, String fieldName) {
         super(message, cause);
+        this.fieldName = fieldName;
+    }
+
+    public String getFieldName() {
+        return fieldName;
     }
 }
