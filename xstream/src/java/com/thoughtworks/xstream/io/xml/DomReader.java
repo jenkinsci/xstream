@@ -49,7 +49,19 @@ public class DomReader extends AbstractDocumentReader {
     public DomReader(Document document, XmlFriendlyReplacer replacer) {
         this(document.getDocumentElement(), replacer);
     }
-    
+
+    public String peekNextChild() {
+        NodeList childNodes = currentElement.getChildNodes();
+        childElements = new ArrayList();
+        for (int i = 0; i < childNodes.getLength(); i++) {
+            Node node = childNodes.item(i);
+            if (node instanceof Element) {
+                return unescapeXmlName(((Element)node).getTagName());
+            }
+        }
+        return null;
+    }
+
     public String getNodeName() {
         return unescapeXmlName(currentElement.getTagName());
     }

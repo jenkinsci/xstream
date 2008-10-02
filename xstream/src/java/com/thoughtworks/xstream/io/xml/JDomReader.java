@@ -15,6 +15,8 @@ import org.jdom.Attribute;
 import org.jdom.Document;
 import org.jdom.Element;
 
+import java.util.List;
+
 /**
  * @author Laurent Bihanic
  */
@@ -58,6 +60,12 @@ public class JDomReader extends AbstractDocumentReader {
 
         // JDOM b9 and earlier:
         // return currentElement.getParent();
+    }
+
+    public String peekNextChild() {
+        List list = currentElement.getChildren();
+        if(list.isEmpty())  return null;
+        return unescapeXmlName(((Element)list.get(0)).getName());
     }
 
     protected Object getChild(int index) {

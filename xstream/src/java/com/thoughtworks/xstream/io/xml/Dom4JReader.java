@@ -16,6 +16,8 @@ import com.thoughtworks.xstream.converters.ErrorWriter;
 import org.dom4j.Document;
 import org.dom4j.Element;
 
+import java.util.List;
+
 public class Dom4JReader extends AbstractDocumentReader {
 
     private Element currentElement;
@@ -41,7 +43,13 @@ public class Dom4JReader extends AbstractDocumentReader {
     public Dom4JReader(Document document, XmlFriendlyReplacer replacer) {
         this(document.getRootElement(), replacer);
     }
-    
+
+    public String peekNextChild() {
+        List list = currentElement.elements();
+        if(list.isEmpty())  return null;
+        return unescapeXmlName(((Element)list.get(0)).getName());
+    }
+
     public String getNodeName() {
         return unescapeXmlName(currentElement.getName());
     }

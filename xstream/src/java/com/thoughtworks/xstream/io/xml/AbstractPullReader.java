@@ -88,6 +88,23 @@ public abstract class AbstractPullReader extends AbstractXmlReader {
         }
     }
 
+    public String peekNextChild() {
+        mark();
+        while (true) {
+            Event ev = readEvent();
+            switch (ev.type) {
+                case START_NODE:
+                    reset();
+                    return ev.value;
+                case END_NODE:
+                    reset();
+                    return null;
+                default:
+                    continue;
+            }
+        }
+    }
+
     public void moveDown() {
         int currentDepth = elementStack.size();
         while (elementStack.size() <= currentDepth) {

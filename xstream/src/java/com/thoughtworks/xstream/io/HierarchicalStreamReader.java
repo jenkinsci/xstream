@@ -26,6 +26,12 @@ public interface HierarchicalStreamReader {
     boolean hasMoreChildren();
 
     /**
+     * In situation where {@link #hasMoreChildren()} returns true, peek the tag name
+     * of the child.
+     */
+    String peekNextChild();
+
+    /**
      * Select the current child as current node.
      * A call to this function must be balanced with a call to {@link #moveUp()}.
      */

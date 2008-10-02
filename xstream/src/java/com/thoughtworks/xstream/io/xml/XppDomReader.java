@@ -36,6 +36,11 @@ public class XppDomReader extends AbstractDocumentReader {
         return unescapeXmlName(currentElement.getName());
     }
 
+    public String peekNextChild() {
+        if(currentElement.getChildCount()==0)   return null;
+        return unescapeXmlName(currentElement.getChild(0).getName());
+    }
+
     public String getValue() {
         String text = null;
 

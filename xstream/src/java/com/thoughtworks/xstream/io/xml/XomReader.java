@@ -15,6 +15,7 @@ import nu.xom.Document;
 import nu.xom.Element;
 import nu.xom.Node;
 import nu.xom.Text;
+import nu.xom.Elements;
 
 public class XomReader extends AbstractDocumentReader {
 
@@ -44,6 +45,12 @@ public class XomReader extends AbstractDocumentReader {
     
     public String getNodeName() {
         return unescapeXmlName(currentElement.getLocalName());
+    }
+
+    public String peekNextChild() {
+        Elements children = currentElement.getChildElements();
+        if(children.size()==0)  return null;
+        return unescapeXmlName(children.get(0).getLocalName());
     }
 
     public String getValue() {
