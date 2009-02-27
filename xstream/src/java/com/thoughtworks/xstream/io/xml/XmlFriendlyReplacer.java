@@ -115,6 +115,8 @@ public class XmlFriendlyReplacer {
      * @return The String with unescaped name
      */
     public String unescapeName(String name) {
+        // common path: there's nothing that was escaped
+        if(name.indexOf(underscoreReplacement)<0 && name.indexOf(dollarReplacement)<0)  return name;
         final WeakReference ref = (WeakReference)unescapeCache.get(name);
         String s = (String)(ref == null ? null : ref.get());
 

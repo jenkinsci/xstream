@@ -22,6 +22,8 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.WeakHashMap;
 
+import com.thoughtworks.xstream.core.util.ConcurrentWeakHashMap;
+
 /**
  * Instantiates a new object on the Sun JVM by bypassing the constructor (meaning code in the constructor
  * will never be executed and parameters do not have to be known). This is the same method used by the internals of
@@ -58,7 +60,7 @@ public class Sun14ReflectionProvider extends PureJavaReflectionProvider {
     }
 
     private transient ReflectionFactory reflectionFactory = ReflectionFactory.getReflectionFactory();
-    private transient Map constructorCache = Collections.synchronizedMap(new WeakHashMap());
+    private transient Map constructorCache = new ConcurrentWeakHashMap();
 
     public Sun14ReflectionProvider() {
     	super();

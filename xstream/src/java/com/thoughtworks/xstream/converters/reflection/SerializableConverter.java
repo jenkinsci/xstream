@@ -320,8 +320,8 @@ public class SerializableConverter extends AbstractReflectionConverter {
                             } else {
                                 ObjectStreamField field = objectStreamClass.getField(name);
                                 if (field == null) {
-                                    throw new ObjectAccessException("Class " + currentType[0]
-                                            + " does not contain a field named '" + name + "'");
+                                    throw new NonExistentFieldException("Class " + currentType[0]
+                                            + " does not contain a field named '" + name + "'",name);
                                 }
                                 type = field.getType();
                             }
