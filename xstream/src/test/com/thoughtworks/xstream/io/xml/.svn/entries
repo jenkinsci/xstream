@@ -1,14 +1,14 @@
-8
+9
 
 dir
-1494
-http://svn.codehaus.org/xstream/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/xstream/io/xml
+1642
+http://svn.codehaus.org/xstream/tags/XSTREAM_1_3_1/xstream/src/test/com/thoughtworks/xstream/io/xml
 http://svn.codehaus.org/xstream
 
 
 
-2008-02-21T00:09:24.928628Z
-1439
+2008-09-19T14:29:48.407829Z
+1530
 joehni
 
 
@@ -32,34 +32,42 @@ file
 
 
 
-2008-08-28T16:34:30.000000Z
-7d815e39b6ee1f43fa87d63a369e4c6e
-2007-12-11T01:50:12.145301Z
-1345
+2009-02-27T01:07:38.000000Z
+59a7f2bc2f331181ddadafbbd859051d
+2008-09-19T14:29:48.407829Z
+1530
 joehni
 has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+4783
 
-XomWriterTest.java
+JDomAcceptanceTest.java
 file
 
 
 
 
 2008-08-28T16:34:30.000000Z
-06b2b432b483106425fe1513895a289f
-2007-12-11T01:50:12.145301Z
-1345
-joehni
-has-props
-
-AbstractStaxWriterTest.java
-file
-
-
-
-
-2008-08-28T16:34:30.000000Z
-92f6e53cb5cffa0ff17b1e887948781a
+4123419274c530b8d5b221d51a38baf3
 2007-12-11T01:50:12.145301Z
 1345
 joehni
@@ -78,14 +86,27 @@ bad021758eb916ebfe41a400af591ba3
 joehni
 has-props
 
-JDomAcceptanceTest.java
+AbstractStaxWriterTest.java
 file
 
 
 
 
 2008-08-28T16:34:30.000000Z
-4123419274c530b8d5b221d51a38baf3
+92f6e53cb5cffa0ff17b1e887948781a
+2007-12-11T01:50:12.145301Z
+1345
+joehni
+has-props
+
+XomWriterTest.java
+file
+
+
+
+
+2008-08-28T16:34:30.000000Z
+06b2b432b483106425fe1513895a289f
 2007-12-11T01:50:12.145301Z
 1345
 joehni
@@ -104,19 +125,6 @@ file
 joehni
 has-props
 
-StaxReaderTest.java
-file
-
-
-
-
-2008-08-28T16:34:30.000000Z
-a6451017cc22fcbda09c95dcf07fdcd9
-2007-12-11T01:50:12.145301Z
-1345
-joehni
-has-props
-
 DomReaderTest.java
 file
 
@@ -125,6 +133,19 @@ file
 
 2008-08-28T16:34:30.000000Z
 ddb789937c112d8f9aa87c990543f602
+2007-12-11T01:50:12.145301Z
+1345
+joehni
+has-props
+
+StaxReaderTest.java
+file
+
+
+
+
+2008-08-28T16:34:30.000000Z
+a6451017cc22fcbda09c95dcf07fdcd9
 2007-12-11T01:50:12.145301Z
 1345
 joehni
@@ -149,12 +170,33 @@ file
 
 
 
-2008-08-28T16:34:30.000000Z
-2b4fd6351fc823751713cea3656381d6
-2008-02-12T22:28:42.477264Z
-1423
+2009-02-27T01:07:38.000000Z
+104a97e779aac1edac59a9d602914646
+2008-09-19T14:29:48.407829Z
+1530
 joehni
 has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+7912
 
 Dom4JWriterTest.java
 file
@@ -164,19 +206,6 @@ file
 
 2008-08-28T16:34:30.000000Z
 86073371323f1071b0c1e13c1a200f68
-2007-12-11T01:50:12.145301Z
-1345
-joehni
-has-props
-
-DomWriterTest.java
-file
-
-
-
-
-2008-08-28T16:34:30.000000Z
-bf86826bc6e8e3176ad1d0ac2b6e9b75
 2007-12-11T01:50:12.145301Z
 1345
 joehni
@@ -194,6 +223,40 @@ file
 1345
 joehni
 has-props
+
+DomWriterTest.java
+file
+
+
+
+
+2009-02-27T01:07:38.000000Z
+a4447294b5f890a787f18a9b03135872
+2008-09-19T14:29:48.407829Z
+1530
+joehni
+has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+2148
 
 AbstractXMLWriterTest.java
 file
@@ -318,12 +381,33 @@ file
 
 
 
-2008-08-28T16:34:30.000000Z
-11232bcee5eebf5013516ffbf7e7778b
-2007-12-11T01:50:12.145301Z
-1345
+2009-02-27T01:07:38.000000Z
+d8bfe98c1bd5c360492342396e5a25a5
+2008-09-19T14:29:48.407829Z
+1530
 joehni
 has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+2126
 
 Dom4JXmlWriterTest.java
 file

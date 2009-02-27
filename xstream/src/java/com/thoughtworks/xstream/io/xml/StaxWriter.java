@@ -21,7 +21,7 @@ import javax.xml.stream.XMLStreamWriter;
  * A stream writing that outputs to a StAX stream writer
  *
  * @author James Strachan
- * @version $Revision: 1388 $
+ * @version $Revision: 1466 $
  */
 public class StaxWriter extends AbstractXmlWriter {
     
@@ -180,6 +180,14 @@ public class StaxWriter extends AbstractXmlWriter {
      */
     public boolean isNamespaceRepairingMode() {
         return namespaceRepairingMode;
+    }
+
+    protected QNameMap getQNameMap() {
+        return this.qnameMap;
+    }
+
+    protected XMLStreamWriter getXMLStreamWriter() {
+        return this.out;
     }
 
 }

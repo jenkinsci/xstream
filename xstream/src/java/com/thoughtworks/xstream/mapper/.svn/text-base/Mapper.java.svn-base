@@ -69,7 +69,7 @@ public interface Mapper {
     String attributeForEnumType();
 
     /**
-     * Get the alias for an attrbute's name.
+     * Get the alias for an attribute's name.
      * 
      * @param attribute the attribute
      * @return the alias
@@ -78,13 +78,22 @@ public interface Mapper {
     String aliasForAttribute(String attribute);
 
     /**
-     * Get the attribut's name for an alias.
+     * Get the attribute's name for an alias.
      * 
      * @param alias the alias
      * @return the attribute's name
      * @since 1.2
      */
     String attributeForAlias(String alias);
+
+    /**
+     * Get the alias for a system attribute's name.
+     * 
+     * @param attribute the system attribute
+     * @return the alias
+     * @since 1.3.1
+     */
+    String aliasForSystemAttribute(String attribute);
 
     /**
      * Get the name of the field that acts as the default collection for an object, or return null if there is none.
@@ -123,7 +132,7 @@ public interface Mapper {
     SingleValueConverter getConverterFromItemType(Class type);
 
     /**
-     * @deprecated since 1.3, use {@link #getConverterFromAttribute(Class, String)}
+     * @deprecated since 1.3, use {@link #getConverterFromAttribute(Class, String, Class)}
      */
     SingleValueConverter getConverterFromAttribute(String name);
 
@@ -170,7 +179,17 @@ public interface Mapper {
      * 
      * @param definedIn the field's parent
      * @param attribute the attribute name
-     * @since 1.2.2
+     * @deprecated since 1.3.1, use {@link #getConverterFromAttribute(Class, String, Class)} 
      */
     SingleValueConverter getConverterFromAttribute(Class definedIn, String attribute);
+
+    /**
+     * Returns which converter to use for an specific attribute in a type.
+     * 
+     * @param definedIn the field's parent
+     * @param attribute the attribute name
+     * @param type the type the converter should create
+     * @since 1.3.1
+     */
+    SingleValueConverter getConverterFromAttribute(Class definedIn, String attribute, Class type);
 }

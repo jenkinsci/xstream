@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -20,7 +20,6 @@ import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Convenience wrapper to invoke special serialization methods on objects (and perform reflection caching).
@@ -29,7 +28,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class SerializationMethodInvoker {
 
-    private Map cache = new ConcurrentHashMap();
+    private Map cache = Collections.synchronizedMap(new HashMap());
     private static final Object NO_METHOD = new Object();
     private static final Object[] EMPTY_ARGS = new Object[0];
 
@@ -105,11 +104,22 @@ public class SerializationMethodInvoker {
         }
     }
 
-    private Method getMethod(Class type, String name, Class[] parameterTypes, boolean includeBaseclasses) {
-        Object key = type.getName() + "." + name + "." + includeBaseclasses;
-        if (cache.containsKey(key)) {
-            Object result = cache.get(key);
-            return (Method) (result == NO_METHOD ? null : result);
+    private Method getMethod(Class type, String name, Class[] parameterTypes,
+        boolean includeBaseclasses) {
+        final String typeName = type.getName();
+        StringBuffer sb = new StringBuffer(typeName.length() + name.length() + 7);
+        sb
+            .append(typeName)
+            .append('.')
+            .append(name)
+            .append('.')
+            .append(includeBaseclasses)
+            .toString();
+        String key = sb.toString();
+        Object resultOb = cache.get(key);
+
+        if (resultOb != null) {
+            return (resultOb == NO_METHOD) ? null : ((Method)resultOb);
         }
         if (includeBaseclasses) {
             while (type != null) {

@@ -1,17 +1,23 @@
 K 25
 svn:wc:ra_dav:version-url
-V 89
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/xstream/io/json
+V 91
+/xstream/!svn/ver/1631/tags/XSTREAM_1_3_1/xstream/src/test/com/thoughtworks/xstream/io/json
 END
 JsonHierarchicalStreamDriverTest.java
 K 25
 svn:wc:ra_dav:version-url
+V 129
+/xstream/!svn/ver/1631/tags/XSTREAM_1_3_1/xstream/src/test/com/thoughtworks/xstream/io/json/JsonHierarchicalStreamDriverTest.java
+END
+JsonWriterModeDroppingRootTest.java
+K 25
+svn:wc:ra_dav:version-url
 V 127
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/xstream/io/json/JsonHierarchicalStreamDriverTest.java
+/xstream/!svn/ver/1631/tags/XSTREAM_1_3_1/xstream/src/test/com/thoughtworks/xstream/io/json/JsonWriterModeDroppingRootTest.java
 END
 JettisonMappedXmlDriverTest.java
 K 25
 svn:wc:ra_dav:version-url
-V 122
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/xstream/io/json/JettisonMappedXmlDriverTest.java
+V 124
+/xstream/!svn/ver/1631/tags/XSTREAM_1_3_1/xstream/src/test/com/thoughtworks/xstream/io/json/JettisonMappedXmlDriverTest.java
 END

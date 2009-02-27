@@ -57,7 +57,13 @@ public class DefaultMapper implements Mapper {
 
     public Class realClass(String elementName) {
         try {
-            return classLoader.loadClass(elementName);
+            if (elementName.charAt(0) != '[') {
+                return classLoader.loadClass(elementName);
+            } else if (elementName.endsWith(";")) {
+                return Class.forName(elementName.toString(), false, classLoader);
+            } else { 
+                return Class.forName(elementName.toString());
+            }
         } catch (ClassNotFoundException e) {
             throw new CannotResolveClassException(elementName + " : " + e.getMessage());
         }
@@ -103,6 +109,10 @@ public class DefaultMapper implements Mapper {
         return alias;
     }
 
+    public String aliasForSystemAttribute(String attribute) {
+        return attribute;
+    }
+
     public boolean isImmutableValueType(Class type) {
         return false;
     }
@@ -140,7 +150,7 @@ public class DefaultMapper implements Mapper {
     }
 
     /**
-     * @deprecated since 1.3, use {@link #getConverterFromAttribute(Class, String)}
+     * @deprecated since 1.3, use {@link #getConverterFromAttribute(Class, String, Class)}
      */
     public SingleValueConverter getConverterFromAttribute(String name) {
         return null;
@@ -187,7 +197,14 @@ public class DefaultMapper implements Mapper {
         return alias;
     }
 
-    public SingleValueConverter getConverterFromAttribute(Class type, String attribute) {
+    /**
+     * @deprecated since 1.3.1, use {@link #getConverterFromAttribute(Class, String, Class)} 
+     */
+    public SingleValueConverter getConverterFromAttribute(Class definedIn, String attribute) {
+        return null;
+    }
+
+    public SingleValueConverter getConverterFromAttribute(Class definedIn, String attribute, Class type) {
         return null;
     }
 }

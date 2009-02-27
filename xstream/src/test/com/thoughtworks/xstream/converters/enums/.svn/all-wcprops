@@ -1,53 +1,17 @@
 K 25
 svn:wc:ra_dav:version-url
-V 98
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/xstream/converters/enums
+V 100
+/xstream/!svn/ver/1631/tags/XSTREAM_1_3_1/xstream/src/test/com/thoughtworks/xstream/converters/enums
 END
-BigEnum.java
+EnumCustomConverterTest.java
 K 25
 svn:wc:ra_dav:version-url
-V 111
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/xstream/converters/enums/BigEnum.java
-END
-EnumSetConverterTest.java
-K 25
-svn:wc:ra_dav:version-url
-V 124
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/xstream/converters/enums/EnumSetConverterTest.java
+V 129
+/xstream/!svn/ver/1631/tags/XSTREAM_1_3_1/xstream/src/test/com/thoughtworks/xstream/converters/enums/EnumCustomConverterTest.java
 END
 EnumMapperTest.java
 K 25
 svn:wc:ra_dav:version-url
-V 118
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/xstream/converters/enums/EnumMapperTest.java
-END
-Fruit.java
-K 25
-svn:wc:ra_dav:version-url
-V 109
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/xstream/converters/enums/Fruit.java
-END
-EnumMapConverterTest.java
-K 25
-svn:wc:ra_dav:version-url
-V 124
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/xstream/converters/enums/EnumMapConverterTest.java
-END
-PolymorphicEnum.java
-K 25
-svn:wc:ra_dav:version-url
-V 119
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/xstream/converters/enums/PolymorphicEnum.java
-END
-EnumConverterTest.java
-K 25
-svn:wc:ra_dav:version-url
-V 121
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/xstream/converters/enums/EnumConverterTest.java
-END
-SimpleEnum.java
-K 25
-svn:wc:ra_dav:version-url
-V 114
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/xstream/converters/enums/SimpleEnum.java
+V 120
+/xstream/!svn/ver/1631/tags/XSTREAM_1_3_1/xstream/src/test/com/thoughtworks/xstream/converters/enums/EnumMapperTest.java
 END

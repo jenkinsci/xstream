@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -13,6 +13,7 @@ package com.thoughtworks.xstream.core;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.ConverterLookup;
 import com.thoughtworks.xstream.core.util.FastStack;
@@ -20,7 +21,7 @@ import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.mapper.Mapper;
 
 /**
- * Abstract base class for a TreeUnmarshaller, that resolves refrences.
+ * Abstract base class for a TreeUnmarshaller, that resolves references.
  * 
  * @author Joe Walnes
  * @author J&ouml;rg Schaible
@@ -46,19 +47,26 @@ public abstract class AbstractReferenceUnmarshaller extends TreeUnmarshaller {
                 }
             }
         }
-        String reference = reader.getAttribute(getMapper().aliasForAttribute("reference"));
+        final Object result;
+        String attributeName = getMapper().aliasForSystemAttribute("reference");
+        String reference = attributeName == null ? null : reader.getAttribute(attributeName);
         if (reference != null) {
-            return values.get(getReferenceKey(reference));
+            result = values.get(getReferenceKey(reference));
+            if (result == null) {
+                final ConversionException ex = new ConversionException("Invalid reference");
+                ex.add("reference", reference);
+                throw ex;
+            }
         } else {
             Object currentReferenceKey = getCurrentReferenceKey();
             parentStack.push(currentReferenceKey);
-            Object result = super.convert(parent, type, converter);
-            if (currentReferenceKey != null) {
+            result = super.convert(parent, type, converter);
+            if (currentReferenceKey != null && result != null) {
                 values.put(currentReferenceKey, result);
             }
             parentStack.popSilently();
-            return result;
         }
+        return result;
     }
     
     protected abstract Object getReferenceKey(String reference);

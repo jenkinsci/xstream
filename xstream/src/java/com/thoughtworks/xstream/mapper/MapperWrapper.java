@@ -90,6 +90,10 @@ public abstract class MapperWrapper implements Mapper {
         return wrapped.attributeForAlias(alias);
     }
 
+    public String aliasForSystemAttribute(String attribute) {
+        return wrapped.aliasForSystemAttribute(attribute);
+    }
+
     public String getFieldNameForItemTypeAndName(Class definedIn, Class itemType, String itemFieldName) {
         return wrapped.getFieldNameForItemTypeAndName(definedIn, itemType, itemFieldName);
     }
@@ -121,7 +125,7 @@ public abstract class MapperWrapper implements Mapper {
     }
 
     /**
-     * @deprecated since 1.3, use {@link #getConverterFromAttribute(Class, String)}
+     * @deprecated since 1.3, use {@link #getConverterFromAttribute(Class, String, Class)}
      */
     public SingleValueConverter getConverterFromAttribute(String name) {
         return wrapped.getConverterFromAttribute(name);
@@ -153,8 +157,15 @@ public abstract class MapperWrapper implements Mapper {
     	return wrapped.attributeForAlias(definedIn, alias);
     }
     
+    /**
+     * @deprecated since 1.3.1, use {@link #getConverterFromAttribute(Class, String, Class)} 
+     */
     public SingleValueConverter getConverterFromAttribute(Class type, String attribute) {
     	return wrapped.getConverterFromAttribute(type, attribute);
+    }
+    
+    public SingleValueConverter getConverterFromAttribute(Class definedIn, String attribute, Class type) {
+        return wrapped.getConverterFromAttribute(definedIn, attribute, type);
     }
 
 }

@@ -1,14 +1,14 @@
-8
+9
 
 dir
-1494
-http://svn.codehaus.org/xstream/tags/XSTREAM_1_3/xstream-benchmark/src/test/com/thoughtworks/xstream/benchmark/xmlfriendly
+1642
+http://svn.codehaus.org/xstream/tags/XSTREAM_1_3_1/xstream-benchmark/src/test/com/thoughtworks/xstream/benchmark/xmlfriendly
 http://svn.codehaus.org/xstream
 
 
 
-2008-02-26T16:07:20.536377Z
-1446
+2008-10-21T18:06:17.307868Z
+1568
 joehni
 
 
@@ -44,10 +44,31 @@ file
 
 
 
-2008-08-28T16:34:34.000000Z
-89ade100b7c4ea4931460a005883897d
-2007-12-11T22:18:41.322407Z
-1347
+2009-02-27T01:07:40.000000Z
+6172667a059692487856285bf4f83dcb
+2008-10-21T18:06:17.307868Z
+1568
 joehni
 has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+9079
 

@@ -1,53 +1,17 @@
 K 25
 svn:wc:ra_dav:version-url
-V 96
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/acceptance/annotations
-END
-AttributesTest.java
-K 25
-svn:wc:ra_dav:version-url
-V 116
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/acceptance/annotations/AttributesTest.java
-END
-ImplicitCollectionTest.java
-K 25
-svn:wc:ra_dav:version-url
-V 124
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/acceptance/annotations/ImplicitCollectionTest.java
-END
-AliasTest.java
-K 25
-svn:wc:ra_dav:version-url
-V 111
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/acceptance/annotations/AliasTest.java
+V 98
+/xstream/!svn/ver/1631/tags/XSTREAM_1_3_1/xstream/src/test/com/thoughtworks/acceptance/annotations
 END
 FieldConverterTest.java
 K 25
 svn:wc:ra_dav:version-url
-V 120
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/acceptance/annotations/FieldConverterTest.java
-END
-XStream12AnnotationCompatibilityTest.java
-K 25
-svn:wc:ra_dav:version-url
-V 138
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/acceptance/annotations/XStream12AnnotationCompatibilityTest.java
-END
-OmitFieldTest.java
-K 25
-svn:wc:ra_dav:version-url
-V 115
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/acceptance/annotations/OmitFieldTest.java
+V 122
+/xstream/!svn/ver/1631/tags/XSTREAM_1_3_1/xstream/src/test/com/thoughtworks/acceptance/annotations/FieldConverterTest.java
 END
 AnnotationsTest.java
 K 25
 svn:wc:ra_dav:version-url
-V 117
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/acceptance/annotations/AnnotationsTest.java
-END
-ClassConverterTest.java
-K 25
-svn:wc:ra_dav:version-url
-V 120
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/acceptance/annotations/ClassConverterTest.java
+V 119
+/xstream/!svn/ver/1631/tags/XSTREAM_1_3_1/xstream/src/test/com/thoughtworks/acceptance/annotations/AnnotationsTest.java
 END

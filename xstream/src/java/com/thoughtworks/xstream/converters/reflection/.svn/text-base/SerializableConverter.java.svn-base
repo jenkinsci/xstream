@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -30,6 +30,7 @@ import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.core.util.CustomObjectInputStream;
 import com.thoughtworks.xstream.core.util.CustomObjectOutputStream;
+import com.thoughtworks.xstream.core.util.HierarchicalStreams;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.ExtendedHierarchicalStreamWriterHelper;
@@ -83,7 +84,10 @@ public class SerializableConverter extends AbstractReflectionConverter {
     }
 
     public void doMarshal(final Object source, final HierarchicalStreamWriter writer, final MarshallingContext context) {
-        writer.addAttribute(mapper.aliasForAttribute(ATTRIBUTE_SERIALIZATION), ATTRIBUTE_VALUE_CUSTOM);
+        String attributeName = mapper.aliasForSystemAttribute(ATTRIBUTE_SERIALIZATION);
+        if (attributeName != null) {
+            writer.addAttribute(attributeName, ATTRIBUTE_VALUE_CUSTOM);
+        }
 
         // this is an array as it's a non final value that's accessed from an anonymous inner class.
         final Class[] currentType = new Class[1];
@@ -120,7 +124,10 @@ public class SerializableConverter extends AbstractReflectionConverter {
                     if (value != null) {
                         ExtendedHierarchicalStreamWriterHelper.startNode(writer, mapper.serializedMember(source.getClass(), name), field.getType());
                         if (field.getType() != value.getClass() && !field.getType().isPrimitive()) {
-                            writer.addAttribute(mapper.aliasForAttribute(ATTRIBUTE_CLASS), mapper.serializedClass(value.getClass()));
+                            String attributeName = mapper.aliasForSystemAttribute(ATTRIBUTE_CLASS);
+                            if (attributeName != null) {
+                                writer.addAttribute(attributeName, mapper.serializedClass(value.getClass()));
+                            }
                         }
                         context.convertAnother(value);
                         writer.endNode();
@@ -160,7 +167,10 @@ public class SerializableConverter extends AbstractReflectionConverter {
                         Class actualType = value.getClass();
                         Class defaultType = mapper.defaultImplementationOf(field.getType());
                         if (!actualType.equals(defaultType)) {
-                            writer.addAttribute(mapper.aliasForAttribute(ATTRIBUTE_CLASS), mapper.serializedClass(actualType));
+                            String attributeName = mapper.aliasForSystemAttribute(ATTRIBUTE_CLASS);
+                            if (attributeName != null) {
+                                writer.addAttribute(attributeName, mapper.serializedClass(actualType));
+                            }
                         }
 
                         context.convertAnother(value);
@@ -266,14 +276,15 @@ public class SerializableConverter extends AbstractReflectionConverter {
         // this is an array as it's a non final value that's accessed from an anonymous inner class.
         final Class[] currentType = new Class[1];
 
-        if (!ATTRIBUTE_VALUE_CUSTOM.equals(reader.getAttribute(mapper.aliasForAttribute(ATTRIBUTE_SERIALIZATION)))) {
+        String attributeName = mapper.aliasForSystemAttribute(ATTRIBUTE_SERIALIZATION);
+        if (attributeName != null && !ATTRIBUTE_VALUE_CUSTOM.equals(reader.getAttribute(attributeName))) {
             throw new ConversionException("Cannot deserialize object with new readObject()/writeObject() methods");
         }
 
         CustomObjectInputStream.StreamCallback callback = new CustomObjectInputStream.StreamCallback() {
             public Object readFromStream() {
                 reader.moveDown();
-                Class type = mapper.realClass(reader.getNodeName());
+                Class type = HierarchicalStreams.readClassType(reader, mapper);
                 Object value = context.convertAnother(result, type);
                 reader.moveUp();
                 return value;
@@ -302,10 +313,10 @@ public class SerializableConverter extends AbstractReflectionConverter {
                         reader.moveDown();
                         String name = mapper.realMember(currentType[0], reader.getNodeName());
                         if (mapper.shouldSerializeMember(currentType[0], name)) {
-                            String typeName = reader.getAttribute(mapper.aliasForAttribute(ATTRIBUTE_CLASS));
+        		    String classAttribute = HierarchicalStreams.readClassAttribute(reader, mapper);
                             Class type;
-                            if (typeName != null) {
-                                type = mapper.realClass(typeName);
+                            if (classAttribute != null) {
+                                type = mapper.realClass(classAttribute);
                             } else {
                                 ObjectStreamField field = objectStreamClass.getField(name);
                                 if (field == null) {
@@ -340,7 +351,7 @@ public class SerializableConverter extends AbstractReflectionConverter {
 
                     String fieldName = mapper.realMember(currentType[0], reader.getNodeName());
                     if (mapper.shouldSerializeMember(currentType[0], fieldName)) {
-                        String classAttribute = reader.getAttribute(mapper.aliasForAttribute(ATTRIBUTE_CLASS));
+                        String classAttribute = HierarchicalStreams.readClassAttribute(reader, mapper);
                         final Class type;
                         if (classAttribute != null) {
                             type = mapper.realClass(classAttribute);
@@ -380,7 +391,12 @@ public class SerializableConverter extends AbstractReflectionConverter {
             if (nodeName.equals(ELEMENT_UNSERIALIZABLE_PARENTS)) {
                 super.doUnmarshal(result, reader, context);
             } else {
-                currentType[0] = mapper.defaultImplementationOf(mapper.realClass(nodeName));
+        	String classAttribute = HierarchicalStreams.readClassAttribute(reader, mapper);
+                if (classAttribute == null) {
+                    currentType[0] = mapper.defaultImplementationOf(mapper.realClass(nodeName));
+                } else {
+                    currentType[0] = mapper.realClass(classAttribute);
+                }
                 if (serializationMethodInvoker.supportsReadObject(currentType[0], false)) {
                     CustomObjectInputStream objectInputStream = CustomObjectInputStream.getInstance(context, callback);
                     serializationMethodInvoker.callReadObject(currentType[0], result, objectInputStream);

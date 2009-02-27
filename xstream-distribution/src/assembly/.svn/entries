@@ -1,8 +1,8 @@
-8
+9
 
 dir
-1494
-http://svn.codehaus.org/xstream/tags/XSTREAM_1_3/xstream-distribution/src/assembly
+1642
+http://svn.codehaus.org/xstream/tags/XSTREAM_1_3_1/xstream-distribution/src/assembly
 http://svn.codehaus.org/xstream
 
 
@@ -32,7 +32,7 @@ file
 
 
 
-2008-09-19T13:56:32.000000Z
+2008-08-28T16:34:21.000000Z
 15f1ff29eef3fff1c3b672089b05a7cd
 2007-12-11T22:18:41.322407Z
 1347
@@ -45,7 +45,7 @@ file
 
 
 
-2008-09-19T13:56:32.000000Z
+2008-08-28T16:34:21.000000Z
 78c3a0beba1586d7e56a4aef63385195
 2007-12-11T22:18:41.322407Z
 1347

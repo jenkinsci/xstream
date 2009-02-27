@@ -30,30 +30,37 @@ import java.util.WeakHashMap;
  * @author Joe Walnes
  * @author J&ouml;rg Schaible
  */
-public class EnumMapper extends AttributeMapper {
+public class EnumMapper extends MapperWrapper {
 
-    private transient Map enumConverterMap = new WeakHashMap();
-
-    public EnumMapper(Mapper wrapped, ConverterLookup converterLookup) {
-        super(wrapped, converterLookup);
-    }
+    private transient AttributeMapper attributeMapper;
+    private transient Map enumConverterMap;
+    private final ConverterLookup converterLookup;
 
     /**
-     * @deprecated since 1.3, use {@link #EnumMapper(Mapper, ConverterLookup)}
+     * @deprecated since 1.3.1, use {@link #EnumMapper(Mapper)}
      */
+    public EnumMapper(Mapper wrapped, ConverterLookup lookup) {
+        super(wrapped);
+        this.converterLookup = lookup;
+        readResolve();
+    }
+
     @Deprecated
     public EnumMapper(Mapper wrapped) {
-        super(wrapped, null);
+        super(wrapped);
+        this.converterLookup = null;
+        readResolve();
     }
 
     /**
-     * @deprecated since 1.2, use {@link #EnumMapper(Mapper, ConverterLookup))}
+     * @deprecated since 1.2, use {@link #EnumMapper(Mapper))}
      */
     @Deprecated
     public EnumMapper(ClassMapper wrapped) {
-        this((Mapper)wrapped, null);
+        this((Mapper)wrapped);
     }
 
+    @Override
     public String serializedClass(Class type) {
         if (type == null) {
             return super.serializedClass(type);
@@ -67,26 +74,52 @@ public class EnumMapper extends AttributeMapper {
         }
     }
 
+    @Override
     public boolean isImmutableValueType(Class type) {
         return (Enum.class.isAssignableFrom(type)) || super.isImmutableValueType(type);
     }
 
-    protected SingleValueConverter getLocalConverterFromItemType(Class type) {
-        if (Enum.class.isAssignableFrom(type)) {
+    @Override
+    public SingleValueConverter getConverterFromItemType(String fieldName, Class type,
+        Class definedIn) {
+        SingleValueConverter converter = getLocalConverter(fieldName, type, definedIn);
+        return converter == null
+            ? super.getConverterFromItemType(fieldName, type, definedIn)
+            : converter;
+    }
+
+    @Override
+    public SingleValueConverter getConverterFromAttribute(Class definedIn, String attribute,
+        Class type) {
+        SingleValueConverter converter = getLocalConverter(attribute, type, definedIn);
+        return converter == null
+            ? super.getConverterFromAttribute(definedIn, attribute, type)
+            : converter;
+    }
+
+    private SingleValueConverter getLocalConverter(String fieldName, Class type, Class definedIn) {
+        if (attributeMapper != null
+            && Enum.class.isAssignableFrom(type)
+            && attributeMapper.shouldLookForSingleValueConverter(fieldName, type, definedIn)) {
             synchronized (enumConverterMap) {
-                SingleValueConverter singleValueConverter = (SingleValueConverter)enumConverterMap.get(type);
+                SingleValueConverter singleValueConverter = (SingleValueConverter)enumConverterMap
+                    .get(type);
                 if (singleValueConverter == null) {
-                    singleValueConverter = new EnumSingleValueConverter(type);
+                    singleValueConverter = super.getConverterFromItemType(fieldName, type, definedIn);
+                    if (singleValueConverter == null) {
+                        singleValueConverter = new EnumSingleValueConverter(type);
+                    }
                     enumConverterMap.put(type, singleValueConverter);
                 }
                 return singleValueConverter;
             }
         }
-        return super.getLocalConverterFromItemType(type);
+        return null;
     }
 
     private Object readResolve() {
         this.enumConverterMap = new WeakHashMap();
+        this.attributeMapper = (AttributeMapper)lookupMapperOfType(AttributeMapper.class);
         return this;
     }
 }

@@ -1,53 +1,35 @@
 K 25
 svn:wc:ra_dav:version-url
-V 121
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream-benchmark/src/test/com/thoughtworks/xstream/benchmark/xmlfriendly/product
+V 123
+/xstream/!svn/ver/1631/tags/XSTREAM_1_3_1/xstream-benchmark/src/test/com/thoughtworks/xstream/benchmark/xmlfriendly/product
 END
 AbstractXmlFriendlyReplacer.java
 K 25
 svn:wc:ra_dav:version-url
-V 154
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream-benchmark/src/test/com/thoughtworks/xstream/benchmark/xmlfriendly/product/AbstractXmlFriendlyReplacer.java
+V 156
+/xstream/!svn/ver/1631/tags/XSTREAM_1_3_1/xstream-benchmark/src/test/com/thoughtworks/xstream/benchmark/xmlfriendly/product/AbstractXmlFriendlyReplacer.java
 END
-XStream122Replacer.java
+CachingIterativeAppenderWithShortcut.java
 K 25
 svn:wc:ra_dav:version-url
-V 145
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream-benchmark/src/test/com/thoughtworks/xstream/benchmark/xmlfriendly/product/XStream122Replacer.java
+V 165
+/xstream/!svn/ver/1631/tags/XSTREAM_1_3_1/xstream-benchmark/src/test/com/thoughtworks/xstream/benchmark/xmlfriendly/product/CachingIterativeAppenderWithShortcut.java
 END
-CombinedLookupReplacer.java
+IterativeAppenderWithShortcut.java
 K 25
 svn:wc:ra_dav:version-url
-V 149
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream-benchmark/src/test/com/thoughtworks/xstream/benchmark/xmlfriendly/product/CombinedLookupReplacer.java
-END
-CombinedLookupAppender.java
-K 25
-svn:wc:ra_dav:version-url
-V 149
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream-benchmark/src/test/com/thoughtworks/xstream/benchmark/xmlfriendly/product/CombinedLookupAppender.java
+V 158
+/xstream/!svn/ver/1631/tags/XSTREAM_1_3_1/xstream-benchmark/src/test/com/thoughtworks/xstream/benchmark/xmlfriendly/product/IterativeAppenderWithShortcut.java
 END
 IterativeReplacer.java
 K 25
 svn:wc:ra_dav:version-url
-V 144
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream-benchmark/src/test/com/thoughtworks/xstream/benchmark/xmlfriendly/product/IterativeReplacer.java
-END
-NoReplacer.java
-K 25
-svn:wc:ra_dav:version-url
-V 137
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream-benchmark/src/test/com/thoughtworks/xstream/benchmark/xmlfriendly/product/NoReplacer.java
+V 146
+/xstream/!svn/ver/1631/tags/XSTREAM_1_3_1/xstream-benchmark/src/test/com/thoughtworks/xstream/benchmark/xmlfriendly/product/IterativeReplacer.java
 END
 IterativeAppender.java
 K 25
 svn:wc:ra_dav:version-url
-V 144
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream-benchmark/src/test/com/thoughtworks/xstream/benchmark/xmlfriendly/product/IterativeAppender.java
-END
-SeparateLookupReplacer.java
-K 25
-svn:wc:ra_dav:version-url
-V 149
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream-benchmark/src/test/com/thoughtworks/xstream/benchmark/xmlfriendly/product/SeparateLookupReplacer.java
+V 146
+/xstream/!svn/ver/1631/tags/XSTREAM_1_3_1/xstream-benchmark/src/test/com/thoughtworks/xstream/benchmark/xmlfriendly/product/IterativeAppender.java
 END

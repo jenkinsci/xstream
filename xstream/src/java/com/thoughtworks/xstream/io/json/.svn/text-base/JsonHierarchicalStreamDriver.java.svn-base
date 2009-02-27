@@ -24,10 +24,13 @@ import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 
 /**
+ * A driver for JSON that writes optimized JSON format, but is not able to deserialize the result.
+ * 
  * @author Paul Hammant
  * @since 1.2
  */
 public class JsonHierarchicalStreamDriver implements HierarchicalStreamDriver {
+    
     public HierarchicalStreamReader createReader(Reader in) {
         throw new UnsupportedOperationException("The JsonHierarchicalStreamDriver can only write JSON");
     }
@@ -36,8 +39,11 @@ public class JsonHierarchicalStreamDriver implements HierarchicalStreamDriver {
         throw new UnsupportedOperationException("The JsonHierarchicalStreamDriver can only write JSON");
     }
 
+    /**
+     * Create a HierarchicalStreamWriter that writes JSON.
+     */
     public HierarchicalStreamWriter createWriter(Writer out) {
-        return new JsonHierarchicalStreamWriter(out);
+        return new JsonWriter(out);
     }
 
     public HierarchicalStreamWriter createWriter(OutputStream out) {

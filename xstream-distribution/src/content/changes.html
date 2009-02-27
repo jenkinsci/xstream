@@ -28,11 +28,82 @@
 	<a href="http://jira.codehaus.org/browse/XSTR?report=com.atlassian.jira.plugin.system.project:changelog-panel">Change Log</a>.
 	</p>
  
-<!--
+ <!--
     <h1 id="Upcoming">Upcoming</h1>
 
     <p>Not yet released</p>
 -->
+
+    <h1 id="1.3.1">1.3.1</h1>
+
+    <p>Released 6 December 2008.</p>
+    
+    <p class="highlight">CGLIB support must be explicitly activated now. The decision has been made due to possible problems using an own
+    classloader and because of ongoing complaints about occurring exceptions in the CGLIBEnhancedConverter at XStream initialization although
+    they are caused by incompatible ASM versions on the user's classpath (JIRA:XSTR-469, JIRA:XSTR-513 and JIRA:XSTR-518).</p>
+    
+    <p class="highlight">XStream uses some attributes on its own. Until now it was possible to use XStream.aliasAttribute to define a different
+    name. This does still work but is deprecated for system attributes. Use the new call XStream.aliasSystemAttribute for such an alias.</p>
+
+    <h2>Major changes</h2>
+
+    <ul>
+    	<li>JIRA:XSTR-515: CGLIB support is no longer activated automatically and has to be 
+    	<a href="faq.html#Serialization_CGLIB">explicitly turned on</a>.</li>
+    	<li>JIRA:XSTR-448: Separated system attributes and user defined attributes for aliases.</li>
+    	<li>JIRA:XSTR-55: Ability to alias a package name.</li>
+    	<li>JIRA:XSTR-434: New JsonWriter instead of JsonHierarchicalStreamWriter with mode to strip root node of generated JSON (by Paul Hammant).</li>
+    	<li>Support for Diablo JDK on FreeBSD (by Reto Bachmann-Gm&uuml;r).</li>
+    	<li>JIRA:XSTR-495: New PersistenceStrategy instead of StreamStrategy (based on the code and comments by Alexander Radzin).</li>
+    </ul>
+
+    <h2>Minor changes</h2>
+
+    <ul>
+    	<li>Support special Jettison functionality for JSON to detect collections or arrays with one element introduced with Jettison 1.0.</li>
+    	<li>JIRA:XSTR-493: Using attributes for fields with XML-unfriendly names results in NPE at deserialization.</li>
+    	<li>JIRA:XSTR-497: Unsafe operation with WeakHashMap can raise a NPE in Sun14ReflectionProvider.</li>
+    	<li>JIRA:XSTR-423: Support of CGLIB enhanced proxies with multiple callbacks if the proxy uses a factory (CGLIB default).</li>
+    	<li>JIRA:XSTR-536: XStream silently ignores unknown elements.</li>
+    	<li>JIRA:XSTR-503: Omitted properties in JavaBeans are requested at serialization (by Kevin Conaway).</li>
+    	<li>Fix possible memory leak in ObjectIdMap for JVMs that provide real distinct identity hash codes (happened on amd64 system).</li>
+    	<li>JIRA:XSTR-480: Aliasing of array types.</li>
+    	<li>JIRA:XSTR-515: The SubjectConverter and DurationConverter are only registered if the converted class is part of the JDK, 
+    	otherwise they must be registered now explicitly.</li>
+    	<li>JIRA:XSTR-504: XmlHeaderAwareReader fails with improper sized PushbackInputStream.</li>
+    	<li>JIRA:XSTR-489: @XStreamConverter supports now also SingleValueConverter implementations.</li>
+    	<li>JIRA:XSTR-481: @XStreamConverter and @XStreamAsAttribute can be used together (as a result of JIRA:XSTR-489).</li>
+    	<li>JIRA:XSTR-519: New annotation @XStreamInclude to force annotation detection of included types (by Seven Sparling).</li>
+    	<li>JIRA:XSTR-469: Support custom converters for enum types.</li>
+    	<li>JIRA:XSTR-502: ClassNotFoundException even if writeReplace returns proper object.</li>
+    	<li>JIRA:XSTR-529: NullPointerException for null elements in implicit lists.</li>
+    	<li>JIRA:XSTR-517: Miscellaneous performance improvements (by Tatu Saloranta).</li>
+    	<li>JIRA:XSTR-525: JsonHierarchicalStreamDriver writes invalid JSON in case of system attribute.</li>
+    	<li>JIRA:XSTR-535: Mode to allow plain values as result for JSON without root node.</li>
+    	<li>JIRA:XSTR-531: Possibility to omit system attributes.</li>
+    	<li>JIRA:XSTR-508: Fix marshalling error for nested serializable objects with own writeReplace/readResolve methods.</li>
+    	<li>JIRA:XSTR-507: Advanced ReferenceByIdMarshaller uses id of the current object if available.</li>
+    	<li>JIRA:XSTR-485: Check reference for valid object when deserializing.</li>
+    	<li>Fix classloader problem, Xpp3 parser cannot be loaded within a web application.</li>
+    	<li>Dependencies have been updated to latest versions of JDOM, Jettison, Joda Time, and Woodstox. Note for Maven
+    	builds that the <em>groupId</em> of JDOM has changed.</li>
+    	<li>Fix possible IndexOutOfBoundsException creating returning the message for a ConversionException.</li>
+    	<li>JIRA:XSTR-495: StreamStrategy cannot handle key with value <em>null</em>.</li>
+    </ul>
+    
+    <h2>API changes</h2>
+
+    <ul>
+    	<li>Deprecated c.t.x.io.json.JsonHierarchicalStreamWriter in favour of c.t.x.io.json.JsonWriter.</li>
+    	<li>c.t.x.mapper.EnumMapper no longer derives from the c.t.x.mapper.AttributeMapper as it has been before version 1.3. Therefore the new 
+    	constructor has been deprecated in favour of the old one.</li>
+    	<li>c.t.x.mapper.Mapper.getConverterFromAttribute(Class, String) has been deprecated in favour of
+    	c.t.x.mapper.Mapper.getConverterFromAttribute(Class, String, Class) taking the type as third argument that should be handled by the
+    	converter.</li>
+    	<li>c.t.x.core.ReferenceByIdMarshaller.IdGenerator.next() has now the current object as argument.</li>
+    	<li>New c.t.x.persistence.PersistenceStrategy and c.t.x.persistence.FilePersistenceStrategy.</li>
+    	<li>Deprecated c.t.x.persistence.StreamStrategy and c.t.x.persistence.FileStreamStrategy.</li>
+    </ul>
 
     <h1 id="1.3">1.3</h1>
 
@@ -51,7 +122,7 @@
     	in the XML header or use native encoding</li> 
     	<li>JIRA:XSTR-415: JavaBeanConverter uses now BeanIntrospection (by Hinse ter Schuur).</li>
     	<li>JIRA:XSTR-424: DateConverter uses now by default SimpleDateFormat instances in non-lenient mode.</li>
-    	<li>JIRA:XSTR-386: SingleValueConverter that utilizes PropertyEditor implementations (by Jukka Lindstr&ounl;m).</li>
+    	<li>JIRA:XSTR-386: SingleValueConverter that utilizes PropertyEditor implementations (by Jukka Lindstr&ouml;m).</li>
     	<li>JIRA:XSTR-427: Converter for javax.xml.datatype.Duration (by John Kristian).</li>
     	<li>JIRA:XSTR-305: Field alias inheritance (by David Blevins).</li>
     	<li>XStream failed to initialize in environments without AWT or SQL classes.</li>

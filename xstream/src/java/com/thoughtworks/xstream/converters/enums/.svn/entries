@@ -1,14 +1,14 @@
-8
+9
 
 dir
-1494
-http://svn.codehaus.org/xstream/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/converters/enums
+1642
+http://svn.codehaus.org/xstream/tags/XSTREAM_1_3_1/xstream/src/java/com/thoughtworks/xstream/converters/enums
 http://svn.codehaus.org/xstream
 
 
 
-2008-02-26T16:07:07.760163Z
-1445
+2008-11-15T20:00:45.838144Z
+1606
 joehni
 
 
@@ -32,12 +32,33 @@ file
 
 
 
-2008-08-28T16:34:33.000000Z
-71322141948974e25da784dc75bccdfb
-2007-12-11T01:50:12.145301Z
-1345
+2009-02-27T01:07:40.000000Z
+be471713aad679e2f80a61de3a7c1399
+2008-11-15T20:00:45.838144Z
+1606
 joehni
 has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+3982
 
 EnumMapConverter.java
 file
@@ -45,12 +66,33 @@ file
 
 
 
-2008-08-28T16:34:33.000000Z
-637a459e057f0ce210e82d24693078e9
-2007-12-11T01:50:12.145301Z
-1345
+2009-02-27T01:07:40.000000Z
+b5ac16eab688e67f09f59e874ea58c5a
+2008-11-15T20:00:45.838144Z
+1606
 joehni
 has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+3111
 
 EnumSingleValueConverter.java
 file

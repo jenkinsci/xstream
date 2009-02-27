@@ -1,14 +1,14 @@
-8
+9
 
 dir
-1494
-http://svn.codehaus.org/xstream/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/io/xml
+1642
+http://svn.codehaus.org/xstream/tags/XSTREAM_1_3_1/xstream/src/java/com/thoughtworks/xstream/io/xml
 http://svn.codehaus.org/xstream
 
 
 
-2008-02-26T16:07:07.760163Z
-1445
+2008-11-07T15:09:23.627132Z
+1586
 joehni
 
 
@@ -123,12 +123,33 @@ file
 
 
 
-2008-08-28T16:34:32.000000Z
-55037b9effd96cd63dd87cfc72f1d9da
-2007-12-11T01:50:12.145301Z
-1345
+2009-02-27T01:07:39.000000Z
+c191e779998a1ee96d88175e29e549dd
+2008-09-22T09:14:30.821801Z
+1535
 joehni
 has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+1532
 
 Dom4JWriter.java
 file
@@ -208,19 +229,6 @@ d8c7f32c84f2dbe78ead12b502f63f5c
 joehni
 has-props
 
-JDomWriter.java
-file
-
-
-
-
-2008-08-28T16:34:32.000000Z
-8ef2faf54947253f0103908828bd910b
-2007-12-11T01:50:12.145301Z
-1345
-joehni
-has-props
-
 XomReader.java
 file
 
@@ -229,6 +237,19 @@ file
 
 2008-08-28T16:34:32.000000Z
 ee79d777bb1a451a6c10cdbdb18a6085
+2007-12-11T01:50:12.145301Z
+1345
+joehni
+has-props
+
+JDomWriter.java
+file
+
+
+
+
+2008-08-28T16:34:32.000000Z
+8ef2faf54947253f0103908828bd910b
 2007-12-11T01:50:12.145301Z
 1345
 joehni
@@ -286,19 +307,6 @@ file
 joehni
 has-props
 
-DocumentReader.java
-file
-
-
-
-
-2008-08-28T16:34:32.000000Z
-6dbf60ac60f7fc41f6a52fc6d55f8853
-2007-12-11T01:50:12.145301Z
-1345
-joehni
-has-props
-
 PrettyPrintWriter.java
 file
 
@@ -309,6 +317,19 @@ file
 78ded6ced4f56861460185137ba9de43
 2008-02-26T16:07:07.760163Z
 1445
+joehni
+has-props
+
+DocumentReader.java
+file
+
+
+
+
+2008-08-28T16:34:32.000000Z
+6dbf60ac60f7fc41f6a52fc6d55f8853
+2007-12-11T01:50:12.145301Z
+1345
 joehni
 has-props
 
@@ -325,6 +346,40 @@ file
 joehni
 has-props
 
+XmlFriendlyReplacer.java
+file
+
+
+
+
+2009-02-27T01:07:39.000000Z
+f8dcd23f94ec8ebc2b42e4bb4eb87584
+2008-10-21T18:06:17.307868Z
+1568
+joehni
+has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+5507
+
 DocumentWriter.java
 file
 
@@ -338,31 +393,39 @@ file
 joehni
 has-props
 
-XmlFriendlyReplacer.java
-file
-
-
-
-
-2008-08-28T16:34:32.000000Z
-2a90956a9f5c5aa4a7d5167d6f10cdc0
-2007-12-11T01:50:12.145301Z
-1345
-joehni
-has-props
-
 StaxWriter.java
 file
 
 
 
 
-2008-08-28T16:34:32.000000Z
-36e0bce42a5857fda86abcde4e0a3c56
-2008-01-23T23:59:50.140840Z
-1388
+2009-02-27T01:07:39.000000Z
+e6276d4ac6de974250c3343271069777
+2008-04-17T22:38:50.800314Z
+1466
 joehni
 has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+6239
 
 XmlFriendlyReader.java
 file
@@ -390,18 +453,39 @@ a68bf1beecbb0184b02ce6caefb47d23
 joehni
 has-props
 
-XppDomDriver.java
+XppDriver.java
 file
 
 
 
 
-2008-08-28T16:34:32.000000Z
-5f83e605112d7806201a1e189c538686
-2008-02-13T22:27:39.841773Z
-1430
+2009-02-27T01:07:39.000000Z
+fdac14b45e4490d14263828f184626e1
+2008-11-07T15:09:23.627132Z
+1586
 joehni
 has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+2383
 
 CompactWriter.java
 file
@@ -416,14 +500,14 @@ file
 joehni
 has-props
 
-XppDriver.java
+XppDomDriver.java
 file
 
 
 
 
 2008-08-28T16:34:32.000000Z
-d53ed7cd208add74728e3fd67caeab35
+5f83e605112d7806201a1e189c538686
 2008-02-13T22:27:39.841773Z
 1430
 joehni
@@ -490,12 +574,33 @@ file
 
 
 
-2008-08-28T16:34:32.000000Z
-62143f6bce0d63e7087fc1ce3a8b744c
-2007-12-11T01:50:12.145301Z
-1345
+2009-02-27T01:07:39.000000Z
+ac084859b1596770f0ce6cce333e5c41
+2008-09-22T09:14:30.821801Z
+1535
 joehni
 has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+3294
 
 Dom4JXmlWriter.java
 file

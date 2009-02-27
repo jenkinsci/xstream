@@ -16,6 +16,7 @@ import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.SingleValueConverter;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
+import com.thoughtworks.xstream.core.util.HierarchicalStreams;
 import com.thoughtworks.xstream.core.util.Primitives;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
@@ -48,10 +49,14 @@ public abstract class AbstractReflectionConverter implements Converter {
         final Object source = serializationMethodInvoker.callWriteReplace(original);
 
         if (source.getClass() != original.getClass()) {
-            writer.addAttribute(mapper.aliasForAttribute("resolves-to"), mapper.serializedClass(source.getClass()));
+            String attributeName = mapper.aliasForSystemAttribute("resolves-to");
+            if (attributeName != null) {
+                writer.addAttribute(attributeName, mapper.serializedClass(source.getClass()));
+            }
+            context.convertAnother(source);
+        } else {
+            doMarshal(source, writer, context);
         }
-
-        doMarshal(source, writer, context);
     }
 
     protected void doMarshal(final Object source, final HierarchicalStreamWriter writer, final MarshallingContext context) {
@@ -104,37 +109,44 @@ public abstract class AbstractReflectionConverter implements Converter {
                             Collection list = (Collection) newObj;
                             for (Iterator iter = list.iterator(); iter.hasNext();) {
                                 Object obj = iter.next();
-                                writeField(fieldName, mapping.getItemFieldName(), mapping.getItemType(), definedIn, obj);
+                                writeField(fieldName, obj == null ? mapper.serializedClass(null) : mapping.getItemFieldName(), mapping.getItemType(), definedIn, obj);
                             }
                         } else {
                             context.convertAnother(newObj);
                         }
                     } else {
-                        writeField(fieldName, fieldName, fieldType, definedIn, newObj);
+                        writeField(fieldName, null, fieldType, definedIn, newObj);
                     }
                 }
             }
 
             private void writeField(String fieldName, String aliasName, Class fieldType, Class definedIn, Object newObj) {
-                ExtendedHierarchicalStreamWriterHelper.startNode(writer, mapper.serializedMember(source.getClass(), aliasName), fieldType); 
+                ExtendedHierarchicalStreamWriterHelper.startNode(writer, aliasName != null ? aliasName : mapper.serializedMember(source.getClass(), fieldName), fieldType); 
 
-                Class actualType = newObj.getClass();
-
-                Class defaultType = mapper.defaultImplementationOf(fieldType);
-                if (!actualType.equals(defaultType)) {
-                    String serializedClassName = mapper.serializedClass(actualType);
-                    if (!serializedClassName.equals(mapper.serializedClass(defaultType))) {
-                        writer.addAttribute(mapper.aliasForAttribute("class"), serializedClassName);
+                if (newObj != null) {
+                    Class actualType = newObj.getClass();
+                    Class defaultType = mapper.defaultImplementationOf(fieldType);
+                    if (!actualType.equals(defaultType)) {
+                        String serializedClassName = mapper.serializedClass(actualType);
+                        if (!serializedClassName.equals(mapper.serializedClass(defaultType))) {
+                            String attributeName = mapper.aliasForSystemAttribute("class");
+                            if (attributeName != null) {
+                                writer.addAttribute(attributeName, serializedClassName);
+                            }
+                        }
                     }
+    
+                    final Field defaultField = (Field)defaultFieldDefinition.get(fieldName);
+                    if (defaultField.getDeclaringClass() != definedIn) {
+                        String attributeName = mapper.aliasForSystemAttribute("defined-in");
+                        if (attributeName != null) {
+                            writer.addAttribute(attributeName, mapper.serializedClass(definedIn));
+                        }
+                    }
+    
+                    Field field = reflectionProvider.getField(definedIn,fieldName);
+                    marshallField(context, newObj, field);
                 }
-
-                final Field defaultField = (Field)defaultFieldDefinition.get(fieldName);
-                if (defaultField.getDeclaringClass() != definedIn) {
-                    writer.addAttribute(mapper.aliasForAttribute("defined-in"), mapper.serializedClass(definedIn));
-                }
-
-                Field field = reflectionProvider.getField(definedIn,fieldName);
-                marshallField(context, newObj, field);
                 writer.endNode();
             }
 
@@ -166,7 +178,7 @@ public abstract class AbstractReflectionConverter implements Converter {
                 if (Modifier.isTransient(field.getModifiers()) && ! shouldUnmarshalTransientFields()) {
                     continue;
                 }
-                SingleValueConverter converter = mapper.getConverterFromAttribute(field.getDeclaringClass(), attrName);
+                SingleValueConverter converter = mapper.getConverterFromAttribute(field.getDeclaringClass(), attrName, field.getType());
                 Class type = field.getType();
                 if (converter != null) {
                     Object value = converter.fromString(reader.getAttribute(attrAlias));
@@ -238,18 +250,26 @@ public abstract class AbstractReflectionConverter implements Converter {
         return false;
     }
 
-    private Map writeValueToImplicitCollection(UnmarshallingContext context, Object value, Map implicitCollections, Object result, String itemFieldName) {
-        String fieldName = mapper.getFieldNameForItemTypeAndName(context.getRequiredType(), value.getClass(), itemFieldName);
+    private Map writeValueToImplicitCollection(UnmarshallingContext context, Object value,
+        Map implicitCollections, Object result, String itemFieldName) {
+        String fieldName = mapper.getFieldNameForItemTypeAndName(
+            context.getRequiredType(), value != null ? value.getClass() : Mapper.Null.class,
+            itemFieldName);
         if (fieldName != null) {
             if (implicitCollections == null) {
                 implicitCollections = new HashMap(); // lazy instantiation
             }
-            Collection collection = (Collection) implicitCollections.get(fieldName);
+            Collection collection = (Collection)implicitCollections.get(fieldName);
             if (collection == null) {
-                Class fieldType = mapper.defaultImplementationOf(reflectionProvider.getFieldType(result, fieldName, null));
+                Class fieldType = mapper.defaultImplementationOf(reflectionProvider
+                    .getFieldType(result, fieldName, null));
                 if (!Collection.class.isAssignableFrom(fieldType)) {
-                    throw new ObjectAccessException("Field " + fieldName + " of " + result.getClass().getName() +
-                            " is configured for an implicit Collection, but field is of type " + fieldType.getName());
+                    throw new ObjectAccessException("Field "
+                        + fieldName
+                        + " of "
+                        + result.getClass().getName()
+                        + " is configured for an implicit Collection, but field is of type "
+                        + fieldType.getName());
                 }
                 if (pureJavaReflectionProvider == null) {
                     pureJavaReflectionProvider = new PureJavaReflectionProvider();
@@ -259,17 +279,26 @@ public abstract class AbstractReflectionConverter implements Converter {
                 implicitCollections.put(fieldName, collection);
             }
             collection.add(value);
+        } else {
+            throw new ConversionException("Element "
+                + itemFieldName
+                + " of type "
+                + value.getClass().getName()
+                + " is not defined as field in type "
+                + result.getClass().getName());
         }
         return implicitCollections;
     }
 
     private Class determineWhichClassDefinesField(HierarchicalStreamReader reader) {
-        String definedIn = reader.getAttribute(mapper.aliasForAttribute("defined-in"));
+        String attributeName = mapper.aliasForSystemAttribute("defined-in");
+        String definedIn = attributeName == null ? null : reader.getAttribute(attributeName);
         return definedIn == null ? null : mapper.realClass(definedIn);
     }
 
     protected Object instantiateNewInstance(HierarchicalStreamReader reader, UnmarshallingContext context) {
-        String readResolveValue = reader.getAttribute(mapper.aliasForAttribute("resolves-to"));
+        String attributeName = mapper.aliasForSystemAttribute("resolves-to");
+        String readResolveValue = attributeName == null ? null : reader.getAttribute(attributeName);
         Object currentObject = context.currentObject();
         if (currentObject != null) {
             return currentObject;
@@ -299,7 +328,7 @@ public abstract class AbstractReflectionConverter implements Converter {
     }
 
     private Class determineType(HierarchicalStreamReader reader, boolean validField, Object result, String fieldName, Class definedInCls) {
-        String classAttribute = reader.getAttribute(mapper.aliasForAttribute("class"));
+        String classAttribute = HierarchicalStreams.readClassAttribute(reader, mapper);
         if (classAttribute != null) {
             return mapper.realClass(classAttribute);
         } else if (!validField) {

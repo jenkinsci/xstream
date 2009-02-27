@@ -1,14 +1,14 @@
-8
+9
 
 dir
-1494
-http://svn.codehaus.org/xstream/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/core
+1642
+http://svn.codehaus.org/xstream/tags/XSTREAM_1_3_1/xstream/src/java/com/thoughtworks/xstream/core
 http://svn.codehaus.org/xstream
 
 
 
-2008-02-26T16:07:07.760163Z
-1445
+2008-12-01T22:00:46.836836Z
+1618
 joehni
 
 
@@ -45,12 +45,33 @@ file
 
 
 
-2008-08-28T16:34:33.000000Z
-b74d18f26acef37e96b9ea99dd53c494
-2007-12-11T01:50:12.145301Z
-1345
+2009-02-27T01:07:40.000000Z
+13ec7daf15c91c80db09dab081ed5c8b
+2008-11-15T20:00:45.838144Z
+1606
 joehni
 has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+2864
 
 ReferenceByXPathMarshallingStrategy.java
 file
@@ -97,12 +118,33 @@ file
 
 
 
-2008-08-28T16:34:33.000000Z
-f7dc7eb66bdc64dd1e895c7f4ed7379b
-2007-12-11T01:50:12.145301Z
-1345
+2009-02-27T01:07:40.000000Z
+4beca578251ea181b03465641f631542
+2008-11-11T23:35:10.474300Z
+1600
 joehni
 has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+1806
 
 TreeMarshaller.java
 file
@@ -149,12 +191,33 @@ file
 
 
 
-2008-08-28T16:34:33.000000Z
-9b38a21de25de58b4509c9aa835dc6cc
-2007-12-11T01:50:12.145301Z
-1345
+2009-02-27T01:07:40.000000Z
+27cad6af0e1040f9060e518384dff1c2
+2008-10-09T19:25:54.105721Z
+1563
 joehni
 has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+5100
 
 SequenceGenerator.java
 file
@@ -162,12 +225,33 @@ file
 
 
 
-2008-08-28T16:34:33.000000Z
-8c0116e84082a1f8dcb05b7af494749a
-2007-12-11T01:50:12.145301Z
-1345
+2009-02-27T01:07:40.000000Z
+e1ac8708c9ad507f4d6dedf0652ae7f3
+2008-11-11T23:35:10.474300Z
+1600
 joehni
 has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+664
 
 ReferenceByIdMarshaller.java
 file
@@ -175,12 +259,33 @@ file
 
 
 
-2008-08-28T16:34:33.000000Z
-08c3cda6279fa7ccefe4603f9618c4ac
-2007-12-11T01:50:12.145301Z
-1345
+2009-02-27T01:07:40.000000Z
+d86b0a0622e468ad1a949fa1c0cbbe9e
+2008-11-15T20:00:45.838144Z
+1606
 joehni
 has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+2882
 
 ReferenceByIdUnmarshaller.java
 file
@@ -188,12 +293,33 @@ file
 
 
 
-2008-08-28T16:34:33.000000Z
-8e0e2d3fa8872a3b4809d045462ec6aa
-2007-12-11T01:50:12.145301Z
-1345
+2009-02-27T01:07:40.000000Z
+9720770f3a947f5f58454bea74975b2c
+2008-11-15T20:00:45.838144Z
+1606
 joehni
 has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+1625
 
 AbstractTreeMarshallingStrategy.java
 file
@@ -227,12 +353,33 @@ file
 
 
 
-2008-08-28T16:34:33.000000Z
-123acf6f5cbef912b2ad53586998d11a
-2008-01-23T20:42:00.979396Z
-1386
+2009-02-27T01:07:40.000000Z
+a302b6cd6eb1c9dbb80dc68636d271ec
+2008-11-11T22:03:32.446624Z
+1598
 joehni
 has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+8955
 
 util
 dir
@@ -243,10 +390,31 @@ file
 
 
 
-2008-08-28T16:34:33.000000Z
-056333ac69ad9fc66116848990bf2e99
-2007-12-11T01:50:12.145301Z
-1345
+2009-02-27T01:07:40.000000Z
+df4122c07217950360ee796f880c5d25
+2008-11-15T20:00:45.838144Z
+1606
 joehni
 has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+3828
 

@@ -1,377 +1,155 @@
 K 25
 svn:wc:ra_dav:version-url
-V 84
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/acceptance
-END
-IDCircularReferenceTest.java
-K 25
-svn:wc:ra_dav:version-url
-V 113
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/acceptance/IDCircularReferenceTest.java
-END
-ArraysTest.java
-K 25
-svn:wc:ra_dav:version-url
-V 100
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/acceptance/ArraysTest.java
-END
-AttributeTest.java
-K 25
-svn:wc:ra_dav:version-url
-V 103
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/acceptance/AttributeTest.java
-END
-XStream11XmlFriendlyTest.java
-K 25
-svn:wc:ra_dav:version-url
-V 114
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/acceptance/XStream11XmlFriendlyTest.java
+V 86
+/xstream/!svn/ver/1631/tags/XSTREAM_1_3_1/xstream/src/test/com/thoughtworks/acceptance
 END
 SerializationNestedWriteObjectsTest.java
 K 25
 svn:wc:ra_dav:version-url
-V 125
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/acceptance/SerializationNestedWriteObjectsTest.java
-END
-DataHolderTest.java
-K 25
-svn:wc:ra_dav:version-url
-V 104
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/acceptance/DataHolderTest.java
-END
-ExternalizableTest.java
-K 25
-svn:wc:ra_dav:version-url
-V 108
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/acceptance/ExternalizableTest.java
-END
-AbstractNestedCircularReferenceTest.java
-K 25
-svn:wc:ra_dav:version-url
-V 125
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/acceptance/AbstractNestedCircularReferenceTest.java
-END
-SortableFieldListTest.java
-K 25
-svn:wc:ra_dav:version-url
-V 111
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/acceptance/SortableFieldListTest.java
-END
-ReadResolveTest.java
-K 25
-svn:wc:ra_dav:version-url
-V 105
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/acceptance/ReadResolveTest.java
-END
-TreeMapAndTreeSetTest.java
-K 25
-svn:wc:ra_dav:version-url
-V 111
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/acceptance/TreeMapAndTreeSetTest.java
+V 127
+/xstream/!svn/ver/1631/tags/XSTREAM_1_3_1/xstream/src/test/com/thoughtworks/acceptance/SerializationNestedWriteObjectsTest.java
 END
 MapTest.java
 K 25
 svn:wc:ra_dav:version-url
-V 97
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/acceptance/MapTest.java
-END
-CollectionsTest.java
-K 25
-svn:wc:ra_dav:version-url
-V 105
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/acceptance/CollectionsTest.java
-END
-CustomMapperTest.java
-K 25
-svn:wc:ra_dav:version-url
-V 106
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/acceptance/CustomMapperTest.java
-END
-XStream11CompatibilityTest.java
-K 25
-svn:wc:ra_dav:version-url
-V 116
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/acceptance/XStream11CompatibilityTest.java
-END
-XStream12CompatibilityTest.java
-K 25
-svn:wc:ra_dav:version-url
-V 116
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/acceptance/XStream12CompatibilityTest.java
-END
-FinalFieldsTest.java
-K 25
-svn:wc:ra_dav:version-url
-V 105
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/acceptance/FinalFieldsTest.java
-END
-DynamicProxyTest.java
-K 25
-svn:wc:ra_dav:version-url
-V 106
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/acceptance/DynamicProxyTest.java
-END
-WriteReplaceTest.java
-K 25
-svn:wc:ra_dav:version-url
-V 106
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/acceptance/WriteReplaceTest.java
-END
-CustomFieldKeySorterTest.java
-K 25
-svn:wc:ra_dav:version-url
-V 114
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/acceptance/CustomFieldKeySorterTest.java
-END
-RelativeXPathNestedCircularReferenceTest.java
-K 25
-svn:wc:ra_dav:version-url
-V 130
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/acceptance/RelativeXPathNestedCircularReferenceTest.java
-END
-AbsoluteXPathCircularReferenceTest.java
-K 25
-svn:wc:ra_dav:version-url
-V 124
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/acceptance/AbsoluteXPathCircularReferenceTest.java
-END
-AliasTest.java
-K 25
-svn:wc:ra_dav:version-url
 V 99
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/acceptance/AliasTest.java
+/xstream/!svn/ver/1631/tags/XSTREAM_1_3_1/xstream/src/test/com/thoughtworks/acceptance/MapTest.java
 END
-RelativeXPathDuplicateReferenceTest.java
-K 25
-svn:wc:ra_dav:version-url
-V 125
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/acceptance/RelativeXPathDuplicateReferenceTest.java
-END
-ClassLoaderTest.java
-K 25
-svn:wc:ra_dav:version-url
-V 105
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/acceptance/ClassLoaderTest.java
-END
-AbsoluteXPathDuplicateReferenceTest.java
-K 25
-svn:wc:ra_dav:version-url
-V 125
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/acceptance/AbsoluteXPathDuplicateReferenceTest.java
-END
-OmitFieldsTest.java
-K 25
-svn:wc:ra_dav:version-url
-V 104
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/acceptance/OmitFieldsTest.java
-END
-XStreamer.xsl
-K 25
-svn:wc:ra_dav:version-url
-V 98
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/acceptance/XStreamer.xsl
-END
-EncodingTestSuite.java
+PersistenceTest.java
 K 25
 svn:wc:ra_dav:version-url
 V 107
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/acceptance/EncodingTestSuite.java
+/xstream/!svn/ver/1631/tags/XSTREAM_1_3_1/xstream/src/test/com/thoughtworks/acceptance/PersistenceTest.java
 END
-SecurityManagerTest.java
-K 25
-svn:wc:ra_dav:version-url
-V 109
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/acceptance/SecurityManagerTest.java
-END
-CustomConverterTest.java
-K 25
-svn:wc:ra_dav:version-url
-V 109
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/acceptance/CustomConverterTest.java
-END
-IDNestedCircularReferenceTest.java
+BeanIDCircularReferenceTest.java
 K 25
 svn:wc:ra_dav:version-url
 V 119
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/acceptance/IDNestedCircularReferenceTest.java
-END
-IDDuplicateReferenceTest.java
-K 25
-svn:wc:ra_dav:version-url
-V 114
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/acceptance/IDDuplicateReferenceTest.java
-END
-BooleanFieldsTest.java
-K 25
-svn:wc:ra_dav:version-url
-V 107
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/acceptance/BooleanFieldsTest.java
-END
-BasicTypesTest.java
-K 25
-svn:wc:ra_dav:version-url
-V 104
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/acceptance/BasicTypesTest.java
-END
-AbstractCircularReferenceTest.java
-K 25
-svn:wc:ra_dav:version-url
-V 119
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/acceptance/AbstractCircularReferenceTest.java
+/xstream/!svn/ver/1631/tags/XSTREAM_1_3_1/xstream/src/test/com/thoughtworks/acceptance/BeanIDCircularReferenceTest.java
 END
 CustomSerializationTest.java
 K 25
 svn:wc:ra_dav:version-url
-V 113
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/acceptance/CustomSerializationTest.java
-END
-ReflectionClassesTest.java
-K 25
-svn:wc:ra_dav:version-url
-V 111
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/acceptance/ReflectionClassesTest.java
+V 115
+/xstream/!svn/ver/1631/tags/XSTREAM_1_3_1/xstream/src/test/com/thoughtworks/acceptance/CustomSerializationTest.java
 END
 AbstractAcceptanceTest.java
 K 25
 svn:wc:ra_dav:version-url
-V 112
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/acceptance/AbstractAcceptanceTest.java
+V 114
+/xstream/!svn/ver/1631/tags/XSTREAM_1_3_1/xstream/src/test/com/thoughtworks/acceptance/AbstractAcceptanceTest.java
 END
-XStreamerTest.java
-K 25
-svn:wc:ra_dav:version-url
-V 103
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/acceptance/XStreamerTest.java
-END
-MultipleObjectsInOneStreamTest.java
-K 25
-svn:wc:ra_dav:version-url
-V 120
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/acceptance/MultipleObjectsInOneStreamTest.java
-END
-CglibCompatibilityTest.java
-K 25
-svn:wc:ra_dav:version-url
-V 112
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/acceptance/CglibCompatibilityTest.java
-END
-Basic15TypesTest.java
-K 25
-svn:wc:ra_dav:version-url
-V 106
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/acceptance/Basic15TypesTest.java
-END
-AbstractDuplicateReferenceTest.java
-K 25
-svn:wc:ra_dav:version-url
-V 120
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/acceptance/AbstractDuplicateReferenceTest.java
-END
-ConcreteClassesTest.java
+JodaTimeTypesTest.java
 K 25
 svn:wc:ra_dav:version-url
 V 109
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/acceptance/ConcreteClassesTest.java
-END
-LocalConverterTest.java
-K 25
-svn:wc:ra_dav:version-url
-V 108
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/acceptance/LocalConverterTest.java
-END
-RelativeXPathCircularReferenceTest.java
-K 25
-svn:wc:ra_dav:version-url
-V 124
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/acceptance/RelativeXPathCircularReferenceTest.java
+/xstream/!svn/ver/1631/tags/XSTREAM_1_3_1/xstream/src/test/com/thoughtworks/acceptance/JodaTimeTypesTest.java
 END
 ExtendedTypesTest.java
 K 25
 svn:wc:ra_dav:version-url
-V 107
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/acceptance/ExtendedTypesTest.java
-END
-ImplicitCollectionTest.java
-K 25
-svn:wc:ra_dav:version-url
-V 112
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/acceptance/ImplicitCollectionTest.java
+V 109
+/xstream/!svn/ver/1631/tags/XSTREAM_1_3_1/xstream/src/test/com/thoughtworks/acceptance/ExtendedTypesTest.java
 END
 SerializationCallbackOrderTest.java
 K 25
 svn:wc:ra_dav:version-url
-V 120
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/acceptance/SerializationCallbackOrderTest.java
+V 122
+/xstream/!svn/ver/1631/tags/XSTREAM_1_3_1/xstream/src/test/com/thoughtworks/acceptance/SerializationCallbackOrderTest.java
 END
-SwingTest.java
+ImplicitCollectionTest.java
 K 25
 svn:wc:ra_dav:version-url
-V 99
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/acceptance/SwingTest.java
-END
-CustomClassesTest.java
-K 25
-svn:wc:ra_dav:version-url
-V 107
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/acceptance/CustomClassesTest.java
-END
-ErrorTest.java
-K 25
-svn:wc:ra_dav:version-url
-V 99
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/acceptance/ErrorTest.java
-END
-InheritanceTest.java
-K 25
-svn:wc:ra_dav:version-url
-V 105
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/acceptance/InheritanceTest.java
-END
-QNameMappedConcreteClassesTest.java
-K 25
-svn:wc:ra_dav:version-url
-V 120
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/acceptance/QNameMappedConcreteClassesTest.java
-END
-InnerClassesTest.java
-K 25
-svn:wc:ra_dav:version-url
-V 106
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/acceptance/InnerClassesTest.java
+V 114
+/xstream/!svn/ver/1631/tags/XSTREAM_1_3_1/xstream/src/test/com/thoughtworks/acceptance/ImplicitCollectionTest.java
 END
 Extended14TypesTest.java
 K 25
 svn:wc:ra_dav:version-url
-V 109
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/acceptance/Extended14TypesTest.java
-END
-ConcurrencyTest.java
-K 25
-svn:wc:ra_dav:version-url
-V 105
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/acceptance/ConcurrencyTest.java
-END
-AbsoluteXPathNestedCircularReferenceTest.java
-K 25
-svn:wc:ra_dav:version-url
-V 130
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/acceptance/AbsoluteXPathNestedCircularReferenceTest.java
-END
-DefaultImplementationTest.java
-K 25
-svn:wc:ra_dav:version-url
-V 115
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/acceptance/DefaultImplementationTest.java
+V 111
+/xstream/!svn/ver/1631/tags/XSTREAM_1_3_1/xstream/src/test/com/thoughtworks/acceptance/Extended14TypesTest.java
 END
 XmlFriendlyTest.java
 K 25
 svn:wc:ra_dav:version-url
-V 105
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/acceptance/XmlFriendlyTest.java
+V 107
+/xstream/!svn/ver/1631/tags/XSTREAM_1_3_1/xstream/src/test/com/thoughtworks/acceptance/XmlFriendlyTest.java
 END
-XmlFriendlyDollarOnlyTest.java
+AttributeTest.java
 K 25
 svn:wc:ra_dav:version-url
-V 115
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/acceptance/XmlFriendlyDollarOnlyTest.java
+V 105
+/xstream/!svn/ver/1631/tags/XSTREAM_1_3_1/xstream/src/test/com/thoughtworks/acceptance/AttributeTest.java
+END
+BufferedImagesTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/xstream/!svn/ver/1631/tags/XSTREAM_1_3_1/xstream/src/test/com/thoughtworks/acceptance/BufferedImagesTest.java
+END
+CollectionsTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/xstream/!svn/ver/1631/tags/XSTREAM_1_3_1/xstream/src/test/com/thoughtworks/acceptance/CollectionsTest.java
+END
+WriteReplaceTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/xstream/!svn/ver/1631/tags/XSTREAM_1_3_1/xstream/src/test/com/thoughtworks/acceptance/WriteReplaceTest.java
+END
+AliasTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/xstream/!svn/ver/1631/tags/XSTREAM_1_3_1/xstream/src/test/com/thoughtworks/acceptance/AliasTest.java
+END
+XStreamer.xsl
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/xstream/!svn/ver/1631/tags/XSTREAM_1_3_1/xstream/src/test/com/thoughtworks/acceptance/XStreamer.xsl
+END
+EncodingTestSuite.java
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/xstream/!svn/ver/1631/tags/XSTREAM_1_3_1/xstream/src/test/com/thoughtworks/acceptance/EncodingTestSuite.java
+END
+CglibCompatibilityTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/xstream/!svn/ver/1631/tags/XSTREAM_1_3_1/xstream/src/test/com/thoughtworks/acceptance/CglibCompatibilityTest.java
+END
+MultipleObjectsInOneStreamTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 122
+/xstream/!svn/ver/1631/tags/XSTREAM_1_3_1/xstream/src/test/com/thoughtworks/acceptance/MultipleObjectsInOneStreamTest.java
+END
+AbstractDuplicateReferenceTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 122
+/xstream/!svn/ver/1631/tags/XSTREAM_1_3_1/xstream/src/test/com/thoughtworks/acceptance/AbstractDuplicateReferenceTest.java
+END
+ConcreteClassesTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/xstream/!svn/ver/1631/tags/XSTREAM_1_3_1/xstream/src/test/com/thoughtworks/acceptance/ConcreteClassesTest.java
+END
+LocalConverterTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/xstream/!svn/ver/1631/tags/XSTREAM_1_3_1/xstream/src/test/com/thoughtworks/acceptance/LocalConverterTest.java
+END
+SwingTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/xstream/!svn/ver/1631/tags/XSTREAM_1_3_1/xstream/src/test/com/thoughtworks/acceptance/SwingTest.java
 END

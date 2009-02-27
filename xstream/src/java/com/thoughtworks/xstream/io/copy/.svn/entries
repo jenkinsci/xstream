@@ -1,14 +1,14 @@
-8
+9
 
 dir
-1494
-http://svn.codehaus.org/xstream/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/io/copy
+1642
+http://svn.codehaus.org/xstream/tags/XSTREAM_1_3_1/xstream/src/java/com/thoughtworks/xstream/io/copy
 http://svn.codehaus.org/xstream
 
 
 
-2008-02-26T22:47:19.219062Z
-1452
+2008-02-26T22:21:12.817425Z
+1448
 joehni
 
 
@@ -32,10 +32,31 @@ file
 
 
 
-2008-08-28T16:34:32.000000Z
+
 e3d8bb7a002b4c1e32b1225935a575dc
-2008-02-26T22:47:19.219062Z
-1452
+2008-02-26T22:21:12.817425Z
+1448
 joehni
 has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+1872
 

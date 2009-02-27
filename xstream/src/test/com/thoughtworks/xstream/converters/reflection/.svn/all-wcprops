@@ -1,59 +1,11 @@
 K 25
 svn:wc:ra_dav:version-url
-V 103
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/xstream/converters/reflection
-END
-Sun14ReflectionProviderTest.java
-K 25
-svn:wc:ra_dav:version-url
-V 136
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/xstream/converters/reflection/Sun14ReflectionProviderTest.java
-END
-NativeFieldKeySorterTest.java
-K 25
-svn:wc:ra_dav:version-url
-V 133
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/xstream/converters/reflection/NativeFieldKeySorterTest.java
-END
-ReflectionConverterTest.java
-K 25
-svn:wc:ra_dav:version-url
-V 132
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/xstream/converters/reflection/ReflectionConverterTest.java
-END
-PureJavaReflectionProviderTest.java
-K 25
-svn:wc:ra_dav:version-url
-V 139
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/xstream/converters/reflection/PureJavaReflectionProviderTest.java
-END
-SortableFieldKeySorterTest.java
-K 25
-svn:wc:ra_dav:version-url
-V 135
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/xstream/converters/reflection/SortableFieldKeySorterTest.java
-END
-AbstractReflectionProviderTest.java
-K 25
-svn:wc:ra_dav:version-url
-V 139
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/xstream/converters/reflection/AbstractReflectionProviderTest.java
-END
-FieldDictionaryTest.java
-K 25
-svn:wc:ra_dav:version-url
-V 128
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/xstream/converters/reflection/FieldDictionaryTest.java
-END
-PureJavaReflectionProvider15Test.java
-K 25
-svn:wc:ra_dav:version-url
-V 141
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/xstream/converters/reflection/PureJavaReflectionProvider15Test.java
+V 105
+/xstream/!svn/ver/1631/tags/XSTREAM_1_3_1/xstream/src/test/com/thoughtworks/xstream/converters/reflection
 END
 SerializableConverterTest.java
 K 25
 svn:wc:ra_dav:version-url
-V 134
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/xstream/converters/reflection/SerializableConverterTest.java
+V 136
+/xstream/!svn/ver/1631/tags/XSTREAM_1_3_1/xstream/src/test/com/thoughtworks/xstream/converters/reflection/SerializableConverterTest.java
 END

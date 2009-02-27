@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -338,15 +338,15 @@ public class AttributeTest extends AbstractAcceptanceTest {
     
     static class Person {
         String _name;
-        transient int _age;
+        int _age;
+        Person() {} // JDK 1.3
         Person(String name, int age) {
             this._name = name;
             this._age = age;
         }
     };
     
-    // FIXME: reader.getAttribute(name) does not escape the given name anymore
-    public void XXXtestAttributeMayHaveXmlUnfriendlyName() {
+    public void testAttributeMayHaveXmlUnfriendlyName() {
         xstream.alias("person", Person.class);
         xstream.useAttributeFor(Person.class, "_name");
         xstream.useAttributeFor(Person.class, "_age");

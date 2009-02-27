@@ -1,14 +1,14 @@
-8
+9
 
 dir
-1494
-http://svn.codehaus.org/xstream/tags/XSTREAM_1_3/xstream/lib
+1642
+http://svn.codehaus.org/xstream/tags/XSTREAM_1_3_1/xstream/lib
 http://svn.codehaus.org/xstream
 
 
 
-2007-12-19T21:47:00.741346Z
-1359
+2008-12-05T22:02:46.540518Z
+1622
 joehni
 
 
@@ -55,22 +55,6 @@ file
 joehni
 has-props
 
-joda-time-1.5.1.jar
-file
-
-
-
-
-2008-08-28T16:34:30.000000Z
-1e7d494772d928fda286d30bcdb94bb1
-2007-12-19T21:47:00.741346Z
-1359
-joehni
-has-props
-
-
-svn:needs-lock
-
 stax-1.2.0.jar
 file
 
@@ -87,6 +71,53 @@ has-props
 
 svn:needs-lock
 
+joda-time-1.6.jar
+file
+
+
+
+
+2009-02-27T01:07:38.000000Z
+3a9f0fe3f470e2490cb266cddba33492
+2008-12-05T22:02:46.540518Z
+1622
+joehni
+has-props
+
+
+svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+534827
+
+junit-license.txt
+file
+
+
+
+
+2008-08-28T16:34:30.000000Z
+5baa49cadb0cb5d752d3ce4bd1efcd8d
+2004-04-19T18:51:52.000000Z
+169
+joe
+has-props
+
 jdom-license.txt
 file
 
@@ -100,14 +131,14 @@ file
 joehni
 has-props
 
-junit-license.txt
+commons-lang-license.txt
 file
 
 
 
 
 2008-08-28T16:34:30.000000Z
-5baa49cadb0cb5d752d3ce4bd1efcd8d
+86d3f3a95c324c9479bd8986968f4327
 2004-04-19T18:51:52.000000Z
 169
 joe
@@ -126,19 +157,6 @@ ed97655c6303d93ac48d0806d2385e23
 joe
 has-props
 
-commons-lang-license.txt
-file
-
-
-
-
-2008-08-28T16:34:30.000000Z
-86d3f3a95c324c9479bd8986968f4327
-2004-04-19T18:51:52.000000Z
-169
-joe
-has-props
-
 dom4j-1.6.1.jar
 file
 
@@ -149,22 +167,6 @@ file
 4d8f51d3fe3900efc6e395be48030d6d
 2006-11-10T21:28:33.472554Z
 1049
-joehni
-has-props
-
-
-svn:needs-lock
-
-jettison-1.0-RC2.jar
-file
-
-
-
-
-2008-08-28T16:34:30.000000Z
-cd0265e435b31d9ddd53ccc1013a0e9b
-2007-12-01T00:43:20.283035Z
-1331
 joehni
 has-props
 
@@ -190,19 +192,6 @@ has-props
 
 svn:needs-lock
 
-oro-license.txt
-file
-
-
-
-
-2008-08-28T16:34:30.000000Z
-86d3f3a95c324c9479bd8986968f4327
-2006-09-18T20:02:51.054912Z
-946
-joehni
-has-props
-
 jettison-license.txt
 file
 
@@ -216,37 +205,52 @@ file
 joehni
 has-props
 
-wstx-asl-3.2.3.jar
+oro-license.txt
 file
 
 
 
 
 2008-08-28T16:34:30.000000Z
-f38076f35178eeff694ad1d9f3da8149
-2007-12-01T00:43:20.283035Z
-1331
+86d3f3a95c324c9479bd8986968f4327
+2006-09-18T20:02:51.054912Z
+946
 joehni
 has-props
-
-
-svn:needs-lock
 
-jdom-1.0.jar
+cglib-nodep-2.2.jar
 file
 
 
 
 
-2008-08-28T16:34:30.000000Z
-0b8f97de82fc9529b1028a77125ce4f8
-2006-11-10T21:28:33.472554Z
-1049
+2009-02-27T01:07:38.000000Z
+753f4e9036e1fc6c3e07d3ab97ee6722
+2008-12-05T21:42:41.791490Z
+1620
 joehni
 has-props
 
 
 svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+322362
 
 xom-license.txt
 file
@@ -261,21 +265,141 @@ fb2678afd00e370aa19a7fe8c5e8c9a9
 joe
 has-props
 
-commons-lang-2.1.jar
+jdom-1.1.jar
 file
 
 
 
 
-2008-08-28T16:34:30.000000Z
-51591549f1662a64543f08a1d4a0cf87
-2006-11-10T21:28:33.472554Z
-1049
+2009-02-27T01:07:38.000000Z
+adf67fc5dcf48e1593640ad7e02f6ad4
+2008-10-23T14:46:33.159125Z
+1572
 joehni
 has-props
 
 
 svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+153115
+
+wstx-asl-3.2.7.jar
+file
+
+
+
+
+2009-02-27T01:07:38.000000Z
+5ca667e626a1b2f3e5522cb431370cc6
+2008-10-23T14:46:33.159125Z
+1572
+joehni
+has-props
+
+
+svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+520969
+
+jettison-1.0.1.jar
+file
+
+
+
+
+2009-02-27T01:07:38.000000Z
+3c19e866afd5bd18ab58e7c001e8a048
+2008-10-23T14:46:33.159125Z
+1572
+joehni
+has-props
+
+
+svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+56702
+
+commons-lang-2.4.jar
+file
+
+
+
+
+2009-02-27T01:07:38.000000Z
+237a8e845441bad2e535c57d985c8204
+2008-04-21T22:39:54.058315Z
+1468
+joehni
+has-props
+
+
+svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+261809
 
 joda-time-license.txt
 file
@@ -395,22 +519,6 @@ file
 743
 joehni
 has-props
-
-cglib-nodep-2.1_3.jar
-file
-
-
-
-
-2008-08-28T16:34:30.000000Z
-db0e461169599af137eb24478c5292ce
-2006-11-10T21:28:33.472554Z
-1049
-joehni
-has-props
-
-
-svn:needs-lock
 
 cglib-license.txt
 file

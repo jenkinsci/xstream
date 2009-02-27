@@ -15,14 +15,18 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 
 import junit.framework.TestCase;
 
 import com.thoughtworks.acceptance.objects.Category;
 import com.thoughtworks.acceptance.objects.Product;
+import com.thoughtworks.acceptance.objects.StandardObject;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.json.JettisonMappedXmlDriver;
+import com.thoughtworks.xstream.testutil.TimeZoneChanger;
 
 
 /**
@@ -32,9 +36,9 @@ import com.thoughtworks.xstream.io.json.JettisonMappedXmlDriver;
  */
 public class JettisonMappedXmlDriverTest extends TestCase {
 
-    private final static String SIMPLE = "{'product':{'name':'Banana','id':'123','price':'23.0'}}"
+    private final static String SIMPLE = "{'product':{'name':'Banana','id':123,'price':23}}"
         .replace('\'', '"');
-    private final static String HIERARCHY = "{'category':{'name':'fruit','id':'111','products':{'product':[{'name':'Banana','id':'123','price':'23.01','tags':{'string':['yellow','fresh','tasty']}},{'name':'Mango','id':'124','price':'34.01'}]}}}"
+    private final static String HIERARCHY = "{'category':{'name':'fruit','id':111,'products':{'product':[{'name':'Banana','id':123,'price':23.01,'tags':{'string':['yellow','fresh','tasty']}},{'name':'Mango','id':124,'price':34.01}]}}}"
         .replace('\'', '"');
 
     private XStream xstream;
@@ -44,9 +48,15 @@ public class JettisonMappedXmlDriverTest extends TestCase {
      */
     protected void setUp() throws Exception {
         super.setUp();
+        TimeZoneChanger.change("UTC");
         xstream = new XStream(new JettisonMappedXmlDriver());
         xstream.alias("category", Category.class);
         xstream.alias("product", Product.class);
+    }
+
+    protected void tearDown() throws Exception {
+        TimeZoneChanger.reset();
+        super.tearDown();
     }
 
     public void testReadSimple() {
@@ -117,6 +127,43 @@ public class JettisonMappedXmlDriverTest extends TestCase {
     public void testDoesEscapeValuesAccordingRfc4627() {
         String expected = "{'string':'\\u0000\\u0001\\u001f \uffee'}".replace('\'', '"');
         assertEquals(expected, xstream.toXML("\u0000\u0001\u001f\u0020\uffee"));
+    }
+
+    public void testOneElementList() {
+        ArrayList list1 = new ArrayList();
+        list1.add("one");
+        String json = xstream.toXML(list1);
+        assertEquals("{\"list\":{\"string\":[\"one\"]}}", json);
+        ArrayList list2 = (ArrayList)xstream.fromXML(json);
+        assertEquals(json, xstream.toXML(list2));
+    }
+
+    public void todoTestEmptyList() {
+        ArrayList list1 = new ArrayList();
+        String json = xstream.toXML(list1);
+        assertEquals("{\"list\":[]}", json);
+        ArrayList list2 = (ArrayList)xstream.fromXML(json);
+        assertEquals(json, xstream.toXML(list2));
+    }
+    
+    public static class Topic extends StandardObject {
+        long id;
+        String description;
+        Date createdOn;
+    }
+    
+    public void testDefaultValue() {
+        Topic topic1 = new Topic();
+        topic1.id = 4711;
+        topic1.description = "JSON";
+        topic1.createdOn = new Timestamp(1000);
+        xstream.alias("topic", Topic.class);
+        String json = xstream.toXML(topic1);
+        assertEquals(
+            "{\"topic\":{\"id\":4711,\"description\":\"JSON\",\"createdOn\":{\"@class\":\"sql-timestamp\",\"$\":\"1970-01-01 00:00:01.0\"}}}",
+            json);
+        Topic topic2 = (Topic)xstream.fromXML(json);
+        assertEquals(json, xstream.toXML(topic2));
     }
 
     // TODO: See XSTR-460

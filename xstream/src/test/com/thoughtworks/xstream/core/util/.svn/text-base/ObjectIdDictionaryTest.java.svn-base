@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -13,14 +13,16 @@ package com.thoughtworks.xstream.core.util;
 
 import junit.framework.TestCase;
 
+import java.lang.reflect.Field;
+
 
 public class ObjectIdDictionaryTest extends TestCase {
 
     public void testMapsIdsToObjectReferences() {
-        ObjectIdDictionary dict = new ObjectIdDictionary();
-        Object a = new Object();
-        Object b = new Object();
-        Object c = new Object();
+        final ObjectIdDictionary dict = new ObjectIdDictionary();
+        final Object a = new Object();
+        final Object b = new Object();
+        final Object c = new Object();
         dict.associateId(a, "id a");
         dict.associateId(b, "id b");
         dict.associateId(c, "id c");
@@ -30,31 +32,65 @@ public class ObjectIdDictionaryTest extends TestCase {
     }
 
     public void testTreatsObjectsThatAreEqualButNotSameInstanceAsDifferentReference() {
-        ObjectIdDictionary dict = new ObjectIdDictionary();
-        Integer a = new Integer(3);
-        Integer b = new Integer(3);
+        final ObjectIdDictionary dict = new ObjectIdDictionary();
+        final Integer a = new Integer(3);
+        final Integer b = new Integer(3);
         dict.associateId(a, "id a");
         dict.associateId(b, "id b");
         assertEquals("id a", dict.lookupId(a));
         assertEquals("id b", dict.lookupId(b));
     }
 
-    public void testEnforceSameSystemHashCodeForGCedObjects() {
-        // create 100000 Strings and call GC after creation of 10000
-        final int loop = 10;
-        final int elements = 10000;
-        final int[] dictSizes = new int[loop * elements];
-        ObjectIdDictionary dict = new ObjectIdDictionary();
-        for (int i = 0; i < loop; ++i) {
-            System.gc();
-            for (int j = 0; j < elements; ++j) {
-                final String s = new String("JUnit ") + j; // enforce new object
-                dictSizes[i * elements + j] = dict.size();
-                assertFalse("Failed in (" + i + "/" + j + ")", dict.containsId(s));
-                dict.associateId(s, "X");
+    public void testEnforceSameSystemHashCodeForGCedObjects()
+        throws NoSuchFieldException, IllegalAccessException {
+        final Field actionCounter = ObjectIdDictionary.class.getDeclaredField("counter");
+        actionCounter.setAccessible(true);
+        final ObjectIdDictionary dict = new ObjectIdDictionary();
+        actionCounter.setInt(dict, 1);
+
+        final StringBuffer memInfo = new StringBuffer("JVM: ");
+        memInfo.append(System.getProperty("java.version"));
+        memInfo.append("\nOS: ");
+        memInfo.append(System.getProperty("os.name"));
+        memInfo.append(" / ");
+        memInfo.append(System.getProperty("os.arch"));
+        memInfo.append(" / ");
+        memInfo.append(System.getProperty("os.version"));
+        memInfo.append("\nMemoryInfo:\n");
+        memInfo.append(memoryInfo());
+        memInfo.append('\n');
+
+        int counter = 0;
+        for (; actionCounter.getInt(dict) != 0; ++counter) {
+            final String s = new String("JUnit ") + counter; // enforce new object
+            assertFalse("Failed in (" + counter + ")", dict.containsId(s));
+            dict.associateId(s, "X");
+            if (counter % 4000 == 3999) {
+                System.gc();
+                memInfo.append("\nMemoryInfo:\n");
+                memInfo.append(memoryInfo());
             }
         }
-        assertFalse("Algorithm did not reach last element", 0 == dictSizes[loop * elements - 1]);
-        assertFalse("Dictionary did not shrink", loop * elements - 1 == dictSizes[loop * elements - 1]);
+        memInfo.append("\nMemoryInfo:\n");
+        memInfo.append(memoryInfo());
+        assertTrue("Dictionary did not shrink; "
+            + counter
+            + " distinct objects; "
+            + dict.size()
+            + " size; "
+            + memInfo, dict.size() < 1100);
+    }
+
+    private String memoryInfo() {
+        final Runtime runtime = Runtime.getRuntime();
+        final StringBuffer buffer = new StringBuffer("Memory: ");
+        // not available in JDK 1.3
+        // buffer.append(runtime.maxMemory());
+        // buffer.append(" max / ");
+        buffer.append(runtime.freeMemory());
+        buffer.append(" free / ");
+        buffer.append(runtime.totalMemory());
+        buffer.append(" total");
+        return buffer.toString();
     }
 }

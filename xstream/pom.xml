@@ -14,14 +14,11 @@
   <parent>
     <groupId>com.thoughtworks.xstream</groupId>
     <artifactId>xstream-parent</artifactId>
-    <version>1.3</version>
+    <version>1.3.1</version>
   </parent>
   <artifactId>xstream</artifactId>
   <packaging>jar</packaging>
   <name>XStream Core</name>
-
-  <groupId>org.jvnet.hudson</groupId>
-  <version>1.3-hudson-3</version>
 
   <dependencies>
     <dependency>
@@ -31,7 +28,7 @@
     </dependency>
 
     <dependency>
-      <groupId>jdom</groupId>
+      <groupId>org.jdom</groupId>
       <artifactId>jdom</artifactId>
       <optional>true</optional>
     </dependency>
@@ -87,13 +84,11 @@
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <scope>test</scope>
     </dependency>
 
     <dependency>
       <groupId>jmock</groupId>
       <artifactId>jmock</artifactId>
-      <scope>test</scope>
     </dependency>
 
     <dependency>
@@ -115,41 +110,6 @@
     </dependency>
   </dependencies>
 
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-surefire-plugin</artifactId>
-        <configuration>
-          <systemProperties>
-            <property>
-              <name>test.src.dir</name>
-              <value>${project.build.testSourceDirectory}</value>
-            </property>
-            <property>
-              <name>java.awt.headless</name>
-              <value>true</value>
-            </property>
-          </systemProperties>
-        </configuration>
-      </plugin>
-    </plugins>
-    <extensions>
-      <extension>
-        <groupId>org.jvnet.wagon-svn</groupId>
-        <artifactId>wagon-svn</artifactId>
-        <version>1.8</version>
-      </extension>
-    </extensions>
-  </build>
-
-  <distributionManagement>
-    <repository>
-      <id>java.net-m2-repository</id>
-      <url>java-net:/maven2-repository/trunk/www/repository/</url>
-    </repository>
-  </distributionManagement>
-
   <profiles>
     <profile>
       <id>jdk15</id>
@@ -165,8 +125,8 @@
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-compiler-plugin</artifactId>
             <configuration>
-              <source>1.5</source>
-              <target>1.5</target>
+              <source>1.3</source>
+              <target>1.3</target>
               <excludes>
                 <exclude>**/annotations/*</exclude>
                 <exclude>**/AnnotationMapper*</exclude>
@@ -249,8 +209,8 @@
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-compiler-plugin</artifactId>
             <configuration>
-              <source>1.5</source>
-              <target>1.5</target>
+              <source>1.3</source>
+              <target>1.3</target>
               <excludes>
                 <exclude>**/annotations/*</exclude>
                 <exclude>**/AnnotationMapper*</exclude>
@@ -329,8 +289,8 @@
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-compiler-plugin</artifactId>
             <configuration>
-              <source>1.5</source>
-              <target>1.5</target>
+              <source>1.3</source>
+              <target>1.3</target>
               <excludes>
                 <exclude>**/annotations/*</exclude>
                 <exclude>**/AnnotationMapper*</exclude>

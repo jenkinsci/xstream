@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -16,6 +16,7 @@
 
 package com.thoughtworks.xstream.converters.enums;
 
+import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
@@ -68,7 +69,10 @@ public class EnumSetConverter implements Converter {
     public void marshal(Object source, HierarchicalStreamWriter writer, MarshallingContext context) {
         EnumSet set = (EnumSet) source;
         Class enumTypeForSet = (Class) Fields.read(typeField, set);
-        writer.addAttribute(mapper.aliasForAttribute("enum-type"), mapper.serializedClass(enumTypeForSet));
+        String attributeName = mapper.aliasForSystemAttribute("enum-type");
+        if (attributeName != null) {
+            writer.addAttribute(attributeName, mapper.serializedClass(enumTypeForSet));
+        }
         writer.setValue(joinEnumValues(set));
     }
 
@@ -88,7 +92,11 @@ public class EnumSetConverter implements Converter {
     }
 
     public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
-        Class enumTypeForSet = mapper.realClass(reader.getAttribute(mapper.aliasForAttribute("enum-type")));
+        String attributeName = mapper.aliasForSystemAttribute("enum-type");
+        if (attributeName == null) {
+            throw new ConversionException("No EnumType specified for EnumSet");
+        }
+        Class enumTypeForSet = mapper.realClass(reader.getAttribute(attributeName));
         EnumSet set = EnumSet.noneOf(enumTypeForSet);
         String[] enumValues = reader.getValue().split(",");
         for (int i = 0; i < enumValues.length; i++) {

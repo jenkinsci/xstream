@@ -1,14 +1,14 @@
-8
+9
 
 dir
-1494
-http://svn.codehaus.org/xstream/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/acceptance
+1642
+http://svn.codehaus.org/xstream/tags/XSTREAM_1_3_1/xstream/src/test/com/thoughtworks/acceptance
 http://svn.codehaus.org/xstream
 
 
 
-2008-02-13T22:27:39.841773Z
-1430
+2008-12-05T21:42:41.791490Z
+1620
 joehni
 
 
@@ -58,12 +58,33 @@ file
 
 
 
-2008-08-28T16:34:32.000000Z
+
 3898762a2721c168740a24a44300b986
-2007-12-11T01:50:12.145301Z
-1345
+2008-10-27T23:49:42.328581Z
+1574
 joehni
 has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+7121
 
 DataHolderTest.java
 file
@@ -113,12 +134,33 @@ file
 
 
 
-2008-08-28T16:34:32.000000Z
+
 3bdf3670ac32702bdd827cec89fd2e73
-2007-12-11T01:50:12.145301Z
-1345
+2008-10-27T23:49:42.328581Z
+1574
 joehni
 has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+8136
 
 CustomMapperTest.java
 file
@@ -146,6 +188,40 @@ file
 joehni
 has-props
 
+PersistenceTest.java
+file
+
+
+
+
+2009-02-27T01:07:39.000000Z
+9316f896a44c11458af2c6806f351496
+2008-11-27T09:00:17.795422Z
+1614
+joehni
+has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+3895
+
 DynamicProxyTest.java
 file
 
@@ -158,6 +234,40 @@ file
 1375
 joehni
 has-props
+
+BeanIDCircularReferenceTest.java
+file
+
+
+
+
+2009-02-27T01:07:39.000000Z
+295ebc7b53f1a7bf9a3c3f213185f72c
+2008-11-11T23:35:10.474300Z
+1600
+joehni
+has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+2449
 
 RelativeXPathNestedCircularReferenceTest.java
 file
@@ -243,12 +353,33 @@ file
 
 
 
-2008-08-28T16:34:32.000000Z
+
 28456ab4db66d3401799b35f0a96f484
-2007-12-11T01:50:12.145301Z
-1345
+2008-10-27T23:49:42.328581Z
+1574
 joehni
 has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+18821
 
 AbstractAcceptanceTest.java
 file
@@ -256,12 +387,33 @@ file
 
 
 
-2008-08-28T16:34:32.000000Z
-95360a6b60481d0a3fbdd624e0ec5803
-2007-12-11T01:50:12.145301Z
-1345
+2009-02-27T01:07:39.000000Z
+5c54bf18f9e4232c58c71458e1d379ef
+2008-09-29T19:25:26.770402Z
+1545
 joehni
 has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+8422
 
 Basic15TypesTest.java
 file
@@ -275,6 +427,40 @@ file
 1372
 joehni
 has-props
+
+JodaTimeTypesTest.java
+file
+
+
+
+
+2009-02-27T01:07:39.000000Z
+9a247907c025816d630339e0326c7ef1
+2008-10-27T23:53:09.709327Z
+1575
+joehni
+has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+1554
 
 RelativeXPathCircularReferenceTest.java
 file
@@ -295,12 +481,33 @@ file
 
 
 
-2008-08-28T16:34:32.000000Z
-8899c675eed2870ee43546863ca7f2f1
-2007-12-11T01:50:12.145301Z
-1345
+2009-02-27T01:07:39.000000Z
+f7939a5f00611e8b775a731569e3ced4
+2008-10-27T23:49:42.328581Z
+1574
 joehni
 has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+4915
 
 SerializationCallbackOrderTest.java
 file
@@ -308,12 +515,33 @@ file
 
 
 
-2008-08-28T16:34:32.000000Z
+
 5f39e310d5c5baed585d1977c5378f4e
-2007-12-11T01:50:12.145301Z
-1345
+2008-10-27T23:49:42.328581Z
+1574
 joehni
 has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+13527
 
 ImplicitCollectionTest.java
 file
@@ -321,12 +549,33 @@ file
 
 
 
-2008-08-28T16:34:32.000000Z
-48d7ab5bb80ee674e8a95e9ec03dceb7
-2007-12-11T01:50:12.145301Z
-1345
+2009-02-27T01:07:39.000000Z
+4f16dbaee38b4d5e4fd4dc4a27b3c4da
+2008-11-18T03:24:01.679916Z
+1608
 joehni
 has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+13236
 
 InheritanceTest.java
 file
@@ -373,12 +622,33 @@ file
 
 
 
-2008-08-28T16:34:32.000000Z
+
 46eecc4e7f88f1a74ac4549c29b8214c
-2007-12-11T01:50:12.145301Z
-1345
+2008-10-27T23:49:42.328581Z
+1574
 joehni
 has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+4630
 
 someobjects
 dir
@@ -389,12 +659,33 @@ file
 
 
 
-2008-08-28T16:34:32.000000Z
+
 ab220ae5875c135a195442c308741537
-2007-12-11T01:50:12.145301Z
-1345
+2008-10-27T23:49:42.328581Z
+1574
 joehni
 has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+9279
 
 ArraysTest.java
 file
@@ -415,12 +706,67 @@ file
 
 
 
-2008-08-28T16:34:32.000000Z
-b90c464ae5730abc1aa2e53fb16fcecf
-2007-12-11T01:50:12.145301Z
-1345
+2009-02-27T01:07:39.000000Z
+d9dc4baec9cec274531c25b545bbe486
+2008-12-01T22:00:46.836836Z
+1618
 joehni
 has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+10229
+
+BufferedImagesTest.java
+file
+
+
+
+
+2009-02-27T01:07:39.000000Z
+0aae6cbfcbf5605929d88ab7db18f789
+2008-11-07T17:10:21.752639Z
+1591
+joehni
+has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+3482
 
 ExternalizableTest.java
 file
@@ -430,19 +776,6 @@ file
 
 2008-08-28T16:34:32.000000Z
 9cff35755dcd8faabf939843676c58ec
-2007-12-11T01:50:12.145301Z
-1345
-joehni
-has-props
-
-ReadResolveTest.java
-file
-
-
-
-
-2008-08-28T16:34:32.000000Z
-6c8b2d3544c0125ffa8ec6d1607f66c6
 2007-12-11T01:50:12.145301Z
 1345
 joehni
@@ -460,6 +793,19 @@ file
 1345
 joehni
 
+ReadResolveTest.java
+file
+
+
+
+
+2008-08-28T16:34:32.000000Z
+6c8b2d3544c0125ffa8ec6d1607f66c6
+2007-12-11T01:50:12.145301Z
+1345
+joehni
+has-props
+
 annotations
 dir
 
@@ -469,12 +815,33 @@ file
 
 
 
-2008-08-28T16:34:32.000000Z
-a6238555a19626d7c8d14c568ebf924c
-2007-12-11T01:50:12.145301Z
-1345
+2009-02-27T01:07:39.000000Z
+2f5e64fa7b96ff805e31f91ae6a64b5c
+2008-11-07T15:38:56.932910Z
+1587
 joehni
 has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+9499
 
 XStream11CompatibilityTest.java
 file
@@ -502,6 +869,40 @@ file
 joehni
 has-props
 
+WriteReplaceTest.java
+file
+
+
+
+
+2009-02-27T01:07:39.000000Z
+d4d9dfe17f556cd1acbc0e8d28fc13cb
+2008-10-27T23:49:42.328581Z
+1574
+joehni
+has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+9118
+
 CustomFieldKeySorterTest.java
 file
 
@@ -510,19 +911,6 @@ file
 
 2008-08-28T16:34:32.000000Z
 969d9a69fbd128372e1c6207c418ff05
-2007-12-11T01:50:12.145301Z
-1345
-joehni
-has-props
-
-WriteReplaceTest.java
-file
-
-
-
-
-2008-08-28T16:34:32.000000Z
-09c1ba4a60f6fa92426155557ef12205
 2007-12-11T01:50:12.145301Z
 1345
 joehni
@@ -547,12 +935,33 @@ file
 
 
 
-2008-08-28T16:34:32.000000Z
-802f9fd835cf7d41762140bfeb938304
-2007-12-11T01:50:12.145301Z
-1345
+2009-02-27T01:07:39.000000Z
+654628b6174e517d491a12411b981abe
+2008-11-10T22:37:50.903817Z
+1594
 joehni
 has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+11785
 
 RelativeXPathDuplicateReferenceTest.java
 file
@@ -599,12 +1008,33 @@ file
 
 
 
-2008-08-28T16:34:32.000000Z
-df1cd44b1478c719d463c28d2f6183d0
-2007-12-11T01:50:12.145301Z
-1345
+2009-02-27T01:07:39.000000Z
+eacfe5bbb6537c13ae59786f5c5c74b9
+2008-11-11T22:19:25.354483Z
+1599
 joehni
 has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+918
 
 EncodingTestSuite.java
 file
@@ -612,12 +1042,33 @@ file
 
 
 
-2008-08-28T16:34:32.000000Z
-df3eabac172bfaee5b9ff70ded0a9484
-2008-02-13T22:27:39.841773Z
-1430
+2009-02-27T01:07:39.000000Z
+1247f30d3ee143d17cdb17cf3980ac18
+2008-02-29T22:27:33.044888Z
+1457
 joehni
 has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+5304
 
 CustomConverterTest.java
 file
@@ -671,32 +1122,6 @@ file
 joehni
 has-props
 
-CglibCompatibilityTest.java
-file
-
-
-
-
-2008-08-28T16:34:32.000000Z
-c3aa4f808921135761cacf12d9a2a91f
-2008-01-04T17:46:18.253335Z
-1375
-joehni
-has-props
-
-MultipleObjectsInOneStreamTest.java
-file
-
-
-
-
-2008-08-28T16:34:32.000000Z
-c1a97d83cf3e12c6f786fb5e6c061d9c
-2008-01-24T02:14:18.653983Z
-1393
-joehni
-has-props
-
 XStreamerTest.java
 file
 
@@ -710,18 +1135,107 @@ dec6cf9c8fe05728b17ef5db196e4e07
 joehni
 has-props
 
+MultipleObjectsInOneStreamTest.java
+file
+
+
+
+
+2009-02-27T01:07:39.000000Z
+8c2dabbf552267a1fd803fe0b4b73013
+2008-12-02T23:13:54.277857Z
+1619
+joehni
+has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+11756
+
+CglibCompatibilityTest.java
+file
+
+
+
+
+2009-02-27T01:07:39.000000Z
+6acc3d271b81584ab1066f1793c3ea1e
+2008-12-05T21:42:41.791490Z
+1620
+joehni
+has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+16301
+
 AbstractDuplicateReferenceTest.java
 file
 
 
 
 
-2008-08-28T16:34:32.000000Z
-98c2c2530cc8c9b55e52678876e9e6da
-2007-12-11T01:50:12.145301Z
-1345
+2009-02-27T01:07:39.000000Z
+7a76208f06ad3f90529591fa4b032daa
+2008-11-11T23:53:19.187819Z
+1601
 joehni
 has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+5817
 
 ConcreteClassesTest.java
 file
@@ -729,12 +1243,33 @@ file
 
 
 
-2008-08-28T16:34:32.000000Z
-3bb685209ee862acca6949a046e01c6b
-2007-12-11T01:50:12.145301Z
-1345
+2009-02-27T01:07:39.000000Z
+1ee0eb8178e9c808c038b1798d93f3ae
+2008-11-28T21:38:00.891378Z
+1616
 joehni
 has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+3326
 
 LocalConverterTest.java
 file
@@ -742,12 +1277,33 @@ file
 
 
 
-2008-08-28T16:34:32.000000Z
-b74354cd2dda6c68f94d870728d0266e
-2007-12-11T01:50:12.145301Z
-1345
+2009-02-27T01:07:39.000000Z
+a1c54d480162f44225c0163ba810ee79
+2008-10-08T21:35:56.909748Z
+1560
 joehni
 has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+3411
 
 SwingTest.java
 file
@@ -755,12 +1311,33 @@ file
 
 
 
-2008-08-28T16:34:32.000000Z
-26a63d190b4647a58fb934043a75d44d
-2007-12-11T01:50:12.145301Z
-1345
+2009-02-27T01:07:39.000000Z
+0a21734154df01d9366d4498cbee2078
+2008-10-01T17:33:19.261053Z
+1550
 joehni
 has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+2286
 
 CustomClassesTest.java
 file
@@ -775,19 +1352,6 @@ file
 joehni
 has-props
 
-InnerClassesTest.java
-file
-
-
-
-
-2008-08-28T16:34:32.000000Z
-980c4cf5c398ead7766d0219f7416d9e
-2007-12-11T01:50:12.145301Z
-1345
-joehni
-has-props
-
 QNameMappedConcreteClassesTest.java
 file
 
@@ -796,6 +1360,19 @@ file
 
 2008-08-28T16:34:32.000000Z
 320c6a72e612c22e2e5c3e3e23776f89
+2007-12-11T01:50:12.145301Z
+1345
+joehni
+has-props
+
+InnerClassesTest.java
+file
+
+
+
+
+2008-08-28T16:34:32.000000Z
+980c4cf5c398ead7766d0219f7416d9e
 2007-12-11T01:50:12.145301Z
 1345
 joehni

@@ -1,14 +1,14 @@
-8
+9
 
 dir
-1494
-http://svn.codehaus.org/xstream/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/converters
+1642
+http://svn.codehaus.org/xstream/tags/XSTREAM_1_3_1/xstream/src/java/com/thoughtworks/xstream/converters
 http://svn.codehaus.org/xstream
 
 
 
-2008-02-26T16:07:07.760163Z
-1445
+2008-12-05T21:58:42.335438Z
+1621
 joehni
 
 
@@ -39,6 +39,9 @@ d2c5adf0979072a7dfaf029a4ce8c698
 joehni
 has-props
 
+basic
+dir
+
 ConverterLookup.java
 file
 
@@ -52,17 +55,48 @@ b2a495cf0eeb2d34f6280847131f6b24
 joehni
 has-props
 
-basic
-dir
-
 ConversionException.java
 file
 
 
 
 
+2009-02-27T01:07:40.000000Z
+3e2ae3cab92e9af55ab3658950d5e2c8
+2008-11-07T16:26:19.006134Z
+1590
+joehni
+has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+2783
+
+SingleValueConverter.java
+file
+
+
+
+
 2008-08-28T16:34:34.000000Z
-7fa137bfb4420f3796272e9c4cf79194
+5b639e8b350566ec490a3413014ea75d
 2007-12-11T01:50:12.145301Z
 1345
 joehni
@@ -81,27 +115,17 @@ file
 joehni
 has-props
 
-SingleValueConverter.java
-file
-
-
-
-
-2008-08-28T16:34:34.000000Z
-5b639e8b350566ec490a3413014ea75d
-2007-12-11T01:50:12.145301Z
-1345
-joehni
-has-props
+enums
+dir
 
-Converter.java
+SingleValueConverterWrapper.java
 file
 
 
 
 
 2008-08-28T16:34:34.000000Z
-0424b948bd50876f550f7aa1fff303ed
+65a660fbd254a81fe3b968b5530d01ce
 2007-12-11T01:50:12.145301Z
 1345
 joehni
@@ -120,21 +144,18 @@ file
 joehni
 has-props
 
-SingleValueConverterWrapper.java
+Converter.java
 file
 
 
 
 
 2008-08-28T16:34:34.000000Z
-65a660fbd254a81fe3b968b5530d01ce
+0424b948bd50876f550f7aa1fff303ed
 2007-12-11T01:50:12.145301Z
 1345
 joehni
 has-props
-
-enums
-dir
 
 UnmarshallingContext.java
 file

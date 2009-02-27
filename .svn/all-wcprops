@@ -1,41 +1,11 @@
 K 25
 svn:wc:ra_dav:version-url
-V 39
-/xstream/!svn/ver/1454/tags/XSTREAM_1_3
-END
-LICENSE.txt
-K 25
-svn:wc:ra_dav:version-url
-V 51
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/LICENSE.txt
-END
-svn-autoprops.config
-K 25
-svn:wc:ra_dav:version-url
-V 60
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/svn-autoprops.config
-END
-settings-template.xml
-K 25
-svn:wc:ra_dav:version-url
-V 61
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/settings-template.xml
+V 41
+/xstream/!svn/ver/1634/tags/XSTREAM_1_3_1
 END
 pom.xml
 K 25
 svn:wc:ra_dav:version-url
-V 47
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/pom.xml
-END
-README.txt
-K 25
-svn:wc:ra_dav:version-url
-V 50
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/README.txt
-END
-BUILD.txt
-K 25
-svn:wc:ra_dav:version-url
 V 49
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/BUILD.txt
+/xstream/!svn/ver/1631/tags/XSTREAM_1_3_1/pom.xml
 END

@@ -1,14 +1,14 @@
-8
+9
 
 dir
-1494
-http://svn.codehaus.org/xstream/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/acceptance/annotations
+1642
+http://svn.codehaus.org/xstream/tags/XSTREAM_1_3_1/xstream/src/test/com/thoughtworks/acceptance/annotations
 http://svn.codehaus.org/xstream
 
 
 
-2008-01-04T01:37:26.327810Z
-1370
+2008-11-13T00:13:17.165981Z
+1605
 joehni
 
 
@@ -71,12 +71,33 @@ file
 
 
 
-2008-08-28T16:34:31.000000Z
-d065c22be00186adc62480075b0e42de
-2008-01-04T01:37:26.327810Z
-1370
+2009-02-27T01:07:39.000000Z
+fdd622f26a3ede379bc8c2cb8e3b1ff9
+2008-10-08T21:35:56.909748Z
+1560
 joehni
 has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+7557
 
 XStream12AnnotationCompatibilityTest.java
 file
@@ -110,12 +131,33 @@ file
 
 
 
-2008-08-28T16:34:31.000000Z
-524820abb8dde223ffa725df78136265
-2007-12-11T01:50:12.145301Z
-1345
+2009-02-27T01:07:39.000000Z
+b1abb45672f6d8d1ced479d7a6ccdfca
+2008-11-13T00:13:17.165981Z
+1605
 joehni
 has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+5772
 
 ClassConverterTest.java
 file

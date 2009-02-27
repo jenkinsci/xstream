@@ -13,9 +13,11 @@ package com.thoughtworks.acceptance.annotations;
 
 import com.thoughtworks.acceptance.AbstractAcceptanceTest;
 import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 import com.thoughtworks.xstream.annotations.XStreamConverter;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
+import com.thoughtworks.xstream.converters.SingleValueConverter;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
@@ -47,9 +49,8 @@ public class FieldConverterTest extends AbstractAcceptanceTest {
     public void testAnnotationForFieldsOfSameType() {
         final TaskWithAnnotations task = new TaskWithAnnotations("Tom", "Dick", "Harry");
         final String xml = ""
-            + "<annotatedTask>\n"
+            + "<annotatedTask name2=\"_Dick_\">\n"
             + "  <name1 str=\"Tom\"/>\n"
-            + "  <name2>_Dick_</name2>\n"
             + "  <name3>Harry</name3>\n"
             + "</annotatedTask>";
         assertBothWays(task, xml);
@@ -58,9 +59,8 @@ public class FieldConverterTest extends AbstractAcceptanceTest {
     public void testAnnotationForHiddenFields() {
         final DerivedTask task = new DerivedTask("Tom", "Dick", "Harry");
         final String xml = ""
-            + "<derivedTask>\n"
+            + "<derivedTask name2=\"_Dick_\">\n"
             + "  <name1 defined-in=\"annotatedTask\" str=\"Tom\"/>\n"
-            + "  <name2>_Dick_</name2>\n"
             + "  <name3 defined-in=\"annotatedTask\">Harry</name3>\n"
             + "  <name1>Harry</name1>\n"
             + "  <name3 str=\"Tom\"/>\n"
@@ -72,9 +72,8 @@ public class FieldConverterTest extends AbstractAcceptanceTest {
         final TaskContainer taskContainer = new TaskContainer();
         final String xml = ""
             + "<taskContainer>\n"
-            + "  <task>\n"
+            + "  <task name2=\"_Dick_\">\n"
             + "    <name1 defined-in=\"annotatedTask\" str=\"Tom\"/>\n"
-            + "    <name2>_Dick_</name2>\n"
             + "    <name3 defined-in=\"annotatedTask\">Harry</name3>\n"
             + "    <name1>Harry</name1>\n"
             + "    <name3 str=\"Tom\"/>\n"
@@ -89,6 +88,7 @@ public class FieldConverterTest extends AbstractAcceptanceTest {
         private final String name1;
 
         @XStreamConverter(SecondaryConverter.class)
+        @XStreamAsAttribute
         private final String name2;
         private final String name3;
 
@@ -160,21 +160,18 @@ public class FieldConverterTest extends AbstractAcceptanceTest {
         }
     }
 
-    public static class SecondaryConverter implements Converter {
-
-        public void marshal(final Object source, final HierarchicalStreamWriter writer,
-            final MarshallingContext context) {
-            writer.setValue("_" + source.toString() + "_");
-        }
-
-        public Object unmarshal(final HierarchicalStreamReader reader,
-            final UnmarshallingContext context) {
-            final String value = reader.getValue();
-            return value.substring(1, value.length() - 1);
-        }
+    public static class SecondaryConverter implements SingleValueConverter {
 
         public boolean canConvert(final Class type) {
             return type.equals(String.class);
+        }
+
+        public Object fromString(String value) {
+            return value.substring(1, value.length() - 1);
+        }
+
+        public String toString(Object source) {
+            return "_" + source.toString() + "_";
         }
     }
 

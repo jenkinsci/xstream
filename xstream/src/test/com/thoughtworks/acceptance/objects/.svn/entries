@@ -1,14 +1,14 @@
-8
+9
 
 dir
-1494
-http://svn.codehaus.org/xstream/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/acceptance/objects
+1642
+http://svn.codehaus.org/xstream/tags/XSTREAM_1_3_1/xstream/src/test/com/thoughtworks/acceptance/objects
 http://svn.codehaus.org/xstream
 
 
 
-2007-12-11T01:50:12.145301Z
-1345
+2008-12-01T22:00:46.836836Z
+1618
 joehni
 
 
@@ -25,6 +25,40 @@ svn:special svn:externals svn:needs-lock
 
 
 9830eeb5-ddf4-0310-9ef7-f4b9a3e3227e
+
+Replaced.java
+file
+
+
+
+
+2009-02-27T01:07:39.000000Z
+3015d621140e90c96101332e9d3139da
+2008-10-22T23:16:50.168311Z
+1571
+joehni
+has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+681
 
 Product.java
 file
@@ -52,6 +86,40 @@ c38bc12d266a0d3f93be5a3d72b3b5eb
 joehni
 has-props
 
+Original.java
+file
+
+
+
+
+2009-02-27T01:07:39.000000Z
+fba1fbdde2208626097efcbf351608db
+2008-10-22T23:16:50.168311Z
+1571
+joehni
+has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+682
+
 StandardObject.java
 file
 
@@ -71,12 +139,33 @@ file
 
 
 
-2008-08-28T16:34:31.000000Z
-2062d4caab5e96dc4757a39420b744b6
-2007-12-11T01:50:12.145301Z
-1345
+2009-02-27T01:07:39.000000Z
+165d124e60581ece8738a59b8e9e2c34
+2008-09-19T14:29:48.407829Z
+1530
 joehni
 has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+2043
 
 StatusEnum.java
 file
@@ -110,12 +199,33 @@ file
 
 
 
-2008-08-28T16:34:31.000000Z
-0e3b7971d49e36c3497807107c2fdc46
-2007-12-11T01:50:12.145301Z
-1345
+2009-02-27T01:07:39.000000Z
+00f89b80d089b1aebbb93bff7f8e9fe7
+2008-12-01T22:00:46.836836Z
+1618
 joehni
 has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+1262
 
 Hardware.java
 file

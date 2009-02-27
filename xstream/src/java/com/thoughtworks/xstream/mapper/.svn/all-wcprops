@@ -1,143 +1,101 @@
 K 25
 svn:wc:ra_dav:version-url
-V 88
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/mapper
+V 90
+/xstream/!svn/ver/1631/tags/XSTREAM_1_3_1/xstream/src/java/com/thoughtworks/xstream/mapper
 END
 FieldAliasingMapper.java
 K 25
 svn:wc:ra_dav:version-url
-V 113
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/mapper/FieldAliasingMapper.java
+V 115
+/xstream/!svn/ver/1631/tags/XSTREAM_1_3_1/xstream/src/java/com/thoughtworks/xstream/mapper/FieldAliasingMapper.java
 END
-CachingMapper.java
+AbstractAttributeAliasingMapper.java
 K 25
 svn:wc:ra_dav:version-url
-V 107
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/mapper/CachingMapper.java
-END
-XmlFriendlyMapper.java
-K 25
-svn:wc:ra_dav:version-url
-V 111
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/mapper/XmlFriendlyMapper.java
-END
-AnnotationConfiguration.java
-K 25
-svn:wc:ra_dav:version-url
-V 117
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/mapper/AnnotationConfiguration.java
+V 127
+/xstream/!svn/ver/1631/tags/XSTREAM_1_3_1/xstream/src/java/com/thoughtworks/xstream/mapper/AbstractAttributeAliasingMapper.java
 END
 LocalConversionMapper.java
 K 25
 svn:wc:ra_dav:version-url
-V 115
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/mapper/LocalConversionMapper.java
-END
-XStream11XmlFriendlyMapper.java
-K 25
-svn:wc:ra_dav:version-url
-V 120
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/mapper/XStream11XmlFriendlyMapper.java
+V 117
+/xstream/!svn/ver/1631/tags/XSTREAM_1_3_1/xstream/src/java/com/thoughtworks/xstream/mapper/LocalConversionMapper.java
 END
 AttributeMapper.java
 K 25
 svn:wc:ra_dav:version-url
-V 109
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/mapper/AttributeMapper.java
+V 111
+/xstream/!svn/ver/1631/tags/XSTREAM_1_3_1/xstream/src/java/com/thoughtworks/xstream/mapper/AttributeMapper.java
+END
+PackageAliasingMapper.java
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/xstream/!svn/ver/1631/tags/XSTREAM_1_3_1/xstream/src/java/com/thoughtworks/xstream/mapper/PackageAliasingMapper.java
 END
 EnumMapper.java
 K 25
 svn:wc:ra_dav:version-url
-V 104
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/mapper/EnumMapper.java
-END
-ImmutableTypesMapper.java
-K 25
-svn:wc:ra_dav:version-url
-V 114
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/mapper/ImmutableTypesMapper.java
+V 106
+/xstream/!svn/ver/1631/tags/XSTREAM_1_3_1/xstream/src/java/com/thoughtworks/xstream/mapper/EnumMapper.java
 END
 AnnotationMapper.java
 K 25
 svn:wc:ra_dav:version-url
-V 110
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/mapper/AnnotationMapper.java
+V 112
+/xstream/!svn/ver/1631/tags/XSTREAM_1_3_1/xstream/src/java/com/thoughtworks/xstream/mapper/AnnotationMapper.java
 END
 AttributeAliasingMapper.java
 K 25
 svn:wc:ra_dav:version-url
-V 117
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/mapper/AttributeAliasingMapper.java
+V 119
+/xstream/!svn/ver/1631/tags/XSTREAM_1_3_1/xstream/src/java/com/thoughtworks/xstream/mapper/AttributeAliasingMapper.java
 END
 ClassAliasingMapper.java
 K 25
 svn:wc:ra_dav:version-url
-V 113
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/mapper/ClassAliasingMapper.java
-END
-DefaultImplementationsMapper.java
-K 25
-svn:wc:ra_dav:version-url
-V 122
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/mapper/DefaultImplementationsMapper.java
+V 115
+/xstream/!svn/ver/1631/tags/XSTREAM_1_3_1/xstream/src/java/com/thoughtworks/xstream/mapper/ClassAliasingMapper.java
 END
 ArrayMapper.java
 K 25
 svn:wc:ra_dav:version-url
-V 105
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/mapper/ArrayMapper.java
+V 107
+/xstream/!svn/ver/1631/tags/XSTREAM_1_3_1/xstream/src/java/com/thoughtworks/xstream/mapper/ArrayMapper.java
 END
 Mapper.java
 K 25
 svn:wc:ra_dav:version-url
-V 100
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/mapper/Mapper.java
+V 102
+/xstream/!svn/ver/1631/tags/XSTREAM_1_3_1/xstream/src/java/com/thoughtworks/xstream/mapper/Mapper.java
 END
 CGLIBMapper.java
 K 25
 svn:wc:ra_dav:version-url
-V 105
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/mapper/CGLIBMapper.java
+V 107
+/xstream/!svn/ver/1631/tags/XSTREAM_1_3_1/xstream/src/java/com/thoughtworks/xstream/mapper/CGLIBMapper.java
 END
 MapperWrapper.java
 K 25
 svn:wc:ra_dav:version-url
-V 107
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/mapper/MapperWrapper.java
+V 109
+/xstream/!svn/ver/1631/tags/XSTREAM_1_3_1/xstream/src/java/com/thoughtworks/xstream/mapper/MapperWrapper.java
 END
-AbstractXmlFriendlyMapper.java
+SystemAttributeAliasingMapper.java
 K 25
 svn:wc:ra_dav:version-url
-V 119
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/mapper/AbstractXmlFriendlyMapper.java
-END
-CannotResolveClassException.java
-K 25
-svn:wc:ra_dav:version-url
-V 121
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/mapper/CannotResolveClassException.java
+V 125
+/xstream/!svn/ver/1631/tags/XSTREAM_1_3_1/xstream/src/java/com/thoughtworks/xstream/mapper/SystemAttributeAliasingMapper.java
 END
 DefaultMapper.java
 K 25
 svn:wc:ra_dav:version-url
-V 107
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/mapper/DefaultMapper.java
-END
-OuterClassMapper.java
-K 25
-svn:wc:ra_dav:version-url
-V 110
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/mapper/OuterClassMapper.java
-END
-DynamicProxyMapper.java
-K 25
-svn:wc:ra_dav:version-url
-V 112
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/mapper/DynamicProxyMapper.java
+V 109
+/xstream/!svn/ver/1631/tags/XSTREAM_1_3_1/xstream/src/java/com/thoughtworks/xstream/mapper/DefaultMapper.java
 END
 ImplicitCollectionMapper.java
 K 25
 svn:wc:ra_dav:version-url
-V 118
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/mapper/ImplicitCollectionMapper.java
+V 120
+/xstream/!svn/ver/1631/tags/XSTREAM_1_3_1/xstream/src/java/com/thoughtworks/xstream/mapper/ImplicitCollectionMapper.java
 END

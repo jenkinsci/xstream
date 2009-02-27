@@ -1,14 +1,14 @@
-8
+9
 
 dir
-1494
-http://svn.codehaus.org/xstream/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/mapper
+1642
+http://svn.codehaus.org/xstream/tags/XSTREAM_1_3_1/xstream/src/java/com/thoughtworks/xstream/mapper
 http://svn.codehaus.org/xstream
 
 
 
-2008-02-26T16:07:07.760163Z
-1445
+2008-12-05T21:42:41.791490Z
+1620
 joehni
 
 
@@ -32,12 +32,33 @@ file
 
 
 
-2008-08-28T16:34:32.000000Z
-0e43468aede0c9353d9996cbdc6df5bc
-2007-12-11T01:50:12.145301Z
-1345
+2009-02-27T01:07:39.000000Z
+ece43ecffef3fd2dc975facbc9255bc1
+2008-10-21T18:05:17.830934Z
+1567
 joehni
 has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+2688
 
 CachingMapper.java
 file
@@ -49,19 +70,6 @@ file
 7faa04df8a61714dd3b2aa0eba0746bf
 2008-01-04T00:44:02.902807Z
 1366
-joehni
-has-props
-
-XmlFriendlyMapper.java
-file
-
-
-
-
-2008-08-28T16:34:32.000000Z
-18eff0637f578bcb06d381604ab5eb81
-2008-02-26T16:07:07.760163Z
-1445
 joehni
 has-props
 
@@ -78,18 +86,120 @@ file
 joehni
 has-props
 
-LocalConversionMapper.java
+XmlFriendlyMapper.java
 file
 
 
 
 
 2008-08-28T16:34:32.000000Z
-25c0bbcd42bbbb01b0c49a61c633cd25
+18eff0637f578bcb06d381604ab5eb81
 2008-02-26T16:07:07.760163Z
 1445
 joehni
 has-props
+
+AbstractAttributeAliasingMapper.java
+file
+
+
+
+
+2009-02-27T01:07:39.000000Z
+a5fcf5f88aef73be31e0ae546354b018
+2008-12-01T21:25:29.485407Z
+1617
+joehni
+has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+1320
+
+LocalConversionMapper.java
+file
+
+
+
+
+2009-02-27T01:07:39.000000Z
+62cfcae7809782179b15fbe8b2b7c15e
+2008-10-21T18:05:17.830934Z
+1567
+joehni
+has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+2826
+
+AttributeMapper.java
+file
+
+
+
+
+2009-02-27T01:07:39.000000Z
+e416369c3113384e2e9d9dd8334e0e31
+2008-12-01T21:25:29.485407Z
+1617
+joehni
+has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+5854
 
 XStream11XmlFriendlyMapper.java
 file
@@ -104,31 +214,39 @@ c2db02a5a187b81abfc7f3537dfc6c02
 joehni
 has-props
 
-AttributeMapper.java
+PackageAliasingMapper.java
 file
 
 
 
 
-2008-08-28T16:34:32.000000Z
-318a88e7a9749e26a561622cb9eb30a2
-2008-02-26T16:07:07.760163Z
-1445
+2009-02-27T01:07:39.000000Z
+f25e3b32d842f910bbc7f5d5f4799639
+2008-11-10T22:37:50.903817Z
+1594
 joehni
 has-props
-
-EnumMapper.java
-file
 
 
 
 
-2008-08-28T16:34:32.000000Z
-e8637fb2793310c8ae6c53993bcf4cf4
-2008-02-26T16:07:07.760163Z
-1445
-joehni
-has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+3424
 
 ImmutableTypesMapper.java
 file
@@ -143,18 +261,73 @@ e770e3a5c22a529c385845581f0275e4
 joehni
 has-props
 
+EnumMapper.java
+file
+
+
+
+
+2009-02-27T01:07:39.000000Z
+5b4e124247c742c7c99c7afede694cb5
+2008-12-01T21:25:29.485407Z
+1617
+joehni
+has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+4393
+
 AnnotationMapper.java
 file
 
 
 
 
-2008-08-28T16:34:32.000000Z
-2fcd8b37c5fba15bd137fe188b064efe
-2008-02-26T16:07:07.760163Z
-1445
+2009-02-27T01:07:39.000000Z
+443d5696281fbe643423c90b2e0eda6d
+2008-11-18T03:25:33.842898Z
+1609
 joehni
 has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+22277
 
 AttributeAliasingMapper.java
 file
@@ -162,25 +335,33 @@ file
 
 
 
-2008-08-28T16:34:32.000000Z
-28eebcc6225caad99b1e1a733741cf9a
-2007-12-11T01:50:12.145301Z
-1345
+2009-02-27T01:07:39.000000Z
+fd71d27263a44ae5288608a4a8355e32
+2008-10-10T19:53:15.190815Z
+1565
 joehni
 has-props
-
-ClassAliasingMapper.java
-file
 
 
 
 
-2008-08-28T16:34:32.000000Z
-56268197656100bf9631e12f9c2e9895
-2008-02-26T16:07:07.760163Z
-1445
-joehni
-has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+1072
 
 DefaultImplementationsMapper.java
 file
@@ -195,18 +376,73 @@ b173164735cb0c50f7779ab73efc1082
 joehni
 has-props
 
+ClassAliasingMapper.java
+file
+
+
+
+
+2009-02-27T01:07:39.000000Z
+5b7677c1c3906adb53ad89d688b3cc09
+2008-11-10T22:37:50.903817Z
+1594
+joehni
+has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+3887
+
 ArrayMapper.java
 file
 
 
 
 
-2008-08-28T16:34:32.000000Z
-103c2008638431b219c892c77454d31d
-2007-12-11T01:50:12.145301Z
-1345
+2009-02-27T01:07:39.000000Z
+fb833e96a62885b4b6807c7c07c8a0f0
+2008-10-06T20:15:16.762879Z
+1557
 joehni
 has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+4697
 
 Mapper.java
 file
@@ -214,12 +450,33 @@ file
 
 
 
-2008-08-28T16:34:32.000000Z
-cb11ec4726ff3e5499db267564dfdaa4
-2008-02-26T16:07:07.760163Z
-1445
+2009-02-27T01:07:39.000000Z
+828bad514b8822466d19a0b02fca0f25
+2008-12-01T21:25:29.485407Z
+1617
 joehni
 has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+6275
 
 CGLIBMapper.java
 file
@@ -227,12 +484,33 @@ file
 
 
 
-2008-08-28T16:34:32.000000Z
-eef0cb4506a97e1310cbee2dc13c3d97
-2007-12-11T01:50:12.145301Z
-1345
+2009-02-27T01:07:39.000000Z
+e398e08be7caee275c8985baa2174962
+2008-12-05T21:42:41.791490Z
+1620
 joehni
 has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+1659
 
 MapperWrapper.java
 file
@@ -240,12 +518,67 @@ file
 
 
 
-2008-08-28T16:34:32.000000Z
-e010fbbb2591279d659220fc1d3cb0a4
-2008-02-26T16:07:07.760163Z
-1445
+2009-02-27T01:07:39.000000Z
+30e5e5c1e50085388c5b395dbc5f1646
+2008-12-01T21:25:29.485407Z
+1617
 joehni
 has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+5747
+
+SystemAttributeAliasingMapper.java
+file
+
+
+
+
+2009-02-27T01:07:39.000000Z
+b24de805f1b3cc98f7e3d85b445d4c2b
+2008-12-01T21:25:29.485407Z
+1617
+joehni
+has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+1040
 
 AbstractXmlFriendlyMapper.java
 file
@@ -279,12 +612,33 @@ file
 
 
 
-2008-08-28T16:34:32.000000Z
-f939fe922209ef674eb581b666616c91
-2008-02-26T16:07:07.760163Z
-1445
+2009-02-27T01:07:39.000000Z
+0c8b1f0df1a700b41c56387da8d05359
+2008-12-01T21:25:29.485407Z
+1617
 joehni
 has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+6101
 
 OuterClassMapper.java
 file
@@ -318,10 +672,31 @@ file
 
 
 
-2008-08-28T16:34:32.000000Z
-639831c59278cc2f5e394fe52a879d92
-2007-12-11T01:50:12.145301Z
-1345
+2009-02-27T01:07:39.000000Z
+cc1bc47d5a174f1ae78475f3a5d24edf
+2008-11-18T03:24:01.679916Z
+1608
 joehni
 has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+9831
 

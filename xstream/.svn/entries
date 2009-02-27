@@ -1,14 +1,14 @@
-8
+9
 
 dir
-1494
-http://svn.codehaus.org/xstream/tags/XSTREAM_1_3/xstream
+1642
+http://svn.codehaus.org/xstream/tags/XSTREAM_1_3_1/xstream
 http://svn.codehaus.org/xstream
 
 
 
-2008-02-26T22:47:19.219062Z
-1452
+2008-12-06T15:46:46.654741Z
+1631
 joehni
 has-props
 
@@ -51,12 +51,33 @@ file
 
 
 
-2008-08-28T16:34:34.000000Z
-d8d8a3c4ee473fed8ab357c6406b6d48
-2007-12-11T22:18:41.322407Z
-1347
+2009-02-27T01:07:40.000000Z
+8df2fd859e9105a1ce3b845fddeefc97
+2008-12-01T22:00:46.836836Z
+1618
 joehni
 has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+1729
 
 jdk-1.5-specific.txt
 file
@@ -77,12 +98,33 @@ file
 
 
 
-2008-08-28T16:34:34.000000Z
-a3c75af473d99b9d6ac52bf5974a899d
-2008-02-26T22:47:19.219062Z
-1452
+2009-02-27T01:07:40.000000Z
+a1273dc9ab3b2209e798d09f8b4b0d01
+2008-12-06T15:46:46.654741Z
+1631
 joehni
 has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+11433
 
 build.xml
 file

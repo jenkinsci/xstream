@@ -1,14 +1,14 @@
-8
+9
 
 dir
-1494
-http://svn.codehaus.org/xstream/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/xstream/converters/reflection
+1642
+http://svn.codehaus.org/xstream/tags/XSTREAM_1_3_1/xstream/src/test/com/thoughtworks/xstream/converters/reflection
 http://svn.codehaus.org/xstream
 
 
 
-2008-02-23T00:13:20.742311Z
-1443
+2008-10-27T23:49:42.328581Z
+1574
 joehni
 
 
@@ -135,10 +135,31 @@ file
 
 
 
-2008-08-28T16:34:31.000000Z
+
 c3c60612c8add5d311c934b9a857025e
-2007-12-11T01:50:12.145301Z
-1345
+2008-10-27T23:49:42.328581Z
+1574
 joehni
 has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+10167
 

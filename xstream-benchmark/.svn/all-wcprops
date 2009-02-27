@@ -1,11 +1,11 @@
 K 25
 svn:wc:ra_dav:version-url
-V 57
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream-benchmark
+V 59
+/xstream/!svn/ver/1631/tags/XSTREAM_1_3_1/xstream-benchmark
 END
 pom.xml
 K 25
 svn:wc:ra_dav:version-url
-V 65
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream-benchmark/pom.xml
+V 67
+/xstream/!svn/ver/1631/tags/XSTREAM_1_3_1/xstream-benchmark/pom.xml
 END

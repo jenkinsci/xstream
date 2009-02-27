@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007 XStream Committers.
+ * Copyright (C) 2007, 2008 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -28,7 +28,7 @@ public final class JDK6StaxWriterTest extends AbstractStaxWriterTest {
             expected = perlUtil.substitute("s#<(\\w+|\\w+:\\w+) (xmlns[^\"]*\"[^\"]*\")>#<$1>#g", expected);
         }
         expected = perlUtil.substitute("s#<(\\w+)([^>]*)/>#<$1$2></$1>#g", expected);
-        expected = replaceAll(expected, "&#x0D;", "\r");
+        expected = replaceAll(expected, "&#xd;", "\r");
         expected = getXMLHeader() + expected;
         assertEquals(expected, buffer.toString());
     }

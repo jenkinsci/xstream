@@ -1,29 +1,35 @@
 K 25
 svn:wc:ra_dav:version-url
-V 93
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/xstream/persistence
+V 95
+/xstream/!svn/ver/1631/tags/XSTREAM_1_3_1/xstream/src/test/com/thoughtworks/xstream/persistence
+END
+FilePersistenceStrategyTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 128
+/xstream/!svn/ver/1631/tags/XSTREAM_1_3_1/xstream/src/test/com/thoughtworks/xstream/persistence/FilePersistenceStrategyTest.java
 END
 XmlArrayListTest.java
 K 25
 svn:wc:ra_dav:version-url
-V 115
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/xstream/persistence/XmlArrayListTest.java
+V 117
+/xstream/!svn/ver/1631/tags/XSTREAM_1_3_1/xstream/src/test/com/thoughtworks/xstream/persistence/XmlArrayListTest.java
 END
 XmlSetTest.java
 K 25
 svn:wc:ra_dav:version-url
-V 109
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/xstream/persistence/XmlSetTest.java
+V 111
+/xstream/!svn/ver/1631/tags/XSTREAM_1_3_1/xstream/src/test/com/thoughtworks/xstream/persistence/XmlSetTest.java
 END
 FileStreamStrategyTest.java
 K 25
 svn:wc:ra_dav:version-url
-V 121
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/xstream/persistence/FileStreamStrategyTest.java
+V 123
+/xstream/!svn/ver/1631/tags/XSTREAM_1_3_1/xstream/src/test/com/thoughtworks/xstream/persistence/FileStreamStrategyTest.java
 END
 XmlMapTest.java
 K 25
 svn:wc:ra_dav:version-url
-V 109
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/xstream/persistence/XmlMapTest.java
+V 111
+/xstream/!svn/ver/1631/tags/XSTREAM_1_3_1/xstream/src/test/com/thoughtworks/xstream/persistence/XmlMapTest.java
 END

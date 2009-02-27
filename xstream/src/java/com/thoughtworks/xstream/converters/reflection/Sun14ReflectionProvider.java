@@ -22,8 +22,6 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.WeakHashMap;
 
-import com.thoughtworks.xstream.core.util.ConcurrentWeakHashMap;
-
 /**
  * Instantiates a new object on the Sun JVM by bypassing the constructor (meaning code in the constructor
  * will never be executed and parameters do not have to be known). This is the same method used by the internals of
@@ -60,7 +58,7 @@ public class Sun14ReflectionProvider extends PureJavaReflectionProvider {
     }
 
     private transient ReflectionFactory reflectionFactory = ReflectionFactory.getReflectionFactory();
-    private transient Map constructorCache = new ConcurrentWeakHashMap();
+    private transient Map constructorCache = Collections.synchronizedMap(new WeakHashMap());
 
     public Sun14ReflectionProvider() {
     	super();
@@ -90,13 +88,13 @@ public class Sun14ReflectionProvider extends PureJavaReflectionProvider {
     }
 
     private Constructor getMungedConstructor(Class type) throws NoSuchMethodException {
-        WeakReference ref = (WeakReference)constructorCache.get(type);
-        if (ref == null || ref.get() == null) {
-            Constructor javaLangObjectConstructor = Object.class.getDeclaredConstructor(new Class[0]);
-            ref = new WeakReference(reflectionFactory.newConstructorForSerialization(type, javaLangObjectConstructor));
-            constructorCache.put(type, ref);
+        final WeakReference ref = (WeakReference)constructorCache.get(type);
+        Constructor ctor = (Constructor)(ref == null ? null : ref.get());
+        if (ctor == null) {
+            ctor = reflectionFactory.newConstructorForSerialization(type, Object.class.getDeclaredConstructor(new Class[0]));
+            constructorCache.put(type, new WeakReference(ctor));
         }
-        return (Constructor) ref.get();
+        return ctor;
     }
 
     public void writeField(Object object, String fieldName, Object value, Class definedIn) {

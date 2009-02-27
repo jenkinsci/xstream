@@ -1,14 +1,14 @@
-8
+9
 
 dir
-1494
-http://svn.codehaus.org/xstream/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/xstream/io/json
+1642
+http://svn.codehaus.org/xstream/tags/XSTREAM_1_3_1/xstream/src/test/com/thoughtworks/xstream/io/json
 http://svn.codehaus.org/xstream
 
 
 
-2008-02-21T01:47:27.575167Z
-1441
+2008-12-01T22:00:46.836836Z
+1618
 joehni
 
 
@@ -32,12 +32,67 @@ file
 
 
 
-2008-08-28T16:34:30.000000Z
-b019ed4f3916425a871e5f8d6f876e8d
-2008-02-21T01:47:27.575167Z
-1441
+2009-02-27T01:07:38.000000Z
+e92bca5da050e7bdfaa41f54712ac670
+2008-12-01T22:00:46.836836Z
+1618
 joehni
 has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+19954
+
+JsonWriterModeDroppingRootTest.java
+file
+
+
+
+
+2009-02-27T01:07:38.000000Z
+9c965e7d64ea6f8cca75efa7480dc5a8
+2008-12-01T22:00:46.836836Z
+1618
+joehni
+has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+4000
 
 JettisonMappedXmlDriverTest.java
 file
@@ -45,10 +100,31 @@ file
 
 
 
-2008-08-28T16:34:30.000000Z
-74a0d0321cbe638b6be9c52a79cc2191
-2008-02-12T23:25:34.957021Z
-1425
+2009-02-27T01:07:38.000000Z
+c9169f10cdc43b4b35d0c48e1ea3fff2
+2008-11-11T21:40:22.257081Z
+1597
 joehni
 has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+6869
 

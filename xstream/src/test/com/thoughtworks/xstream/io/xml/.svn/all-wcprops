@@ -1,155 +1,29 @@
 K 25
 svn:wc:ra_dav:version-url
-V 88
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/xstream/io/xml
+V 90
+/xstream/!svn/ver/1631/tags/XSTREAM_1_3_1/xstream/src/test/com/thoughtworks/xstream/io/xml
 END
 AbstractDocumentWriterTest.java
 K 25
 svn:wc:ra_dav:version-url
-V 120
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/xstream/io/xml/AbstractDocumentWriterTest.java
-END
-XomWriterTest.java
-K 25
-svn:wc:ra_dav:version-url
-V 107
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/xstream/io/xml/XomWriterTest.java
-END
-AbstractStaxWriterTest.java
-K 25
-svn:wc:ra_dav:version-url
-V 116
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/xstream/io/xml/AbstractStaxWriterTest.java
-END
-Dom4JReaderTest.java
-K 25
-svn:wc:ra_dav:version-url
-V 109
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/xstream/io/xml/Dom4JReaderTest.java
-END
-JDomAcceptanceTest.java
-K 25
-svn:wc:ra_dav:version-url
-V 112
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/xstream/io/xml/JDomAcceptanceTest.java
-END
-PrettyPrintWriterTest.java
-K 25
-svn:wc:ra_dav:version-url
-V 115
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/xstream/io/xml/PrettyPrintWriterTest.java
-END
-StaxReaderTest.java
-K 25
-svn:wc:ra_dav:version-url
-V 108
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/xstream/io/xml/StaxReaderTest.java
-END
-DomReaderTest.java
-K 25
-svn:wc:ra_dav:version-url
-V 107
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/xstream/io/xml/DomReaderTest.java
-END
-XppDomWriterTest.java
-K 25
-svn:wc:ra_dav:version-url
-V 110
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/xstream/io/xml/XppDomWriterTest.java
+V 122
+/xstream/!svn/ver/1631/tags/XSTREAM_1_3_1/xstream/src/test/com/thoughtworks/xstream/io/xml/AbstractDocumentWriterTest.java
 END
 AbstractXMLReaderTest.java
 K 25
 svn:wc:ra_dav:version-url
-V 115
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/xstream/io/xml/AbstractXMLReaderTest.java
-END
-Dom4JWriterTest.java
-K 25
-svn:wc:ra_dav:version-url
-V 109
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/xstream/io/xml/Dom4JWriterTest.java
+V 117
+/xstream/!svn/ver/1631/tags/XSTREAM_1_3_1/xstream/src/test/com/thoughtworks/xstream/io/xml/AbstractXMLReaderTest.java
 END
 DomWriterTest.java
 K 25
 svn:wc:ra_dav:version-url
-V 107
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/xstream/io/xml/DomWriterTest.java
-END
-JDomReaderTest.java
-K 25
-svn:wc:ra_dav:version-url
-V 108
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/xstream/io/xml/JDomReaderTest.java
-END
-AbstractXMLWriterTest.java
-K 25
-svn:wc:ra_dav:version-url
-V 115
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/xstream/io/xml/AbstractXMLWriterTest.java
-END
-WoodstoxStaxWriterTest.java
-K 25
-svn:wc:ra_dav:version-url
-V 116
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/xstream/io/xml/WoodstoxStaxWriterTest.java
-END
-CompactWriterTest.java
-K 25
-svn:wc:ra_dav:version-url
-V 111
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/xstream/io/xml/CompactWriterTest.java
-END
-BEAStaxWriterTest.java
-K 25
-svn:wc:ra_dav:version-url
-V 111
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/xstream/io/xml/BEAStaxWriterTest.java
-END
-JDomWriterTest.java
-K 25
-svn:wc:ra_dav:version-url
-V 108
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/xstream/io/xml/JDomWriterTest.java
-END
-XomReaderTest.java
-K 25
-svn:wc:ra_dav:version-url
-V 107
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/xstream/io/xml/XomReaderTest.java
-END
-SaxWriterTest.java
-K 25
-svn:wc:ra_dav:version-url
-V 107
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/xstream/io/xml/SaxWriterTest.java
-END
-XppDomReaderTest.java
-K 25
-svn:wc:ra_dav:version-url
-V 110
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/xstream/io/xml/XppDomReaderTest.java
-END
-XppReaderTest.java
-K 25
-svn:wc:ra_dav:version-url
-V 107
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/xstream/io/xml/XppReaderTest.java
+V 109
+/xstream/!svn/ver/1631/tags/XSTREAM_1_3_1/xstream/src/test/com/thoughtworks/xstream/io/xml/DomWriterTest.java
 END
 JDK6StaxWriterTest.java
 K 25
 svn:wc:ra_dav:version-url
-V 112
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/xstream/io/xml/JDK6StaxWriterTest.java
-END
-Dom4JXmlWriterTest.java
-K 25
-svn:wc:ra_dav:version-url
-V 112
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/xstream/io/xml/Dom4JXmlWriterTest.java
-END
-StaxDriverTest.java
-K 25
-svn:wc:ra_dav:version-url
-V 108
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/xstream/io/xml/StaxDriverTest.java
+V 114
+/xstream/!svn/ver/1631/tags/XSTREAM_1_3_1/xstream/src/test/com/thoughtworks/xstream/io/xml/JDK6StaxWriterTest.java
 END

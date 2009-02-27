@@ -1,14 +1,14 @@
-8
+9
 
 dir
-1494
-http://svn.codehaus.org/xstream/tags/XSTREAM_1_3/xstream-benchmark/src/test/com/thoughtworks/xstream/benchmark/xmlfriendly/product
+1642
+http://svn.codehaus.org/xstream/tags/XSTREAM_1_3_1/xstream-benchmark/src/test/com/thoughtworks/xstream/benchmark/xmlfriendly/product
 http://svn.codehaus.org/xstream
 
 
 
-2008-02-26T16:07:20.536377Z
-1446
+2008-10-21T18:06:17.307868Z
+1568
 joehni
 
 
@@ -32,25 +32,101 @@ file
 
 
 
-2008-08-28T16:34:34.000000Z
-3fb57b4476850a22d3fc233f0edd4d2b
-2008-02-26T16:07:20.536377Z
-1446
+2009-02-27T01:07:40.000000Z
+b98fb3bebb7ecf111fd4c811ab1aac94
+2008-10-21T18:06:17.307868Z
+1568
 joehni
 has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+17070
 
-XStream122Replacer.java
+CachingIterativeAppenderWithShortcut.java
 file
 
 
 
 
-2008-08-28T16:34:34.000000Z
-0a597a44eb14f620087bcf988ea356d0
-2007-12-11T22:18:41.322407Z
-1347
+2009-02-27T01:07:40.000000Z
+c0c1145b399bc3f8331bedc33a06bb92
+2008-10-21T18:06:17.307868Z
+1568
 joehni
 has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+2051
+
+IterativeAppenderWithShortcut.java
+file
+
+
+
+
+2009-02-27T01:07:40.000000Z
+06513a4a75c677f0ba5c39341af80cfa
+2008-10-21T18:06:17.307868Z
+1568
+joehni
+has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+1996
 
 CombinedLookupReplacer.java
 file
@@ -84,12 +160,33 @@ file
 
 
 
-2008-08-28T16:34:34.000000Z
-213cadb948a782cd1ec57df498a52f04
-2007-12-11T22:18:41.322407Z
-1347
+2009-02-27T01:07:40.000000Z
+5eb2496e50ed66c7b0e9ae5954e1b0ed
+2008-10-21T18:06:17.307868Z
+1568
 joehni
 has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+2057
 
 NoReplacer.java
 file
@@ -110,12 +207,33 @@ file
 
 
 
-2008-08-28T16:34:34.000000Z
-2b8431de67c8ec6ef1b33e63150e8808
-2007-12-11T22:18:41.322407Z
-1347
+2009-02-27T01:07:40.000000Z
+7471bc0f58725506a3955ca71ac4252d
+2008-10-21T18:06:17.307868Z
+1568
 joehni
 has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+2102
 
 SeparateLookupReplacer.java
 file

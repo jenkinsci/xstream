@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -17,6 +17,7 @@ import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.core.util.CustomObjectInputStream;
 import com.thoughtworks.xstream.core.util.CustomObjectOutputStream;
+import com.thoughtworks.xstream.core.util.HierarchicalStreams;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.ExtendedHierarchicalStreamWriterHelper;
@@ -29,7 +30,7 @@ import java.io.ObjectInputValidation;
 import java.util.Map;
 
 /**
- * Converts any object that implements the java.io.Externalizable interface, allowing compatability with native Java
+ * Converts any object that implements the java.io.Externalizable interface, allowing compatibility with native Java
  * serialization.
  *
  * @author Joe Walnes
@@ -74,7 +75,7 @@ public class ExternalizableConverter implements Converter {
                 }
 
                 public void close() {
-                    throw new UnsupportedOperationException("Objects are not allowed to call ObjecOutput.close() from writeExternal()");
+                    throw new UnsupportedOperationException("Objects are not allowed to call ObjectOutput.close() from writeExternal()");
                 }
             };
             CustomObjectOutputStream objectOutput = CustomObjectOutputStream.getInstance(context, callback);
@@ -92,7 +93,8 @@ public class ExternalizableConverter implements Converter {
             CustomObjectInputStream.StreamCallback callback = new CustomObjectInputStream.StreamCallback() {
                 public Object readFromStream() {
                     reader.moveDown();
-                    Object streamItem = context.convertAnother(externalizable, mapper.realClass(reader.getNodeName()));
+                    Class type = HierarchicalStreams.readClassType(reader, mapper);
+                    Object streamItem = context.convertAnother(externalizable, type);
                     reader.moveUp();
                     return streamItem;
                 }

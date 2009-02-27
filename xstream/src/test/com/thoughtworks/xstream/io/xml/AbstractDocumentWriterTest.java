@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -117,5 +117,18 @@ public abstract class AbstractDocumentWriterTest extends TestCase {
         parent.addChild(new Xpp3Dom("child"));
 
         assertDocumentProducedIs(parent);
+    }
+
+    protected void assertDocumentProducedIs(final Xpp3Dom expected, final Xpp3Dom tree)
+    {
+            copier.copy(new XppDomReader(tree), writer);
+
+            final Object[] nodes = writer.getTopLevelNodes().toArray(new Object[0]);
+            assertEquals(1, nodes.length);
+            for (int i = 0; i < nodes.length; i++) {
+                    final XppDomWriter xpp3 = new XppDomWriter();
+                    copier.copy(createDocumentReaderFor(nodes[i]), xpp3);
+                    assertTrue(equals(expected, xpp3.getConfiguration()));
+            }
     }
 }

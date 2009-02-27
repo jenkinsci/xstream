@@ -1,14 +1,14 @@
-8
+9
 
 dir
-1494
-http://svn.codehaus.org/xstream/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/annotations
+1642
+http://svn.codehaus.org/xstream/tags/XSTREAM_1_3_1/xstream/src/java/com/thoughtworks/xstream/annotations
 http://svn.codehaus.org/xstream
 
 
 
-2008-02-26T16:07:07.760163Z
-1445
+2008-12-01T21:25:29.485407Z
+1617
 joehni
 
 
@@ -50,6 +50,40 @@ f3f6e683e3300b11eb034ec4df977183
 1445
 joehni
 has-props
+
+XStreamInclude.java
+file
+
+
+
+
+2009-02-27T01:07:40.000000Z
+a51b178972a813682cd7a74a13dcbd99
+2008-12-01T21:25:29.485407Z
+1617
+joehni
+has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+762
 
 XStreamContainedType.java
 file
@@ -95,12 +129,33 @@ file
 
 
 
-2008-08-28T16:34:34.000000Z
-44a2f08285b9d7b85edd80166b0878dd
-2007-12-11T01:50:12.145301Z
-1345
+2009-02-27T01:07:40.000000Z
+23bb47f5cb3f128d3bb162ace9e2c946
+2008-10-02T21:47:24.444083Z
+1556
 joehni
 has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+1313
 
 AnnotationReflectionConverter.java
 file
@@ -108,12 +163,33 @@ file
 
 
 
-2008-08-28T16:34:34.000000Z
-d3122a4832ed78841b6c74ae9faef4bf
-2008-02-26T16:07:07.760163Z
-1445
+2009-02-27T01:07:40.000000Z
+b198bceeae26b978a4b10e7ce4ac9348
+2008-10-02T21:47:24.444083Z
+1556
 joehni
 has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+4834
 
 Annotations.java
 file

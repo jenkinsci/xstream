@@ -1,14 +1,14 @@
-8
+9
 
 dir
-1494
-http://svn.codehaus.org/xstream/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/converters/reflection
+1642
+http://svn.codehaus.org/xstream/tags/XSTREAM_1_3_1/xstream/src/java/com/thoughtworks/xstream/converters/reflection
 http://svn.codehaus.org/xstream
 
 
 
-2008-02-26T16:07:07.760163Z
-1445
+2008-12-05T21:58:42.335438Z
+1621
 joehni
 
 
@@ -26,44 +26,39 @@ svn:special svn:externals svn:needs-lock
 
 9830eeb5-ddf4-0310-9ef7-f4b9a3e3227e
 
-AbstractAttributedCharacterIteratorAttributeConverter.java
+Sun14ReflectionProvider.java
 file
 
 
 
 
-2008-08-28T16:34:33.000000Z
-74dc622aeefbfb66dbed16ac80e498c0
-2007-12-11T01:50:12.145301Z
-1345
+2009-02-27T01:07:40.000000Z
+b204908064a5bb86242196084b3d087f
+2008-06-04T08:15:27.231997Z
+1472
 joehni
 has-props
-
-AbstractReflectionConverter.java
-file
 
 
 
 
-2008-08-28T16:34:33.000000Z
-0c3876d0e564ed4568e78c47e04a7b27
-2008-02-23T00:13:20.742311Z
-1443
-joehni
-has-props
-
-CGLIBEnhancedConverter.java
-file
 
 
 
 
-2008-08-28T16:34:33.000000Z
-dfa2cd2ffa235bfd633d6af3b929a6dc
-2007-12-11T01:50:12.145301Z
-1345
-joehni
-has-props
+
+
+
+
+
+
+
+
+
+
+
+
+6336
 
 ExternalizableConverter.java
 file
@@ -71,74 +66,33 @@ file
 
 
 
-2008-08-28T16:34:33.000000Z
-89bae8f8a5db3c172cbe6ba4855f0826
-2007-12-11T01:50:12.145301Z
-1345
+2009-02-27T01:07:40.000000Z
+f8d3c326510757d113de7fc42621f687
+2008-10-09T19:25:54.105721Z
+1563
 joehni
 has-props
-
-FieldDictionary.java
-file
 
 
 
 
-2008-08-28T16:34:33.000000Z
-e7a2f71a698eebfb33a05f91c85b8d69
-2008-02-26T16:07:07.760163Z
-1445
-joehni
-has-props
-
-FieldKey.java
-file
 
 
 
 
-2008-08-28T16:34:33.000000Z
-48d9757bf1ce2fe742168e94696c8ffd
-2007-12-11T01:50:12.145301Z
-1345
-joehni
-
-FieldKeySorter.java
-file
 
 
 
 
-2008-08-28T16:34:33.000000Z
-40cbc3d1455ae504d801d2217ff04730
-2007-12-11T01:50:12.145301Z
-1345
-joehni
-
-HarmonyReflectionProvider.java
-file
-
-
-
-delete
-2008-08-28T16:34:33.000000Z
-d9fb4a40ae114aa48c5a98e0676b134c
-2008-01-08T22:46:44.724771Z
-1378
-joehni
-has-props
-
-ImmutableFieldKeySorter.java
-file
 
 
 
 
-2008-08-28T16:34:33.000000Z
-766eebe5aac1ad9be344b12356d8ee2f
-2007-12-11T01:50:12.145301Z
-1345
-joehni
+
+
+
+
+5657
 
 NativeFieldKeySorter.java
 file
@@ -153,23 +107,16 @@ file
 joehni
 has-props
 
-NonExistentFieldException.java
-file
-0
-
-
-add
-
-ObjectAccessException.java
+XStream12FieldKeySorter.java
 file
 
 
 
 
 2008-08-28T16:34:33.000000Z
-df2a4d79ad91b52437fa8573881e2f22
-2007-12-11T01:50:12.145301Z
-1345
+3fbb69722f97f0dee5ed5c3a259d8947
+2008-02-26T16:07:07.760163Z
+1445
 joehni
 has-props
 
@@ -186,18 +133,39 @@ file
 joehni
 has-props
 
-ReflectionConverter.java
+HarmonyReflectionProvider.java
 file
 
 
 
 
-2008-08-28T16:34:33.000000Z
-e554c1e847435a8c492e57ecb89b3db7
-2007-12-11T01:50:12.145301Z
-1345
+2009-02-27T01:07:40.000000Z
+f05e5bf3924bd5c19e33b966ee440953
+2008-04-21T22:39:54.058315Z
+1468
 joehni
 has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+5199
 
 ReflectionProvider.java
 file
@@ -225,6 +193,100 @@ file
 joehni
 has-props
 
+AbstractReflectionConverter.java
+file
+
+
+
+
+2009-02-27T01:07:40.000000Z
+e2ba4475fc44b981faf7dd5ea79f0e89
+2008-11-28T21:38:00.891378Z
+1616
+joehni
+has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+17928
+
+ObjectAccessException.java
+file
+
+
+
+
+2008-08-28T16:34:33.000000Z
+df2a4d79ad91b52437fa8573881e2f22
+2007-12-11T01:50:12.145301Z
+1345
+joehni
+has-props
+
+FieldDictionary.java
+file
+
+
+
+
+2008-08-28T16:34:33.000000Z
+e7a2f71a698eebfb33a05f91c85b8d69
+2008-02-26T16:07:07.760163Z
+1445
+joehni
+has-props
+
+SerializationMethodInvoker.java
+file
+
+
+
+
+2009-02-27T01:07:40.000000Z
+9ad3546f2ff4925f08a364b30fe83216
+2008-10-21T18:04:13.904107Z
+1566
+joehni
+has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+6120
+
 SelfStreamingInstanceChecker.java
 file
 
@@ -238,27 +300,14 @@ file
 joehni
 has-props
 
-SerializableConverter.java
+ReflectionConverter.java
 file
 
 
 
 
 2008-08-28T16:34:33.000000Z
-85c2104b4bbf169613af7b8c1a5f4ebb
-2007-12-11T01:50:12.145301Z
-1345
-joehni
-has-props
-
-SerializationMethodInvoker.java
-file
-
-
-
-
-2008-08-28T16:34:33.000000Z
-dc665825454a4e68fde2b4af8242504c
+e554c1e847435a8c492e57ecb89b3db7
 2007-12-11T01:50:12.145301Z
 1345
 joehni
@@ -276,29 +325,120 @@ file
 1345
 joehni
 
-Sun14ReflectionProvider.java
+ImmutableFieldKeySorter.java
 file
 
 
 
 
 2008-08-28T16:34:33.000000Z
-c9ca8cc4d52d37e18c7b6c4794499464
-2008-01-08T23:03:01.746517Z
-1382
+766eebe5aac1ad9be344b12356d8ee2f
+2007-12-11T01:50:12.145301Z
+1345
+joehni
+
+FieldKeySorter.java
+file
+
+
+
+
+2008-08-28T16:34:33.000000Z
+40cbc3d1455ae504d801d2217ff04730
+2007-12-11T01:50:12.145301Z
+1345
+joehni
+
+FieldKey.java
+file
+
+
+
+
+2008-08-28T16:34:33.000000Z
+48d9757bf1ce2fe742168e94696c8ffd
+2007-12-11T01:50:12.145301Z
+1345
+joehni
+
+CGLIBEnhancedConverter.java
+file
+
+
+
+
+2009-02-27T01:07:40.000000Z
+48cdc0321be9f675761b17f2969aa421
+2008-12-05T21:58:42.335438Z
+1621
+joehni
+has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+19274
+
+AbstractAttributedCharacterIteratorAttributeConverter.java
+file
+
+
+
+
+2008-08-28T16:34:33.000000Z
+74dc622aeefbfb66dbed16ac80e498c0
+2007-12-11T01:50:12.145301Z
+1345
 joehni
 has-props
 
-XStream12FieldKeySorter.java
+SerializableConverter.java
 file
 
 
 
 
-2008-08-28T16:34:33.000000Z
-3fbb69722f97f0dee5ed5c3a259d8947
-2008-02-26T16:07:07.760163Z
-1445
+2009-02-27T01:07:40.000000Z
+2e3c6b0a4356bd6bf5c2f8bd591cbf6d
+2008-11-15T20:00:45.838144Z
+1606
 joehni
 has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+21268
 

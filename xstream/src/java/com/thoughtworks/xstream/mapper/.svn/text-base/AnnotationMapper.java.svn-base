@@ -18,9 +18,13 @@ import com.thoughtworks.xstream.annotations.XStreamConverter;
 import com.thoughtworks.xstream.annotations.XStreamConverters;
 import com.thoughtworks.xstream.annotations.XStreamImplicit;
 import com.thoughtworks.xstream.annotations.XStreamImplicitCollection;
+import com.thoughtworks.xstream.annotations.XStreamInclude;
 import com.thoughtworks.xstream.annotations.XStreamOmitField;
 import com.thoughtworks.xstream.converters.Converter;
+import com.thoughtworks.xstream.converters.ConverterMatcher;
 import com.thoughtworks.xstream.converters.ConverterRegistry;
+import com.thoughtworks.xstream.converters.SingleValueConverter;
+import com.thoughtworks.xstream.converters.SingleValueConverterWrapper;
 import com.thoughtworks.xstream.converters.reflection.ReflectionProvider;
 import com.thoughtworks.xstream.core.JVM;
 import com.thoughtworks.xstream.core.util.DependencyInjectionFactory;
@@ -88,7 +92,7 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
     }
 
     @Override
-    public String realMember(Class type, String serialized) {
+    public String realMember(final Class type, final String serialized) {
         if (!locked) {
             processAnnotations(type);
         }
@@ -96,7 +100,7 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
     }
 
     @Override
-    public String serializedClass(Class type) {
+    public String serializedClass(final Class type) {
         if (!locked) {
             processAnnotations(type);
         }
@@ -104,7 +108,7 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
     }
 
     @Override
-    public Class defaultImplementationOf(Class type) {
+    public Class defaultImplementationOf(final Class type) {
         if (!locked) {
             processAnnotations(type);
         }
@@ -123,7 +127,7 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
         return super.getLocalConverter(definedIn, fieldName);
     }
 
-    public void autodetectAnnotations(boolean mode) {
+    public void autodetectAnnotations(final boolean mode) {
         locked = !mode;
     }
 
@@ -134,7 +138,7 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
         locked = true;
         synchronized (annotatedTypes) {
             final Set<Class<?>> types = new UnprocessedTypesSet();
-            for (Class initialType : initialTypes) {
+            for (final Class initialType : initialTypes) {
                 types.add(initialType);
             }
             processTypes(types);
@@ -200,10 +204,10 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
 
     private void addParametrizedTypes(Type type, final Set<Class<?>> types) {
         final Set<Type> processedTypes = new HashSet<Type>();
-        Set<Type> localTypes = new LinkedHashSet<Type>() {
+        final Set<Type> localTypes = new LinkedHashSet<Type>() {
 
             @Override
-            public boolean add(Type o) {
+            public boolean add(final Type o) {
                 if (o instanceof Class) {
                     return types.add((Class<?>)o);
                 }
@@ -214,11 +218,11 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
         while (type != null) {
             processedTypes.add(type);
             if (type instanceof Class) {
-                Class<?> clazz = (Class<?>)type;
+                final Class<?> clazz = (Class<?>)type;
                 types.add(clazz);
                 if (!clazz.isPrimitive()) {
                     final TypeVariable<?>[] typeParameters = clazz.getTypeParameters();
-                    for (TypeVariable<?> typeVariable : typeParameters) {
+                    for (final TypeVariable<?> typeVariable : typeParameters) {
                         localTypes.add(typeVariable);
                     }
                     localTypes.add(clazz.getGenericSuperclass());
@@ -229,14 +233,14 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
             } else if (type instanceof TypeVariable) {
                 final TypeVariable<?> typeVariable = (TypeVariable<?>)type;
                 final Type[] bounds = typeVariable.getBounds();
-                for (Type bound : bounds) {
+                for (final Type bound : bounds) {
                     localTypes.add(bound);
                 }
             } else if (type instanceof ParameterizedType) {
                 final ParameterizedType parametrizedType = (ParameterizedType)type;
                 localTypes.add(parametrizedType.getRawType());
-                Type[] actualArguments = parametrizedType.getActualTypeArguments();
-                for (Type actualArgument : actualArguments) {
+                final Type[] actualArguments = parametrizedType.getActualTypeArguments();
+                for (final Type actualArgument : actualArguments) {
                     localTypes.add(actualArgument);
                 }
             } else if (type instanceof GenericArrayType) {
@@ -245,7 +249,7 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
             }
 
             if (!localTypes.isEmpty()) {
-                Iterator<Type> iter = localTypes.iterator();
+                final Iterator<Type> iter = localTypes.iterator();
                 type = iter.next();
                 iter.remove();
             } else {
@@ -258,7 +262,8 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
         if (converterRegistry != null) {
             final XStreamConverters convertersAnnotation = type
                 .getAnnotation(XStreamConverters.class);
-            final XStreamConverter converterAnnotation = type.getAnnotation(XStreamConverter.class);
+            final XStreamConverter converterAnnotation = type
+                .getAnnotation(XStreamConverter.class);
             final List<XStreamConverter> annotations = convertersAnnotation != null
                 ? new ArrayList<XStreamConverter>(Arrays.asList(convertersAnnotation.value()))
                 : new ArrayList<XStreamConverter>();
@@ -266,10 +271,10 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
                 annotations.add(converterAnnotation);
             }
             for (final XStreamConverter annotation : annotations) {
-                final Class<? extends Converter> converterType = annotation.value();
+                final Class<? extends ConverterMatcher> converterType = annotation.value();
                 final Converter converter = cacheConverter(converterType);
                 if (converter != null) {
-                    if (converter != converterAnnotation || converter.canConvert(type)) {
+                    if (converterAnnotation != null || converter.canConvert(type)) {
                         converterRegistry.registerConverter(converter, XStream.PRIORITY_NORMAL);
                     } else {
                         throw new InitializationException("Converter "
@@ -379,8 +384,8 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
                     + ImplicitCollectionMapper.class.getName()
                     + " available");
             }
-            String fieldName = field.getName();
-            String itemFieldName = implicitAnnotation.itemFieldName();
+            final String fieldName = field.getName();
+            final String itemFieldName = implicitAnnotation.itemFieldName();
             Class itemType = null;
             final Type genericType = field.getGenericType();
             if (genericType instanceof ParameterizedType) {
@@ -413,7 +418,7 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
     private void processLocalConverterAnnotation(final Field field) {
         final XStreamConverter annotation = field.getAnnotation(XStreamConverter.class);
         if (annotation != null) {
-            final Class<? extends Converter> converterType = annotation.value();
+            final Class<? extends ConverterMatcher> converterType = annotation.value();
             final Converter converter = cacheConverter(converterType);
             if (converter != null) {
                 if (localConversionMapper == null) {
@@ -427,12 +432,18 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
         }
     }
 
-    private Converter cacheConverter(final Class<? extends Converter> converterType) {
+    private Converter cacheConverter(final Class<? extends ConverterMatcher> converterType) {
         Converter converter = converterCache.get(converterType);
         if (converter == null) {
             try {
-                converter = (Converter)DependencyInjectionFactory.newInstance(
-                    converterType, arguments);
+                if (SingleValueConverter.class.isAssignableFrom(converterType)) {
+                    final SingleValueConverter svc = (SingleValueConverter)DependencyInjectionFactory
+                        .newInstance(converterType, arguments);
+                    converter = new SingleValueConverterWrapper(svc);
+                } else {
+                    converter = (Converter)DependencyInjectionFactory.newInstance(
+                        converterType, arguments);
+                }
                 converterCache.put(converterType, converter);
             } catch (final Exception e) {
                 throw new InitializationException("Cannot instantiate converter "
@@ -462,25 +473,37 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
                 type = type.getComponentType();
             }
             final String name = type.getName();
-            if (name.startsWith("java.") || name.startsWith("java.")) {
+            if (name.startsWith("java.") || name.startsWith("javax.")) {
                 return false;
             }
-            return annotatedTypes.contains(type) ? false : super.add(type);
+            final boolean ret = annotatedTypes.contains(type) ? false : super.add(type);
+            if (ret) {
+                final XStreamInclude inc = type.getAnnotation(XStreamInclude.class);
+                if (inc != null) {
+                    final Class<?>[] incTypes = inc.value();
+                    if (incTypes != null) {
+                        for (final Class<?> incType : incTypes) {
+                            add(incType);
+                        }
+                    }
+                }
+            }
+            return ret;
         }
     }
 
     private static class WeakHashSet<K> implements Set<K> {
 
         private static Object NULL = new Object();
-        private WeakHashMap<K, Object> map = new WeakHashMap<K, Object>();
+        private final WeakHashMap<K, Object> map = new WeakHashMap<K, Object>();
 
-        public boolean add(K o) {
+        public boolean add(final K o) {
             return map.put(o, NULL) == null;
         }
 
-        public boolean addAll(Collection<? extends K> c) {
+        public boolean addAll(final Collection<? extends K> c) {
             boolean ret = false;
-            for (K k : c) {
+            for (final K k : c) {
                 ret = add(k) | false;
             }
             return ret;
@@ -490,11 +513,11 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
             map.clear();
         }
 
-        public boolean contains(Object o) {
+        public boolean contains(final Object o) {
             return map.containsKey(o);
         }
 
-        public boolean containsAll(Collection<?> c) {
+        public boolean containsAll(final Collection<?> c) {
             return map.keySet().containsAll(c);
         }
 
@@ -506,19 +529,19 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
             return map.keySet().iterator();
         }
 
-        public boolean remove(Object o) {
+        public boolean remove(final Object o) {
             return map.remove(o) != null;
         }
 
-        public boolean removeAll(Collection<?> c) {
+        public boolean removeAll(final Collection<?> c) {
             boolean ret = false;
-            for (Object object : c) {
+            for (final Object object : c) {
                 ret = remove(object) | false;
             }
             return ret;
         }
 
-        public boolean retainAll(Collection<?> c) {
+        public boolean retainAll(final Collection<?> c) {
             boolean ret = false;
             for (final Iterator<K> iter = iterator(); iter.hasNext();) {
                 final K element = iter.next();
@@ -538,7 +561,7 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
             return map.keySet().toArray();
         }
 
-        public <T> T[] toArray(T[] a) {
+        public <T> T[] toArray(final T[] a) {
             return map.keySet().toArray(a);
         }
 

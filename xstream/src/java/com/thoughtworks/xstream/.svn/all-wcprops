@@ -1,35 +1,11 @@
 K 25
 svn:wc:ra_dav:version-url
-V 81
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream
-END
-XStreamException.java
-K 25
-svn:wc:ra_dav:version-url
-V 103
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/XStreamException.java
+V 83
+/xstream/!svn/ver/1631/tags/XSTREAM_1_3_1/xstream/src/java/com/thoughtworks/xstream
 END
 XStream.java
 K 25
 svn:wc:ra_dav:version-url
-V 94
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/XStream.java
-END
-MarshallingStrategy.java
-K 25
-svn:wc:ra_dav:version-url
-V 106
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/MarshallingStrategy.java
-END
-InitializationException.java
-K 25
-svn:wc:ra_dav:version-url
-V 110
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/InitializationException.java
-END
-XStreamer.java
-K 25
-svn:wc:ra_dav:version-url
 V 96
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/XStreamer.java
+/xstream/!svn/ver/1631/tags/XSTREAM_1_3_1/xstream/src/java/com/thoughtworks/xstream/XStream.java
 END

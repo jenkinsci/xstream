@@ -83,6 +83,10 @@ public class JVM {
         return vendor.indexOf("Blackdown") != -1;
     }
 
+    private static boolean isDiablo() {
+        return vendor.indexOf("FreeBSD Foundation") != -1;
+    }
+
     private static boolean isHarmony() {
         return vendor.indexOf("Apache Software Foundation") != -1;
     }
@@ -178,7 +182,17 @@ public class JVM {
     }
 
     private boolean canUseSun14ReflectionProvider() {
-        return (isSun() || isApple() || isHPUX() || isIBM() || isBlackdown() || isBEAWithUnsafeSupport() || isHitachi() || isSAP()) && is14() && loadClass("sun.misc.Unsafe") != null;
+        return (isSun()
+            || isApple()
+            || isHPUX()
+            || isIBM()
+            || isBlackdown()
+            || isBEAWithUnsafeSupport()
+            || isHitachi()
+            || isSAP() 
+            || isDiablo())
+            && is14()
+            && loadClass("sun.misc.Unsafe") != null;
     }
 
     private boolean canUseHarmonyReflectionProvider() {
@@ -241,6 +255,7 @@ public class JVM {
         System.out.println("Version: " + majorJavaVersion);
         System.out.println("XStream support for enhanced Mode: " + (jvm.canUseSun14ReflectionProvider() || jvm.canUseHarmonyReflectionProvider()));
         System.out.println("Supports AWT: " + jvm.supportsAWT());
+        System.out.println("Supports Swing: " + jvm.supportsSwing());
         System.out.println("Supports SQL: " + jvm.supportsSQL());
         System.out.println("Reverse field order detected (may have failed): " + reverse);
     }

@@ -1,17 +1,11 @@
 K 25
 svn:wc:ra_dav:version-url
-V 101
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/xstream/converters/javabean
+V 103
+/xstream/!svn/ver/1631/tags/XSTREAM_1_3_1/xstream/src/test/com/thoughtworks/xstream/converters/javabean
 END
 JavaBeanConverterTest.java
 K 25
 svn:wc:ra_dav:version-url
-V 128
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/xstream/converters/javabean/JavaBeanConverterTest.java
-END
-PropertyDictionaryTest.java
-K 25
-svn:wc:ra_dav:version-url
-V 129
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/xstream/converters/javabean/PropertyDictionaryTest.java
+V 130
+/xstream/!svn/ver/1631/tags/XSTREAM_1_3_1/xstream/src/test/com/thoughtworks/xstream/converters/javabean/JavaBeanConverterTest.java
 END

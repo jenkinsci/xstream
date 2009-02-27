@@ -1,233 +1,35 @@
 K 25
 svn:wc:ra_dav:version-url
-V 88
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/io/xml
-END
-QNameMap.java
-K 25
-svn:wc:ra_dav:version-url
-V 102
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/io/xml/QNameMap.java
-END
-AbstractDocumentWriter.java
-K 25
-svn:wc:ra_dav:version-url
-V 116
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/io/xml/AbstractDocumentWriter.java
-END
-AbstractXmlDriver.java
-K 25
-svn:wc:ra_dav:version-url
-V 111
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/io/xml/AbstractXmlDriver.java
-END
-Dom4JReader.java
-K 25
-svn:wc:ra_dav:version-url
-V 105
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/io/xml/Dom4JReader.java
-END
-DomReader.java
-K 25
-svn:wc:ra_dav:version-url
-V 103
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/io/xml/DomReader.java
-END
-XppDomWriter.java
-K 25
-svn:wc:ra_dav:version-url
-V 106
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/io/xml/XppDomWriter.java
-END
-JDomDriver.java
-K 25
-svn:wc:ra_dav:version-url
-V 104
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/io/xml/JDomDriver.java
+V 90
+/xstream/!svn/ver/1631/tags/XSTREAM_1_3_1/xstream/src/java/com/thoughtworks/xstream/io/xml
 END
 AbstractXmlReader.java
 K 25
 svn:wc:ra_dav:version-url
-V 111
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/io/xml/AbstractXmlReader.java
-END
-Dom4JWriter.java
-K 25
-svn:wc:ra_dav:version-url
-V 105
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/io/xml/Dom4JWriter.java
-END
-JDomReader.java
-K 25
-svn:wc:ra_dav:version-url
-V 104
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/io/xml/JDomReader.java
-END
-DomWriter.java
-K 25
-svn:wc:ra_dav:version-url
-V 103
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/io/xml/DomWriter.java
-END
-XomDriver.java
-K 25
-svn:wc:ra_dav:version-url
-V 103
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/io/xml/XomDriver.java
-END
-AbstractXmlWriter.java
-K 25
-svn:wc:ra_dav:version-url
-V 111
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/io/xml/AbstractXmlWriter.java
-END
-AbstractPullReader.java
-K 25
-svn:wc:ra_dav:version-url
-V 112
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/io/xml/AbstractPullReader.java
-END
-XomReader.java
-K 25
-svn:wc:ra_dav:version-url
-V 103
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/io/xml/XomReader.java
-END
-JDomWriter.java
-K 25
-svn:wc:ra_dav:version-url
-V 104
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/io/xml/JDomWriter.java
-END
-SaxWriter.java
-K 25
-svn:wc:ra_dav:version-url
-V 103
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/io/xml/SaxWriter.java
-END
-StaxDriver.java
-K 25
-svn:wc:ra_dav:version-url
-V 104
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/io/xml/StaxDriver.java
-END
-TraxSource.java
-K 25
-svn:wc:ra_dav:version-url
-V 104
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/io/xml/TraxSource.java
-END
-XomWriter.java
-K 25
-svn:wc:ra_dav:version-url
-V 103
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/io/xml/XomWriter.java
-END
-DocumentReader.java
-K 25
-svn:wc:ra_dav:version-url
-V 108
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/io/xml/DocumentReader.java
-END
-PrettyPrintWriter.java
-K 25
-svn:wc:ra_dav:version-url
-V 111
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/io/xml/PrettyPrintWriter.java
-END
-StaxReader.java
-K 25
-svn:wc:ra_dav:version-url
-V 104
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/io/xml/StaxReader.java
-END
-DocumentWriter.java
-K 25
-svn:wc:ra_dav:version-url
-V 108
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/io/xml/DocumentWriter.java
+V 113
+/xstream/!svn/ver/1631/tags/XSTREAM_1_3_1/xstream/src/java/com/thoughtworks/xstream/io/xml/AbstractXmlReader.java
 END
 XmlFriendlyReplacer.java
 K 25
 svn:wc:ra_dav:version-url
-V 113
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/io/xml/XmlFriendlyReplacer.java
+V 115
+/xstream/!svn/ver/1631/tags/XSTREAM_1_3_1/xstream/src/java/com/thoughtworks/xstream/io/xml/XmlFriendlyReplacer.java
 END
 StaxWriter.java
 K 25
 svn:wc:ra_dav:version-url
-V 104
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/io/xml/StaxWriter.java
-END
-XmlFriendlyReader.java
-K 25
-svn:wc:ra_dav:version-url
-V 111
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/io/xml/XmlFriendlyReader.java
-END
-XStream11XmlFriendlyReplacer.java
-K 25
-svn:wc:ra_dav:version-url
-V 122
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/io/xml/XStream11XmlFriendlyReplacer.java
+V 106
+/xstream/!svn/ver/1631/tags/XSTREAM_1_3_1/xstream/src/java/com/thoughtworks/xstream/io/xml/StaxWriter.java
 END
 XppDriver.java
 K 25
 svn:wc:ra_dav:version-url
-V 103
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/io/xml/XppDriver.java
-END
-XppDomDriver.java
-K 25
-svn:wc:ra_dav:version-url
-V 106
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/io/xml/XppDomDriver.java
-END
-CompactWriter.java
-K 25
-svn:wc:ra_dav:version-url
-V 107
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/io/xml/CompactWriter.java
-END
-AbstractDocumentReader.java
-K 25
-svn:wc:ra_dav:version-url
-V 116
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/io/xml/AbstractDocumentReader.java
-END
-Dom4JDriver.java
-K 25
-svn:wc:ra_dav:version-url
 V 105
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/io/xml/Dom4JDriver.java
-END
-XmlFriendlyWriter.java
-K 25
-svn:wc:ra_dav:version-url
-V 111
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/io/xml/XmlFriendlyWriter.java
-END
-XppDomReader.java
-K 25
-svn:wc:ra_dav:version-url
-V 106
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/io/xml/XppDomReader.java
+/xstream/!svn/ver/1631/tags/XSTREAM_1_3_1/xstream/src/java/com/thoughtworks/xstream/io/xml/XppDriver.java
 END
 XppReader.java
 K 25
 svn:wc:ra_dav:version-url
-V 103
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/io/xml/XppReader.java
-END
-Dom4JXmlWriter.java
-K 25
-svn:wc:ra_dav:version-url
-V 108
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/io/xml/Dom4JXmlWriter.java
-END
-DomDriver.java
-K 25
-svn:wc:ra_dav:version-url
-V 103
-/xstream/!svn/ver/1452/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/io/xml/DomDriver.java
+V 105
+/xstream/!svn/ver/1631/tags/XSTREAM_1_3_1/xstream/src/java/com/thoughtworks/xstream/io/xml/XppReader.java
 END

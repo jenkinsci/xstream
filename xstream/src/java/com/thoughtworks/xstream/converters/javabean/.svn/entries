@@ -1,14 +1,14 @@
-8
+9
 
 dir
-1494
-http://svn.codehaus.org/xstream/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/converters/javabean
+1642
+http://svn.codehaus.org/xstream/tags/XSTREAM_1_3_1/xstream/src/java/com/thoughtworks/xstream/converters/javabean
 http://svn.codehaus.org/xstream
 
 
 
-2008-02-26T16:07:07.760163Z
-1445
+2008-12-01T21:25:29.485407Z
+1617
 joehni
 
 
@@ -32,12 +32,33 @@ file
 
 
 
-2008-08-28T16:34:33.000000Z
-f05cfca66c9499cbdbf843d825c0a58b
-2008-02-26T16:07:07.760163Z
-1445
+2009-02-27T01:07:40.000000Z
+d278dffb1cd040428b462a3da05bd244
+2008-11-15T20:00:45.838144Z
+1606
 joehni
 has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+6193
 
 BeanProvider.java
 file
@@ -45,12 +66,33 @@ file
 
 
 
-2008-08-28T16:34:33.000000Z
-4461fb70cb95c64ab462c4611caf8a9f
-2007-12-11T01:50:12.145301Z
-1345
+2009-02-27T01:07:40.000000Z
+060a0bb0c4545751425be75ea2b611ee
+2008-09-22T09:24:47.176394Z
+1537
 joehni
 has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+8003
 
 BeanProperty.java
 file
@@ -58,12 +100,33 @@ file
 
 
 
-2008-08-28T16:34:33.000000Z
-09275040eaa5b09f424aff3d88425e8b
-2007-12-11T01:50:12.145301Z
-1345
+2009-02-27T01:07:40.000000Z
+c81d453ff1d62ebd73bc72fcf0d621ab
+2008-12-01T21:25:29.485407Z
+1617
 joehni
 has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+3604
 
 PropertyDictionary.java
 file
@@ -71,10 +134,31 @@ file
 
 
 
-2008-08-28T16:34:33.000000Z
-2f3ae4f3c0a8b9bb1404205cb27b9bfd
-2007-12-11T01:50:12.145301Z
-1345
+2009-02-27T01:07:40.000000Z
+4b2c851c6d85b5f783e4552083fb1a98
+2008-12-01T21:25:29.485407Z
+1617
 joehni
 has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+7908
 

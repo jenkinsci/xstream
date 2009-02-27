@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -36,6 +36,8 @@ public class SampleDynamicProxy implements InvocationHandler {
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         if (method.getName().equals("equals")) {
             return equals(args[0]) ? Boolean.TRUE : Boolean.FALSE;
+        } else if (method.getName().equals("hashCode")) {
+            return new Integer(System.identityHashCode(proxy));
         } else {
             return aField;
         }

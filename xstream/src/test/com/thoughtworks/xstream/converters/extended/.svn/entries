@@ -1,8 +1,8 @@
-8
+9
 
 dir
-1494
-http://svn.codehaus.org/xstream/tags/XSTREAM_1_3/xstream/src/test/com/thoughtworks/xstream/converters/extended
+1642
+http://svn.codehaus.org/xstream/tags/XSTREAM_1_3_1/xstream/src/test/com/thoughtworks/xstream/converters/extended
 http://svn.codehaus.org/xstream
 
 
@@ -26,14 +26,14 @@ svn:special svn:externals svn:needs-lock
 
 9830eeb5-ddf4-0310-9ef7-f4b9a3e3227e
 
-JavaClassConverterTest.java
+GregorianCalendarConverterTest.java
 file
 
 
 
 
 2008-08-28T16:34:31.000000Z
-eaaf93e1fd9144eee28af32104df5da6
+dc44441e9bc7794618ba63b6c00452ce
 2007-12-11T01:50:12.145301Z
 1345
 joehni
@@ -52,14 +52,14 @@ a3efcae4d66e785234844ac99fd749da
 joehni
 has-props
 
-GregorianCalendarConverterTest.java
+JavaClassConverterTest.java
 file
 
 
 
 
 2008-08-28T16:34:31.000000Z
-dc44441e9bc7794618ba63b6c00452ce
+eaaf93e1fd9144eee28af32104df5da6
 2007-12-11T01:50:12.145301Z
 1345
 joehni

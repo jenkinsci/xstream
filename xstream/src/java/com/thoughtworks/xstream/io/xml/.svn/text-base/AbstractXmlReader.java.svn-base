@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -40,6 +40,16 @@ public abstract class AbstractXmlReader implements HierarchicalStreamReader, Xml
      */
     public String unescapeXmlName(String name) {
         return replacer.unescapeName(name);
+    }
+
+    /**
+     * Escapes XML-unfriendly name (node or attribute) 
+     * 
+     * @param name the unescaped XML-unfriendly name
+     * @return An escaped name with original characters
+     */
+    protected String escapeXmlName(String name) {
+        return replacer.escapeName(name);
     }
     
 }

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -72,9 +72,12 @@ public class BeanProvider {
             PropertyDescriptor property = propertyDescriptors[i];
             try {
                 Method readMethod = property.getReadMethod();
-                Object value = readMethod.invoke(object, new Object[0]);
-                visitor.visit(property.getName(), property.getPropertyType(), readMethod
-                    .getDeclaringClass(), value);
+                String name = property.getName();
+                Class definedIn = readMethod.getDeclaringClass();
+                if (visitor.shouldVisit(name, definedIn)) {
+                    Object value = readMethod.invoke(object, new Object[0]);
+                    visitor.visit(name, property.getPropertyType(), definedIn, value);
+                }
             } catch (IllegalArgumentException e) {
                 throw new ObjectAccessException("Could not get property "
                     + object.getClass()
@@ -184,7 +187,7 @@ public class BeanProvider {
             try {
                 beanInfo = Introspector.getBeanInfo(type, Object.class);
             } catch (IntrospectionException e) {
-                throw new ObjectAccessException("", e);
+                throw new ObjectAccessException("Cannot get BeanInfo of type " + type.getName(), e);
             }
             nameMap = new OrderRetainingMap();
             propertyNameCache.put(type, nameMap);
@@ -198,6 +201,7 @@ public class BeanProvider {
     }
 
     interface Visitor {
+        boolean shouldVisit(String name, Class definedIn);
         void visit(String name, Class type, Class definedIn, Object value);
     }
 }

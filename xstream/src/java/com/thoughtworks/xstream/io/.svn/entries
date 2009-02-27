@@ -1,14 +1,14 @@
-8
+9
 
 dir
-1494
-http://svn.codehaus.org/xstream/tags/XSTREAM_1_3/xstream/src/java/com/thoughtworks/xstream/io
+1642
+http://svn.codehaus.org/xstream/tags/XSTREAM_1_3_1/xstream/src/java/com/thoughtworks/xstream/io
 http://svn.codehaus.org/xstream
 
 
 
-2008-02-26T22:47:19.219062Z
-1452
+2008-12-01T21:25:29.485407Z
+1617
 joehni
 
 
@@ -55,19 +55,6 @@ fbec394ae3c655ae761eef72b7f8a4fa
 joehni
 has-props
 
-ExtendedHierarchicalStreamWriterHelper.java
-file
-
-
-
-
-2008-08-28T16:34:33.000000Z
-c0951fd70a0267e75d4780f445575d37
-2007-12-11T01:50:12.145301Z
-1345
-joehni
-has-props
-
 ExtendedHierarchicalStreamWriter.java
 file
 
@@ -76,6 +63,19 @@ file
 
 2008-08-28T16:34:32.000000Z
 1a4e036044183591f82b8631b87b1b9e
+2007-12-11T01:50:12.145301Z
+1345
+joehni
+has-props
+
+ExtendedHierarchicalStreamWriterHelper.java
+file
+
+
+
+
+2008-08-28T16:34:33.000000Z
+c0951fd70a0267e75d4780f445575d37
 2007-12-11T01:50:12.145301Z
 1345
 joehni
@@ -97,19 +97,6 @@ has-props
 path
 dir
 
-WriterWrapper.java
-file
-
-
-
-
-2008-08-28T16:34:33.000000Z
-c76fb036d4ef41e491989281b52725d6
-2007-12-11T01:50:12.145301Z
-1345
-joehni
-has-props
-
 HierarchicalStreamReader.java
 file
 
@@ -118,6 +105,19 @@ file
 
 2008-08-28T16:34:33.000000Z
 728091e22a87cf2b5d01e9c4e0e1ef83
+2007-12-11T01:50:12.145301Z
+1345
+joehni
+has-props
+
+WriterWrapper.java
+file
+
+
+
+
+2008-08-28T16:34:33.000000Z
+c76fb036d4ef41e491989281b52725d6
 2007-12-11T01:50:12.145301Z
 1345
 joehni
