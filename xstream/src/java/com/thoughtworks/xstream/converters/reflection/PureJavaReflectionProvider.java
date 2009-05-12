@@ -12,6 +12,7 @@
 package com.thoughtworks.xstream.converters.reflection;
 
 import com.thoughtworks.xstream.core.JVM;
+import com.thoughtworks.xstream.annotations.XStreamSerializable;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -159,7 +160,7 @@ public class PureJavaReflectionProvider implements ReflectionProvider {
 
     protected boolean fieldModifiersSupported(Field field) {
         return !(Modifier.isStatic(field.getModifiers())
-                || Modifier.isTransient(field.getModifiers()));
+                || (Modifier.isTransient(field.getModifiers()) && field.getAnnotation(XStreamSerializable.class)==null));
     }
 
     protected void validateFieldAccess(Field field) {
