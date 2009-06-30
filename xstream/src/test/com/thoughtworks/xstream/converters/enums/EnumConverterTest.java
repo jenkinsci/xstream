@@ -40,6 +40,12 @@ public class EnumConverterTest extends TestCase {
         assertEquals(in, xstream.fromXML(expectedXml));
     }
 
+    public void testRelaxedNameMatch() {
+        String expectedXml = "<simple>green</simple>";
+        SimpleEnum in = SimpleEnum.GREEN;
+        assertEquals(in, xstream.fromXML(expectedXml));
+    }
+
     public void testRepresentsPolymorphicEnumAsSingleStringValue() {
         String expectedXml = "<polymorphic>B</polymorphic>";
         PolymorphicEnum in = PolymorphicEnum.B;
