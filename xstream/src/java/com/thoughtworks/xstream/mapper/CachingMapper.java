@@ -44,20 +44,26 @@ public class CachingMapper extends MapperWrapper {
     public Class realClass(String elementName) {
         WeakReference reference = (WeakReference) realClassCache.get(elementName);
         if (reference != null) {
-            Class cached = (Class) reference.get();
+            Object cached = reference.get();
+            if (cached instanceof CannotResolveClassException)
+                throw (CannotResolveClassException) cached;
             if (cached != null) {
-                return cached;
+                return (Class)cached;
             }
         }
-        
-        Class result = super.realClass(elementName);
-        realClassCache.put(elementName, new WeakReference(result));
-        return result;
+
+        try {
+            Class result = super.realClass(elementName);
+            realClassCache.put(elementName, new WeakReference(result));
+            return result;
+        } catch (CannotResolveClassException e) {
+            realClassCache.put(elementName,e);
+            throw e;
+        }
     }
 
     private Object readResolve() {
         realClassCache = new ConcurrentHashMap();
         return this;
     }
-
 }
