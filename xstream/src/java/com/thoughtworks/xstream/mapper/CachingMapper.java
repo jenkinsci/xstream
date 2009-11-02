@@ -57,7 +57,7 @@ public class CachingMapper extends MapperWrapper {
             realClassCache.put(elementName, new WeakReference(result));
             return result;
         } catch (CannotResolveClassException e) {
-            realClassCache.put(elementName,e);
+            realClassCache.put(elementName,new WeakReference(e));
             throw e;
         }
     }

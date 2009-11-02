@@ -12,12 +12,15 @@
 package com.thoughtworks.xstream.core;
 
 import java.util.BitSet;
+import java.io.ByteArrayInputStream;
 
 import junit.framework.TestCase;
 
 import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.mapper.CannotResolveClassException;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.SingleValueConverterWrapper;
+import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.basic.StringConverter;
 import com.thoughtworks.xstream.converters.collections.BitSetConverter;
 
@@ -41,4 +44,25 @@ public class DefaultConverterLookupTest extends TestCase {
 		assertEquals(lookup.lookupConverterForType(String.class), newConverter);
 	}
 
+    /**
+     * Caching the failure should function correctly.
+     * 
+     */
+    public void testFailureCache() {
+        String xml = "<root><field class='NoSuchClass'/></root>";
+        XStream xs = new XStream();
+        xs.alias("root",Root.class);
+        for (int i=0; i<3; i++) {
+            try {
+                xs.fromXML(new ByteArrayInputStream(xml.getBytes()));
+                fail(); // should fail to unmarshal
+            } catch (ConversionException e) {
+                assertTrue(e.getCause() instanceof CannotResolveClassException);
+            }
+        }
+    }
+
+    public static class Root {
+        public Object field;
+    }
 }
