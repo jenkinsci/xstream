@@ -202,7 +202,7 @@ import java.util.Vector;
  * no other registered converter is suitable, can be registered with priority
  * XStream.PRIORITY_VERY_LOW. XStream uses by default the
  * {@link com.thoughtworks.xstream.converters.reflection.ReflectionConverter} as the fallback
- * converter.
+ * converter (override createDefaultConverter() to change this).
  * </p>
  * <p/>
  * <p>
@@ -612,10 +612,13 @@ public class XStream {
         addDefaultImplementation(GregorianCalendar.class, Calendar.class);
     }
 
+    protected Converter createDefaultConverter() {
+        return new ReflectionConverter(mapper, reflectionProvider);
+    }
+
     protected void setupConverters() {
-        final ReflectionConverter reflectionConverter = 
-            new ReflectionConverter(mapper, reflectionProvider);
-        registerConverter(reflectionConverter, PRIORITY_VERY_LOW);
+        final Converter defaultConverter = createDefaultConverter();
+        registerConverter(defaultConverter, PRIORITY_VERY_LOW);
 
         registerConverter(new SerializableConverter(mapper, reflectionProvider), PRIORITY_LOW);
         registerConverter(new ExternalizableConverter(mapper), PRIORITY_LOW);
@@ -675,7 +678,7 @@ public class XStream {
             dynamicallyRegisterConverter(
                     "com.thoughtworks.xstream.converters.extended.ThrowableConverter",
                     PRIORITY_NORMAL, new Class[]{Converter.class},
-                    new Object[]{reflectionConverter});
+                    new Object[]{defaultConverter});
             dynamicallyRegisterConverter(
                     "com.thoughtworks.xstream.converters.extended.StackTraceElementConverter",
                     PRIORITY_NORMAL, null, null);
@@ -685,7 +688,7 @@ public class XStream {
             dynamicallyRegisterConverter(
                     "com.thoughtworks.xstream.converters.extended.RegexPatternConverter",
                     PRIORITY_NORMAL, new Class[]{Converter.class},
-                    new Object[]{reflectionConverter});
+                    new Object[]{defaultConverter});
             dynamicallyRegisterConverter(
                     "com.thoughtworks.xstream.converters.extended.CharsetConverter",
                     PRIORITY_NORMAL, null, null);
@@ -713,7 +716,7 @@ public class XStream {
                 null, null);
         }
 
-        registerConverter(new SelfStreamingInstanceChecker(reflectionConverter, this), PRIORITY_NORMAL);
+        registerConverter(new SelfStreamingInstanceChecker(defaultConverter, this), PRIORITY_NORMAL);
     }
 
     private void dynamicallyRegisterConverter(
