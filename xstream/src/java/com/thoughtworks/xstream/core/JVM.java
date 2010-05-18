@@ -130,6 +130,10 @@ public class JVM {
         return false;
     }
     
+    private static boolean isOracle() {
+        return vendor.indexOf("Oracle") != -1;
+    }
+    
     private static boolean isHitachi() {
         return vendor.indexOf("Hitachi") != -1;
     }
@@ -188,6 +192,7 @@ public class JVM {
             || isIBM()
             || isBlackdown()
             || isBEAWithUnsafeSupport()
+            || isOracle()
             || isHitachi()
             || isSAP() 
             || isDiablo())
