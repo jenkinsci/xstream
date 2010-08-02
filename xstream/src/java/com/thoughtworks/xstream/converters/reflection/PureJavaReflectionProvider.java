@@ -13,6 +13,7 @@ package com.thoughtworks.xstream.converters.reflection;
 
 import com.thoughtworks.xstream.core.JVM;
 import com.thoughtworks.xstream.annotations.XStreamSerializable;
+import com.thoughtworks.xstream.decorators.FieldDecorator;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -176,6 +177,13 @@ public class PureJavaReflectionProvider implements ReflectionProvider {
 
     public Field getField(Class definedIn, String fieldName) {
         return fieldDictionary.field(definedIn, fieldName, null);
+    }
+
+    public FieldDecorator getFieldDecorator(Class definedIn, String fieldName) {
+        FieldDecorator fd = fieldDictionary.fieldDecoratorOrNull(definedIn, fieldName, null);
+        if (fd==null)
+            throw new NonExistentFieldException("No such field " + definedIn.getName() + "." + fieldName,fieldName);
+        return fd;
     }
 
     public Field getFieldOrNull(Class definedIn, String fieldName) {

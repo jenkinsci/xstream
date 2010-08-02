@@ -10,6 +10,8 @@
  */
 package com.thoughtworks.xstream.converters.reflection;
 
+import com.thoughtworks.xstream.decorators.FieldDecorator;
+
 import java.lang.reflect.Field;
 
 /**
@@ -32,6 +34,10 @@ public class ReflectionProviderWrapper implements ReflectionProvider {
 
     public Field getField(Class definedIn, String fieldName) {
         return this.wrapped.getField(definedIn, fieldName);
+    }
+
+    public FieldDecorator getFieldDecorator(Class definedIn, String fieldName) {
+        return this.wrapped.getFieldDecorator(definedIn, fieldName);
     }
 
     public Class getFieldType(Object object, String fieldName, Class definedIn) {

@@ -11,6 +11,9 @@
  */
 package com.thoughtworks.xstream.converters.reflection;
 
+import com.thoughtworks.xstream.decorators.Decorator;
+import com.thoughtworks.xstream.decorators.FieldDecorator;
+
 import java.lang.reflect.Field;
 
 /**
@@ -66,4 +69,9 @@ public interface ReflectionProvider {
      */
     Field getFieldOrNull(Class definedIn, String fieldName);
 
+    /**
+     * Gets the {@link FieldDecorator} for the given field.
+     * Supercedes {@link #getField(Class, String)}
+     */
+    FieldDecorator getFieldDecorator(Class definedIn, String fieldName);
 }

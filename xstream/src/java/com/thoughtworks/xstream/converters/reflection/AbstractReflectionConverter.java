@@ -18,6 +18,7 @@ import com.thoughtworks.xstream.converters.SingleValueConverter;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.core.util.HierarchicalStreams;
 import com.thoughtworks.xstream.core.util.Primitives;
+import com.thoughtworks.xstream.decorators.FieldDecorator;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.ExtendedHierarchicalStreamWriterHelper;
@@ -61,7 +62,7 @@ public abstract class AbstractReflectionConverter implements Converter {
 
     protected void doMarshal(final Object source, final HierarchicalStreamWriter writer, final MarshallingContext context) {
         final Set seenFields = new HashSet();
-        final Map defaultFieldDefinition = new HashMap();
+        final Map<String, FieldDecorator> defaultFieldDefinition = new HashMap<String, FieldDecorator>();
 
         // Attributes might be preferred to child elements ...
          reflectionProvider.visitSerializableFields(source, new ReflectionProvider.Visitor() {
@@ -75,7 +76,7 @@ public abstract class AbstractReflectionConverter implements Converter {
                     // if (definedIn != source.getClass() && !mapper.shouldSerializeMember(lookupType, fieldName)) {
                     //    lookupType = definedIn;
                     // }
-                    defaultFieldDefinition.put(fieldName, reflectionProvider.getField(lookupType, fieldName));
+                    defaultFieldDefinition.put(fieldName, reflectionProvider.getFieldDecorator(lookupType, fieldName));
                 }
                 
                 SingleValueConverter converter = mapper.getConverterFromItemType(fieldName, type, definedIn);

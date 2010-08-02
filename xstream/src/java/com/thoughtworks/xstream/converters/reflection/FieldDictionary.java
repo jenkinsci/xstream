@@ -19,11 +19,11 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.WeakHashMap;
 
 import com.thoughtworks.xstream.core.JVM;
 import com.thoughtworks.xstream.core.util.OrderRetainingMap;
 import com.thoughtworks.xstream.core.util.ConcurrentWeakHashMap;
+import com.thoughtworks.xstream.decorators.FieldDecorator;
 
 
 /**
@@ -36,10 +36,10 @@ import com.thoughtworks.xstream.core.util.ConcurrentWeakHashMap;
 public class FieldDictionary {
 
     static final class Entry {
-        final Map<String,Field> keyedByFieldName;
-        final Map<FieldKey,Field> keyedByFieldKey;
+        final Map<String,FieldDecorator> keyedByFieldName;
+        final Map<FieldKey,FieldDecorator> keyedByFieldKey;
 
-        Entry(Map keyedByFieldName, Map keyedByFieldKey) {
+        Entry(Map<String,FieldDecorator> keyedByFieldName, Map<FieldKey,FieldDecorator> keyedByFieldKey) {
             this.keyedByFieldName = keyedByFieldName;
             this.keyedByFieldKey = keyedByFieldKey;
         }
@@ -65,7 +65,9 @@ public class FieldDictionary {
 //        keyedByFieldNameCache.put(Object.class, Collections.EMPTY_MAP);
 //        keyedByFieldKeyCache.put(Object.class, Collections.EMPTY_MAP);
         cache = new ConcurrentWeakHashMap<Class,Entry>();
-        cache.put(Object.class, new Entry(Collections.EMPTY_MAP,Collections.EMPTY_MAP));
+        cache.put(Object.class, new Entry(
+                Collections.<String,FieldDecorator>emptyMap(),
+                Collections.<FieldKey,FieldDecorator>emptyMap()));
     }
 
     /**
@@ -113,8 +115,13 @@ public class FieldDictionary {
      * Works like {@link #field(Class, String, Class)} but returns null instead of throwing exception.
      */
     public Field fieldOrNull(Class cls, String name, Class definedIn) {
+        FieldDecorator d = fieldDecoratorOrNull(cls, name, definedIn);
+        return d==null ? null : d.target;
+    }
+
+    public FieldDecorator fieldDecoratorOrNull(Class cls, String name, Class definedIn) {
         Map fields = buildMap(cls, definedIn != null);
-        Field field = (Field)fields.get(definedIn != null ? (Object)new FieldKey(
+        FieldDecorator field = (FieldDecorator)fields.get(definedIn != null ? (Object)new FieldKey(
             name, definedIn, 0) : (Object)name);
         return field;
     }
@@ -123,18 +130,18 @@ public class FieldDictionary {
         Class cls = type;
 //        synchronized (this) {
             if (!cache.containsKey(type)) {
-                final List superClasses = new ArrayList();
+                final List<Class> superClasses = new ArrayList<Class>();
                 while (!Object.class.equals(cls)) {
                     superClasses.add(0, cls);
                     cls = cls.getSuperclass();
                 }
-                Map lastKeyedByFieldName = Collections.EMPTY_MAP;
-                Map lastKeyedByFieldKey = Collections.EMPTY_MAP;
-                for (final Iterator iter = superClasses.iterator(); iter.hasNext();) {
-                    cls = (Class)iter.next();
+                Map<String,FieldDecorator> lastKeyedByFieldName = Collections.emptyMap();
+                Map lastKeyedByFieldKey = Collections.emptyMap();
+                for (Class superClass : superClasses) {
+                    cls = superClass;
                     if (!cache.containsKey(cls)) {
-                        final Map keyedByFieldName = new HashMap(lastKeyedByFieldName);
-                        final Map keyedByFieldKey = new OrderRetainingMap(lastKeyedByFieldKey);
+                        final Map<String,FieldDecorator> keyedByFieldName = new HashMap<String,FieldDecorator>(lastKeyedByFieldName);
+                        final Map<FieldKey,FieldDecorator> keyedByFieldKey = new OrderRetainingMap(lastKeyedByFieldKey);
                         Field[] fields = cls.getDeclaredFields();
                         if (JVM.reverseFieldDefinition()) {
                             for (int i = fields.length >> 1; i-- > 0;) {
@@ -147,19 +154,19 @@ public class FieldDictionary {
                         for (int i = 0; i < fields.length; i++) {
                             Field field = fields[i];
                             FieldKey fieldKey = new FieldKey(field.getName(), field
-                                .getDeclaringClass(), i);
+                                    .getDeclaringClass(), i);
                             field.setAccessible(true);
-                            Field existent = (Field)keyedByFieldName.get(field.getName());
+                            FieldDecorator existent = keyedByFieldName.get(field.getName());
                             if (existent == null
-                            // do overwrite statics
-                                || ((existent.getModifiers() & Modifier.STATIC) != 0)
-                                // overwrite non-statics with non-statics only
-                                || (existent != null && ((field.getModifiers() & Modifier.STATIC) == 0))) {
-                                keyedByFieldName.put(field.getName(), field);
+                                    // do overwrite statics
+                                    || ((existent.target.getModifiers() & Modifier.STATIC) != 0)
+                                    // overwrite non-statics with non-statics only
+                                    || ((field.getModifiers() & Modifier.STATIC) == 0)) {
+                                keyedByFieldName.put(field.getName(), new FieldDecorator(field));
                             }
-                            keyedByFieldKey.put(fieldKey, field);
+                            keyedByFieldKey.put(fieldKey, new FieldDecorator(field));
                         }
-                        cache.put(cls, new Entry(keyedByFieldName,sorter.sort(type, keyedByFieldKey)));
+                        cache.put(cls, new Entry(keyedByFieldName, sorter.sort(type, keyedByFieldKey)));
                     }
                     Entry e = cache.get(cls);
                     lastKeyedByFieldName = e.keyedByFieldName;
