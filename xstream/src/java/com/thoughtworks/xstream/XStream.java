@@ -1224,6 +1224,10 @@ public class XStream {
         return converterLookup;
     }
 
+    public ConverterRegistry getConverterRegistry() {
+        return converterRegistry;
+    }
+
     /**
      * Change mode for dealing with duplicate references. Valid values are
      * <code>XPATH_ABSOLUTE_REFERENCES</code>, <code>XPATH_RELATIVE_REFERENCES</code>,
