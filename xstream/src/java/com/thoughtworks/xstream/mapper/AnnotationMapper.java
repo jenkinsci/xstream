@@ -20,6 +20,7 @@ import com.thoughtworks.xstream.annotations.XStreamImplicit;
 import com.thoughtworks.xstream.annotations.XStreamImplicitCollection;
 import com.thoughtworks.xstream.annotations.XStreamInclude;
 import com.thoughtworks.xstream.annotations.XStreamOmitField;
+import com.thoughtworks.xstream.annotations.XStreamSerializeAs;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.ConverterMatcher;
 import com.thoughtworks.xstream.converters.ConverterRegistry;
@@ -68,6 +69,8 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
     private final Map<Class<?>, Converter> converterCache = new HashMap<Class<?>, Converter>();
     private final Set<Class<?>> annotatedTypes = new WeakHashSet<Class<?>>();
 
+    private final Map<Class,String> serializedClass = new WeakHashMap<Class, String>();
+
     /**
      * Construct an AnnotationMapper.
      * 
@@ -104,6 +107,8 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
         if (!locked) {
             processAnnotations(type);
         }
+        String name = serializedClass.get(type);
+        if (name!=null) return name;
         return super.serializedClass(type);
     }
 
@@ -166,6 +171,10 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
                 if (type.isPrimitive()) {
                     continue;
                 }
+
+                XStreamSerializeAs a = type.getAnnotation(XStreamSerializeAs.class);
+                if (a!=null && a.value()!=void.class)
+                    serializedClass.put(type,a.value().getName());
 
                 addParametrizedTypes(type, types);
 
