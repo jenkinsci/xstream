@@ -31,6 +31,7 @@ public class JVM {
     private final boolean supportsSQL = loadClass("java.sql.Date") != null; 
 
     private static final String vendor = System.getProperty("java.vm.vendor");
+    private static final String runtime = System.getProperty("java.runtime.name");
     private static final float majorJavaVersion = getMajorJavaVersion();
     private static final boolean reverseFieldOrder = isHarmony() || (isIBM() && !is15());
 
@@ -61,6 +62,14 @@ public class JVM {
 
     public static boolean is16() {
         return majorJavaVersion >= 1.6f;
+    }
+
+    private static boolean isIcedTea() {
+        return runtime.indexOf("IcedTea") != -1;
+    }
+
+    private static boolean isOpenJDK() {
+        return runtime.indexOf("OpenJDK") != -1;
     }
 
     private static boolean isSun() {
@@ -187,6 +196,8 @@ public class JVM {
 
     private boolean canUseSun14ReflectionProvider() {
         return (isSun()
+            || isOpenJDK()
+            || isIcedTea()
             || isApple()
             || isHPUX()
             || isIBM()
