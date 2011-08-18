@@ -173,6 +173,11 @@ public class SecurityManagerTest extends TestCase {
                 "cglib.debugLocation", "read"));
         securityManager.addPermission(defaultCodeSource, new RuntimePermission(
                 "getProtectionDomain"));
+
+        // Xerces in JDK seems to want this. Given that it's in JDK core class, I don't understand why we need to grant this permission explicitly.
+        // possibly a bug in JAXP or a problem in our custom security manager?
+        securityManager.addPermission(defaultCodeSource, new PropertyPermission("http://java.sun.com/xml/dom/properties/ancestor-check","read"));
+
         securityManager.setReadOnly();
         System.setSecurityManager(securityManager);
 
