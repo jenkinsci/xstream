@@ -28,6 +28,7 @@ import com.thoughtworks.xstream.converters.SingleValueConverter;
 import com.thoughtworks.xstream.converters.SingleValueConverterWrapper;
 import com.thoughtworks.xstream.converters.reflection.ReflectionProvider;
 import com.thoughtworks.xstream.core.JVM;
+import com.thoughtworks.xstream.core.util.ConcurrentWeakHashMap;
 import com.thoughtworks.xstream.core.util.DependencyInjectionFactory;
 
 import java.lang.reflect.Field;
@@ -154,8 +155,8 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
         if (initialType == null) {
             return;
         }
+        if (annotatedTypes.contains(initialType))   return;
         synchronized (annotatedTypes) {
-            if (annotatedTypes.contains(initialType))   return;
             final Set<Class<?>> types = new UnprocessedTypesSet();
             types.add(initialType);
             processTypes(types);
@@ -505,7 +506,7 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
     private static class WeakHashSet<K> implements Set<K> {
 
         private static Object NULL = new Object();
-        private final WeakHashMap<K, Object> map = new WeakHashMap<K, Object>();
+        private final ConcurrentWeakHashMap<K, Object> map = new ConcurrentWeakHashMap<K, Object>();
 
         public boolean add(final K o) {
             return map.put(o, NULL) == null;
