@@ -109,8 +109,10 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
         if (!locked) {
             processAnnotations(type);
         }
-        String name = serializedClass.get(type);
-        if (name!=null) return name;
+        if (type!=null) {
+            String name = serializedClass.get(type);
+            if (name!=null) return name;
+        }
         return super.serializedClass(type);
     }
 
