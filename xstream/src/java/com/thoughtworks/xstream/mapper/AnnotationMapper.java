@@ -69,8 +69,9 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
     private final LocalConversionMapper localConversionMapper;
     private final Map<Class<?>, Converter> converterCache = new HashMap<Class<?>, Converter>();
     private final Set<Class<?>> annotatedTypes = new WeakHashSet<Class<?>>();
+    private final Set<Class<?>> processedTypes = new WeakHashSet<Class<?>>();
 
-    private final Map<Class,String> serializedClass = new WeakHashMap<Class, String>();
+    private final Map<Class,String> serializedClass = new ConcurrentWeakHashMap<Class, String>();
 
     /**
      * Construct an AnnotationMapper.
@@ -155,7 +156,7 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
         if (initialType == null) {
             return;
         }
-        if (annotatedTypes.contains(initialType))   return;
+        if (processedTypes.contains(initialType))   return;
         synchronized (annotatedTypes) {
             final Set<Class<?>> types = new UnprocessedTypesSet();
             types.add(initialType);
@@ -170,44 +171,48 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
             iter.remove();
 
             if (annotatedTypes.add(type)) {
-                if (type.isPrimitive()) {
-                    continue;
-                }
-
-                XStreamSerializeAs a = type.getAnnotation(XStreamSerializeAs.class);
-                if (a!=null && a.value()!=void.class)
-                    serializedClass.put(type,a.value().getName());
-
-                addParametrizedTypes(type, types);
-
-                processConverterAnnotations(type);
-                processAliasAnnotation(type, types);
-
-                if (type.isInterface()) {
-                    continue;
-                }
-
-                processImplicitCollectionAnnotation(type);
-
-                final Field[] fields = type.getDeclaredFields();
-                for (int i = 0; i < fields.length; i++ ) {
-                    final Field field = fields[i];
-                    if (field.isEnumConstant()
-                        || (field.getModifiers() & (Modifier.STATIC | Modifier.TRANSIENT)) > 0) {
+                try {
+                    if (type.isPrimitive()) {
                         continue;
                     }
 
-                    addParametrizedTypes(field.getGenericType(), types);
+                    XStreamSerializeAs a = type.getAnnotation(XStreamSerializeAs.class);
+                    if (a!=null && a.value()!=void.class)
+                        serializedClass.put(type,a.value().getName());
 
-                    if (field.isSynthetic()) {
+                    addParametrizedTypes(type, types);
+
+                    processConverterAnnotations(type);
+                    processAliasAnnotation(type, types);
+
+                    if (type.isInterface()) {
                         continue;
                     }
 
-                    processFieldAliasAnnotation(field);
-                    processAsAttributeAnnotation(field);
-                    processImplicitAnnotation(field);
-                    processOmitFieldAnnotation(field);
-                    processLocalConverterAnnotation(field);
+                    processImplicitCollectionAnnotation(type);
+
+                    final Field[] fields = type.getDeclaredFields();
+                    for (int i = 0; i < fields.length; i++ ) {
+                        final Field field = fields[i];
+                        if (field.isEnumConstant()
+                            || (field.getModifiers() & (Modifier.STATIC | Modifier.TRANSIENT)) > 0) {
+                            continue;
+                        }
+
+                        addParametrizedTypes(field.getGenericType(), types);
+
+                        if (field.isSynthetic()) {
+                            continue;
+                        }
+
+                        processFieldAliasAnnotation(field);
+                        processAsAttributeAnnotation(field);
+                        processImplicitAnnotation(field);
+                        processOmitFieldAnnotation(field);
+                        processLocalConverterAnnotation(field);
+                    }
+                } finally {
+                    processedTypes.add(type);
                 }
             }
         }
