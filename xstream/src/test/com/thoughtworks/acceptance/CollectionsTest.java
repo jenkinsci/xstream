@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003, 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -27,6 +27,7 @@ import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 import java.util.Vector;
 
@@ -170,10 +171,116 @@ public class CollectionsTest extends AbstractAcceptanceTest {
         assertBothWays(list, xml);
     }
 
-    public void testEmptyList() {
-        assertBothWays(Collections.EMPTY_LIST, "<java.util.Collections_-EmptyList/>");
+    public void testSyncronizedArrayList() {
+        final String xml;
+        if (JVM.is15()) {
+            xml = 
+                "<java.util.Collections_-SynchronizedRandomAccessList resolves-to=\"java.util.Collections$SynchronizedList\" serialization=\"custom\">\n" +
+                "  <java.util.Collections_-SynchronizedCollection>\n" +
+                "    <default>\n" +
+                "      <c class=\"list\">\n" +
+                "        <string>hi</string>\n" +
+                "      </c>\n" +
+                "      <mutex class=\"java.util.Collections$SynchronizedList\" reference=\"../../..\"/>\n" +
+                "    </default>\n" +
+                "  </java.util.Collections_-SynchronizedCollection>\n" +
+                "  <java.util.Collections_-SynchronizedList>\n" +
+                "    <default>\n" +
+                "      <list reference=\"../../../java.util.Collections_-SynchronizedCollection/default/c\"/>\n" +
+                "    </default>\n" +
+                "  </java.util.Collections_-SynchronizedList>\n" +
+                "</java.util.Collections_-SynchronizedRandomAccessList>";
+        } else {
+            xml = 
+                "<java.util.Collections_-SynchronizedRandomAccessList resolves-to=\"java.util.Collections$SynchronizedList\">\n" +
+                "  <c class=\"list\">\n" +
+                "    <string>hi</string>\n" +
+                "  </c>\n" +
+                "  <mutex class=\"java.util.Collections$SynchronizedList\" reference=\"..\"/>\n" +
+                "  <list reference=\"../c\"/>\n" +
+                "</java.util.Collections_-SynchronizedRandomAccessList>";
+        }
+
+        // synchronized list has circular reference
+        xstream.setMode(XStream.XPATH_RELATIVE_REFERENCES);
+
+        List list = Collections.synchronizedList(new ArrayList());
+        list.add("hi");
+
+        assertBothWays(list, xml);
     }
 
+    public void testEmptyList() {
+        assertBothWays(Collections.EMPTY_LIST, "<empty-list/>");
+    }
+
+    public void testEmptySet() {
+        assertBothWays(Collections.EMPTY_SET, "<empty-set/>");
+    }
+
+    public void testEmptyListIsImmutable() {
+        List list = new ArrayList();
+        list.add(Collections.EMPTY_LIST);
+        list.add(Collections.EMPTY_LIST);
+        assertBothWays(list, 
+            "<list>\n" +
+            "  <empty-list/>\n" +
+            "  <empty-list/>\n" +
+            "</list>");
+    }
+
+    public void testEmptySetIsImmutable() {
+        List list = new ArrayList();
+        list.add(Collections.EMPTY_SET);
+        list.add(Collections.EMPTY_SET);
+        assertBothWays(list, 
+            "<list>\n" +
+            "  <empty-set/>\n" +
+            "  <empty-set/>\n" +
+            "</list>");
+    }
+
+    public void testEmptyListIsSingleton() {
+        assertSame(Collections.EMPTY_LIST, xstream.fromXML("<empty-list/>"));
+    }
+
+    public void testEmptySetIsSingleton() {
+        assertSame(Collections.EMPTY_SET, xstream.fromXML("<empty-set/>"));
+    }
+    
+    public void testSingletonList() {
+        assertBothWays(Collections.singletonList("XStream"), 
+            "<singleton-list>\n" +
+            "  <string>XStream</string>\n" +
+            "</singleton-list>");
+    }
+    
+    public void testSingletonSet() {
+        assertBothWays(Collections.singleton("XStream"), 
+            "<singleton-set>\n" +
+            "  <string>XStream</string>\n" +
+            "</singleton-set>");
+    }
+
+    public void testPropertiesWithDefaults() {
+        Properties defaults = new Properties();
+        defaults.setProperty("1", "one");
+        defaults.setProperty("2", "two");
+        Properties properties = new Properties(defaults);
+        properties.setProperty("1", "I");
+        properties.setProperty("3", "III");
+
+        assertBothWays(properties,
+                "<properties>\n" +
+                "  <property name=\"3\" value=\"III\"/>\n" + 
+                "  <property name=\"1\" value=\"I\"/>\n" + 
+                "  <defaults>\n" + 
+                "    <property name=\"2\" value=\"two\"/>\n" + 
+                "    <property name=\"1\" value=\"one\"/>\n" + 
+                "  </defaults>\n" +
+                "</properties>");
+    }
+    
     public void testUnmodifiableList() {
         // unmodifiable list has duplicate references
         xstream.setMode(XStream.XPATH_RELATIVE_REFERENCES);
@@ -227,46 +334,62 @@ public class CollectionsTest extends AbstractAcceptanceTest {
         map.put("JUnit", null);
         final Collection set = map.keySet();
 
+        xstream.alias("key-set", set.getClass());
+
         assertBothWays(set,
-                "<java.util.HashMap_-KeySet>\n" +
+                "<key-set>\n" +
                 "  <outer-class>\n" +
                 "    <entry>\n" +
                 "      <string>JUnit</string>\n" +
                 "      <null/>\n" +
                 "    </entry>\n" +
                 "  </outer-class>\n" +
-                "</java.util.HashMap_-KeySet>");
+                "</key-set>");
     }
 
     public void testValueSetOfHashMapCanBeSerialized() {
         final Map map = new HashMap();
         map.put(Boolean.TRUE, "JUnit");
         final Collection set = map.values();
+        xstream.alias("value-set", set.getClass());
 
         assertBothWays(set,
-                "<java.util.HashMap_-Values>\n" +
+                "<value-set>\n" +
                 "  <outer-class>\n" +
                 "    <entry>\n" +
                 "      <boolean>true</boolean>\n" +
                 "      <string>JUnit</string>\n" +
                 "    </entry>\n" +
                 "  </outer-class>\n" +
-                "</java.util.HashMap_-Values>");
+                "</value-set>");
     }
 
     public void testEntrySetOfHashMapCanBeSerialized() {
         final Map map = new HashMap();
         map.put(Boolean.TRUE, "JUnit");
         final Collection set = map.entrySet();
+        xstream.alias("entry-set", set.getClass());
 
-        assertBothWays(set,
-                "<java.util.HashMap_-EntrySet>\n" +
-                "  <outer-class>\n" +
+        if (JVM.is16() && System.getProperty("java.vm.vendor").indexOf("IBM") >= 0) {
+            assertBothWays(set,
+                "<entry-set>\n" +
+                "  <associatedMap>\n" +
                 "    <entry>\n" +
                 "      <boolean>true</boolean>\n" +
                 "      <string>JUnit</string>\n" +
                 "    </entry>\n" +
-                "  </outer-class>\n" +
-                "</java.util.HashMap_-EntrySet>");
+                "  </associatedMap>\n" +
+                "</entry-set>");
+        } else {
+            assertBothWays(set,
+                    "<entry-set>\n" +
+                    "  <outer-class>\n" +
+                    "    <entry>\n" +
+                    "      <boolean>true</boolean>\n" +
+                    "      <string>JUnit</string>\n" +
+                    "    </entry>\n" +
+                    "  </outer-class>\n" +
+                    "</entry-set>");
+        }
     }
 }

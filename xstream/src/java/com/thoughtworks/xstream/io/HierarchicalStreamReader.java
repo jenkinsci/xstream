@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -11,6 +11,7 @@
  */
 package com.thoughtworks.xstream.io;
 
+import com.thoughtworks.xstream.converters.ErrorReporter;
 import com.thoughtworks.xstream.converters.ErrorWriter;
 
 import java.util.Iterator;
@@ -18,18 +19,12 @@ import java.util.Iterator;
 /**
  * @author Joe Walnes
  */
-public interface HierarchicalStreamReader {
+public interface HierarchicalStreamReader extends ErrorReporter {
 
     /**
      * Does the node have any more children remaining that have not yet been read?
      */
     boolean hasMoreChildren();
-
-    /**
-     * In situation where {@link #hasMoreChildren()} returns true, peek the tag name
-     * of the child.
-     */
-    String peekNextChild();
 
     /**
      * Select the current child as current node.

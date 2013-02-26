@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2010 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -13,15 +13,17 @@ package com.thoughtworks.acceptance;
 import com.thoughtworks.acceptance.objects.Software;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.converters.reflection.PureJavaReflectionProvider;
-import com.thoughtworks.xstream.core.JVM;
 import com.thoughtworks.xstream.io.xml.DomDriver;
 import com.thoughtworks.xstream.testutil.DynamicSecurityManager;
 
 import junit.framework.TestCase;
 
+import org.apache.commons.lang.StringUtils;
+
 import java.io.File;
 import java.io.FilePermission;
 import java.lang.reflect.ReflectPermission;
+import java.net.NetPermission;
 import java.security.CodeSource;
 import java.security.Permission;
 import java.security.Policy;
@@ -40,32 +42,33 @@ import java.util.PropertyPermission;
 public class SecurityManagerTest extends TestCase {
 
     private XStream xstream;
-    private DynamicSecurityManager securityManager;
-    private CodeSource defaultCodeSource;
-    private File mainClasses;
-    private File testClasses;
-    private File libs;
-    private File libsJDK13;
+    private DynamicSecurityManager sm;
+    private CodeSource source;
 
     protected void setUp() throws Exception {
         super.setUp();
         System.setSecurityManager(null);
-        defaultCodeSource = new CodeSource(null, (Certificate[])null);
-        mainClasses = new File(new File(
-                new File(System.getProperty("user.dir"), "target"), "classes"), "-");
-        testClasses = new File(new File(
-                new File(System.getProperty("user.dir"), "target"), "test-classes"), "-");
-        libs = new File(new File(System.getProperty("user.dir"), "lib"), "*");
-        if (!JVM.is14()) {
-            libsJDK13 = new File(new File(
-                    new File(System.getProperty("user.dir"), "lib"), "jdk1.3"), "*");
-        }
-        securityManager = new DynamicSecurityManager();
+        source = new CodeSource(new File("target").toURI().toURL(), (Certificate[])null);
+
+        sm = new DynamicSecurityManager();
         Policy policy = Policy.getPolicy();
-        securityManager.setPermissions(defaultCodeSource, policy
-                .getPermissions(defaultCodeSource));
-        securityManager.addPermission(defaultCodeSource, new RuntimePermission(
-                "setSecurityManager"));
+        sm.setPermissions(source, policy.getPermissions(source));
+        sm.addPermission(source, new RuntimePermission("setSecurityManager"));
+        
+        File mainClasses = new File(System.getProperty("user.dir"), "target/classes/-");
+        File testClasses = new File(System.getProperty("user.dir"), "target/test-classes/-");
+        String[] javaClassPath = StringUtils.split(System.getProperty("java.class.path"), File.pathSeparatorChar);
+        File javaHome = new File(System.getProperty("java.home"), "-");
+        
+        // necessary permission start here
+        sm.addPermission(source, new FilePermission(mainClasses.toString(), "read"));
+        sm.addPermission(source, new FilePermission(testClasses.toString(), "read"));
+        sm.addPermission(source, new FilePermission(javaHome.toString(), "read"));
+        for (int i = 0; i < javaClassPath.length; ++i) {
+            if (javaClassPath[i].endsWith(".jar")) {
+                sm.addPermission(source, new FilePermission(javaClassPath[i], "read"));
+            }
+        }
     }
 
     protected void tearDown() throws Exception {
@@ -77,7 +80,7 @@ public class SecurityManagerTest extends TestCase {
         try {
             super.runTest();
         } catch(Throwable e) {
-            for (final Iterator iter = securityManager.getFailedPermissions().iterator(); iter.hasNext();) {
+            for (final Iterator iter = sm.getFailedPermissions().iterator(); iter.hasNext();) {
                 final Permission permission = (Permission)iter.next();
                 System.out.println("SecurityException: Permission " + permission.toString());
             }
@@ -85,66 +88,47 @@ public class SecurityManagerTest extends TestCase {
         }
     }
 
-    public void testSerializeWithXpp3DriverAndSun14ReflectionProviderAndActiveSecurityManager() {
-        if (JVM.is14()) {
-            securityManager.addPermission(defaultCodeSource, new FilePermission(mainClasses
-                    .toString(), "read"));
-            securityManager.addPermission(defaultCodeSource, new FilePermission(testClasses
-                    .toString(), "read"));
-            securityManager.addPermission(defaultCodeSource, new FilePermission(
-                    libs.toString(), "read"));
-            securityManager.addPermission(defaultCodeSource, new RuntimePermission(
-                    "accessDeclaredMembers"));
-            securityManager.addPermission(defaultCodeSource, new RuntimePermission(
-                    "accessClassInPackage.sun.reflect"));
-            securityManager.addPermission(defaultCodeSource, new RuntimePermission(
-                    "accessClassInPackage.sun.misc"));
-            securityManager.addPermission(defaultCodeSource, new RuntimePermission(
-                    "createClassLoader"));
-            securityManager.addPermission(defaultCodeSource, new RuntimePermission(
-                    "reflectionFactoryAccess"));
-            securityManager.addPermission(defaultCodeSource, new ReflectPermission(
-                    "suppressAccessChecks"));
-            // permissions necessary for CGLIBMapper
-            securityManager.addPermission(defaultCodeSource, new PropertyPermission(
-                    "cglib.debugLocation", "read"));
-            securityManager.addPermission(defaultCodeSource, new RuntimePermission(
-                    "getProtectionDomain"));
-            securityManager.setReadOnly();
-            System.setSecurityManager(securityManager);
+    public void testSerializeWithXppDriverAndSun14ReflectionProviderAndActiveSecurityManager() {
+        sm.addPermission(source, new RuntimePermission("accessClassInPackage.sun.reflect"));
+        sm.addPermission(source, new RuntimePermission("accessClassInPackage.sun.misc"));
+        sm.addPermission(source, new RuntimePermission("accessDeclaredMembers"));
+        sm.addPermission(source, new RuntimePermission("createClassLoader"));
+        sm.addPermission(source, new RuntimePermission("modifyThreadGroup"));
+        sm.addPermission(source, new RuntimePermission("reflectionFactoryAccess"));
+        sm.addPermission(source, new PropertyPermission("ibm.dst.compatibility", "read"));
+        sm.addPermission(source, new PropertyPermission("java.home", "read"));
+        sm.addPermission(source, new PropertyPermission("java.security.debug", "read"));
+        sm.addPermission(source, new PropertyPermission("javax.xml.datatype.DatatypeFactory", "read"));
+        sm.addPermission(source, new PropertyPermission("jaxp.debug", "read"));
+        sm.addPermission(source, new PropertyPermission("sun.boot.class.path", "read"));
+        sm.addPermission(source, new PropertyPermission("sun.timezone.ids.oldmapping", "read"));
+        sm.addPermission(source, new ReflectPermission("suppressAccessChecks"));
+        sm.addPermission(source, new NetPermission("specifyStreamHandler"));
+        sm.setReadOnly();
+        System.setSecurityManager(sm);
 
-            // uses implicit Sun14ReflectionProvider in JDK >= 1.4, since it has the appropriate
-            // rights
-            xstream = new XStream();
+        // uses implicit Sun14ReflectionProvider in JDK >= 1.4, since it has the appropriate
+        // rights
+        xstream = new XStream();
 
-            assertBothWays();
-        }
+        assertBothWays();
     }
 
-    public void testSerializeWithXpp3DriverAndPureJavaReflectionProviderAndActiveSecurityManager() {
-        securityManager.addPermission(defaultCodeSource, new FilePermission(mainClasses
-                .toString(), "read"));
-        securityManager.addPermission(defaultCodeSource, new FilePermission(testClasses
-                .toString(), "read"));
-        securityManager.addPermission(defaultCodeSource, new FilePermission(
-                libs.toString(), "read"));
-        if (libsJDK13 != null) {
-            securityManager.addPermission(defaultCodeSource, new FilePermission(libsJDK13
-                    .toString(), "read"));
-        }
-        securityManager.addPermission(defaultCodeSource, new RuntimePermission(
-                "accessDeclaredMembers"));
-        securityManager.addPermission(defaultCodeSource, new RuntimePermission(
-                "createClassLoader"));
-        securityManager.addPermission(defaultCodeSource, new ReflectPermission(
-                "suppressAccessChecks"));
-        // permissions necessary for CGLIBMapper
-        securityManager.addPermission(defaultCodeSource, new PropertyPermission(
-                "cglib.debugLocation", "read"));
-        securityManager.addPermission(defaultCodeSource, new RuntimePermission(
-                "getProtectionDomain"));
-        securityManager.setReadOnly();
-        System.setSecurityManager(securityManager);
+    public void testSerializeWithXppDriverAndPureJavaReflectionProviderAndActiveSecurityManager() {
+        sm.addPermission(source, new RuntimePermission("accessDeclaredMembers"));
+        sm.addPermission(source, new RuntimePermission("createClassLoader"));
+        sm.addPermission(source, new RuntimePermission("modifyThreadGroup"));
+        sm.addPermission(source, new PropertyPermission("ibm.dst.compatibility", "read"));
+        sm.addPermission(source, new PropertyPermission("java.home", "read"));
+        sm.addPermission(source, new PropertyPermission("java.security.debug", "read"));
+        sm.addPermission(source, new PropertyPermission("javax.xml.datatype.DatatypeFactory", "read"));
+        sm.addPermission(source, new PropertyPermission("jaxp.debug", "read"));
+        sm.addPermission(source, new PropertyPermission("sun.boot.class.path", "read"));
+        sm.addPermission(source, new PropertyPermission("sun.timezone.ids.oldmapping", "read"));
+        sm.addPermission(source, new ReflectPermission("suppressAccessChecks"));
+        sm.addPermission(source, new NetPermission("specifyStreamHandler"));
+        sm.setReadOnly();
+        System.setSecurityManager(sm);
 
         xstream = new XStream(new PureJavaReflectionProvider());
 
@@ -152,38 +136,29 @@ public class SecurityManagerTest extends TestCase {
     }
 
     public void testSerializeWithDomDriverAndPureJavaReflectionProviderAndActiveSecurityManager() {
-        securityManager.addPermission(defaultCodeSource, new FilePermission(mainClasses
-                .toString(), "read"));
-        securityManager.addPermission(defaultCodeSource, new FilePermission(testClasses
-                .toString(), "read"));
-        securityManager.addPermission(defaultCodeSource, new FilePermission(
-                libs.toString(), "read"));
-        if (libsJDK13 != null) {
-            securityManager.addPermission(defaultCodeSource, new FilePermission(libsJDK13
-                    .toString(), "read"));
-        }
-        securityManager.addPermission(defaultCodeSource, new RuntimePermission(
-                "accessDeclaredMembers"));
-        securityManager.addPermission(defaultCodeSource, new RuntimePermission(
-                "createClassLoader"));
-        securityManager.addPermission(defaultCodeSource, new ReflectPermission(
-                "suppressAccessChecks"));
-        // permissions necessary for CGLIBMapper
-        securityManager.addPermission(defaultCodeSource, new PropertyPermission(
-                "cglib.debugLocation", "read"));
-        securityManager.addPermission(defaultCodeSource, new RuntimePermission(
-                "getProtectionDomain"));
+        sm.addPermission(source, new RuntimePermission("accessDeclaredMembers"));
+        sm.addPermission(source, new RuntimePermission("createClassLoader"));
+        sm.addPermission(source, new RuntimePermission("modifyThreadGroup"));
+        sm.addPermission(source, new RuntimePermission("reflectionFactoryAccess"));
+        sm.addPermission(source, new PropertyPermission("com.sun.org.apache.xerces.internal.xni.parser.XMLParserConfiguration", "read"));
+        sm.addPermission(source, new PropertyPermission("elementAttributeLimit", "read"));
+        sm.addPermission(source, new PropertyPermission("entityExpansionLimit", "read"));
+        sm.addPermission(source, new PropertyPermission("http://java.sun.com/xml/dom/properties/ancestor-check", "read"));
+        sm.addPermission(source, new PropertyPermission("ibm.dst.compatibility", "read"));
+        sm.addPermission(source, new PropertyPermission("java.home", "read"));
+        sm.addPermission(source, new PropertyPermission("java.security.debug", "read"));
+        sm.addPermission(source, new PropertyPermission("javax.xml.datatype.DatatypeFactory", "read"));
+        sm.addPermission(source, new PropertyPermission("javax.xml.parsers.DocumentBuilderFactory", "read"));
+        sm.addPermission(source, new PropertyPermission("jaxp.debug", "read"));
+        sm.addPermission(source, new PropertyPermission("maxOccurLimit", "read"));
+        sm.addPermission(source, new PropertyPermission("sun.boot.class.path", "read"));
+        sm.addPermission(source, new PropertyPermission("sun.timezone.ids.oldmapping", "read"));
+        sm.addPermission(source, new NetPermission("specifyStreamHandler"));
+        sm.addPermission(source, new ReflectPermission("suppressAccessChecks"));
+        sm.setReadOnly();
+        System.setSecurityManager(sm);
 
-        // Xerces in JDK seems to want this. Given that it's in JDK core class, I don't understand why we need to grant this permission explicitly.
-        // possibly a bug in JAXP or a problem in our custom security manager?
-        securityManager.addPermission(defaultCodeSource, new PropertyPermission("http://java.sun.com/xml/dom/properties/ancestor-check","read"));
-
-        securityManager.setReadOnly();
-        System.setSecurityManager(securityManager);
-
-        // uses implicit PureJavaReflectionProvider, since Sun14ReflectionProvider cannot be
-        // loaded
-        xstream = new XStream(new DomDriver());
+        xstream = new XStream(new PureJavaReflectionProvider(), new DomDriver());
 
         assertBothWays();
     }

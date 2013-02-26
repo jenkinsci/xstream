@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -18,7 +18,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import com.thoughtworks.xstream.io.copy.HierarchicalStreamCopier;
-import com.thoughtworks.xstream.io.xml.xppdom.Xpp3Dom;
+import com.thoughtworks.xstream.io.xml.xppdom.XppDom;
 
 public class DomWriterTest extends AbstractDocumentWriterTest {
 
@@ -43,18 +43,38 @@ public class DomWriterTest extends AbstractDocumentWriterTest {
         document.appendChild(root);
         Element a = document.createElement("a");
         root.appendChild(a);
-        writer = new DomWriter(a, document, new XmlFriendlyReplacer());
+        writer = new DomWriter(a, document, new XmlFriendlyNameCoder());
         
-        final Xpp3Dom xpp3Root = new Xpp3Dom("root");
-        Xpp3Dom xpp3A = new Xpp3Dom("a");
-        xpp3Root.addChild(xpp3A);
-        Xpp3Dom xpp3B = new Xpp3Dom("b");
-        xpp3A.addChild(xpp3B);
-        xpp3B.setAttribute("attr", "foo");
+        final XppDom xppRoot = new XppDom("root");
+        XppDom xppA = new XppDom("a");
+        xppRoot.addChild(xppA);
+        XppDom xppB = new XppDom("b");
+        xppA.addChild(xppB);
+        xppB.setAttribute("attr", "foo");
         
-        assertDocumentProducedIs(xpp3A, xpp3B);
+        assertDocumentProducedIs(xppA, xppB);
         XppDomWriter xppDomWriter = new XppDomWriter();
         new HierarchicalStreamCopier().copy(createDocumentReaderFor(document.getDocumentElement()), xppDomWriter);
-        assertTrue(equals(xpp3Root, xppDomWriter.getConfiguration()));
+        assertTrue(equals(xppRoot, xppDomWriter.getConfiguration()));
+    }
+
+    public void testCanWriteIntoArbitraryNodeAgain() {
+        Element root = document.createElement("root"); 
+        document.appendChild(root);
+        Element a = document.createElement("a");
+        root.appendChild(a);
+        writer = new DomWriter(a);
+        
+        final XppDom xppRoot = new XppDom("root");
+        XppDom xppA = new XppDom("a");
+        xppRoot.addChild(xppA);
+        XppDom xppB = new XppDom("b");
+        xppA.addChild(xppB);
+        xppB.setAttribute("attr", "foo");
+        
+        assertDocumentProducedIs(xppA, xppB);
+        XppDomWriter xppDomWriter = new XppDomWriter();
+        new HierarchicalStreamCopier().copy(createDocumentReaderFor(document.getDocumentElement()), xppDomWriter);
+        assertTrue(equals(xppRoot, xppDomWriter.getConfiguration()));
     }
 }

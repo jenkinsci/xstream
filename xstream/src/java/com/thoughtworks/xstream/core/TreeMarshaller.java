@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -11,8 +11,6 @@
  */
 package com.thoughtworks.xstream.core;
 
-import com.thoughtworks.xstream.XStreamException;
-import com.thoughtworks.xstream.alias.ClassMapper;
 import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.ConverterLookup;
@@ -30,10 +28,6 @@ public class TreeMarshaller implements MarshallingContext {
 
     protected HierarchicalStreamWriter writer;
     protected ConverterLookup converterLookup;
-    /**
-     * @deprecated As of 1.2, use {@link #mapper}
-     */
-    protected ClassMapper classMapper;
     private Mapper mapper;
     private ObjectIdDictionary parentObjects = new ObjectIdDictionary();
     private DataHolder dataHolder;
@@ -43,20 +37,6 @@ public class TreeMarshaller implements MarshallingContext {
         this.writer = writer;
         this.converterLookup = converterLookup;
         this.mapper = mapper;
-        // TODO: Remove when deprecated ClassMapper goes away
-        if (mapper instanceof ClassMapper) {
-            classMapper = (ClassMapper)mapper;
-        }
-    }
-
-    /**
-     * @deprecated As of 1.2, use
-     *             {@link #TreeMarshaller(HierarchicalStreamWriter, ConverterLookup, Mapper)}
-     */
-    public TreeMarshaller(
-        HierarchicalStreamWriter writer, ConverterLookup converterLookup,
-        ClassMapper classMapper) {
-        this(writer, converterLookup, (Mapper)classMapper);
     }
 
     public void convertAnother(Object item) {
@@ -80,7 +60,11 @@ public class TreeMarshaller implements MarshallingContext {
 
     protected void convert(Object item, Converter converter) {
         if (parentObjects.containsId(item)) {
-            throw new CircularReferenceException();
+            ConversionException e = new CircularReferenceException(
+                "Recursive reference to parent object");
+            e.add("item-type", item.getClass().getName());
+            e.add("converter-type", converter.getClass().getName());
+            throw e;
         }
         parentObjects.associateId(item, "");
         converter.marshal(item, writer, this);
@@ -125,6 +109,10 @@ public class TreeMarshaller implements MarshallingContext {
         return this.mapper;
     }
 
-    public static class CircularReferenceException extends XStreamException {
+    public static class CircularReferenceException extends ConversionException {
+
+        public CircularReferenceException(String msg) {
+            super(msg);
+        }
     }
 }

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -11,10 +11,7 @@
  */
 package com.thoughtworks.xstream.mapper;
 
-import com.thoughtworks.xstream.alias.ClassMapper;
-
-import java.util.Arrays;
-import java.util.Collection;
+import com.thoughtworks.xstream.core.util.Primitives;
 
 /**
  * Mapper that detects arrays and changes the name so it can identified as an array
@@ -24,27 +21,8 @@ import java.util.Collection;
  */
 public class ArrayMapper extends MapperWrapper {
 
-    private final static Collection BOXED_TYPES = Arrays.asList(
-            new Class[] {
-                    Boolean.class,
-                    Byte.class,
-                    Character.class,
-                    Short.class,
-                    Integer.class,
-                    Long.class,
-                    Float.class,
-                    Double.class
-            });
-
     public ArrayMapper(Mapper wrapped) {
         super(wrapped);
-    }
-
-    /**
-     * @deprecated As of 1.2, use {@link #ArrayMapper(Mapper)}
-     */
-    public ArrayMapper(ClassMapper wrapped) {
-        this((Mapper)wrapped);
     }
 
     public String serializedClass(Class type) {
@@ -83,7 +61,7 @@ public class ArrayMapper extends MapperWrapper {
         }
 
         if (dimensions > 0) {
-            Class componentType = primitiveClassNamed(elementName);
+            Class componentType = Primitives.primitiveType(elementName);
             if (componentType == null) {
                 componentType = super.realClass(elementName);
             }
@@ -103,42 +81,15 @@ public class ArrayMapper extends MapperWrapper {
             className.append('[');
         }
         if (componentType.isPrimitive()) {
-            className.append(charThatJavaUsesToRepresentPrimitiveArrayType(componentType));
+            className.append(Primitives.representingChar(componentType));
             return className.toString();
         } else {
             className.append('L').append(componentType.getName()).append(';');
             return className.toString();
         }
     }
-
-    private Class primitiveClassNamed(String name) {
-        return
-                name.equals("void") ? Void.TYPE :
-                name.equals("boolean") ? Boolean.TYPE :
-                name.equals("byte") ? Byte.TYPE :
-                name.equals("char") ? Character.TYPE :
-                name.equals("short") ? Short.TYPE :
-                name.equals("int") ? Integer.TYPE :
-                name.equals("long") ? Long.TYPE :
-                name.equals("float") ? Float.TYPE :
-                name.equals("double") ? Double.TYPE :
-                null;
-    }
-
-    private char charThatJavaUsesToRepresentPrimitiveArrayType(Class primvCls) {
-        return
-                (primvCls == boolean.class) ? 'Z' :
-                (primvCls == byte.class) ? 'B' :
-                (primvCls == char.class) ? 'C' :
-                (primvCls == short.class) ? 'S' :
-                (primvCls == int.class) ? 'I' :
-                (primvCls == long.class) ? 'J' :
-                (primvCls == float.class) ? 'F' :
-                (primvCls == double.class) ? 'D' :
-                0;
-    }
     
     private String boxedTypeName(Class type) {
-        return BOXED_TYPES.contains(type) ? type.getName() : null;
+        return Primitives.isBoxed(type) ? type.getName() : null;
     }
 }

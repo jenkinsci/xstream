@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -11,14 +11,14 @@
  */
 package com.thoughtworks.xstream.mapper;
 
-import com.thoughtworks.xstream.alias.ClassMapper;
 import com.thoughtworks.xstream.converters.ConverterLookup;
 import com.thoughtworks.xstream.converters.SingleValueConverter;
 import com.thoughtworks.xstream.converters.enums.EnumSingleValueConverter;
+import com.thoughtworks.xstream.core.Caching;
 
 import java.util.EnumSet;
+import java.util.HashMap;
 import java.util.Map;
-import java.util.WeakHashMap;
 
 
 /**
@@ -30,34 +30,23 @@ import java.util.WeakHashMap;
  * @author Joe Walnes
  * @author J&ouml;rg Schaible
  */
-public class EnumMapper extends MapperWrapper {
+public class EnumMapper extends MapperWrapper implements Caching {
 
     private transient AttributeMapper attributeMapper;
-    private transient Map enumConverterMap;
-    private final ConverterLookup converterLookup;
+    private transient Map<Class, SingleValueConverter> enumConverterMap;
 
     /**
-     * @deprecated since 1.3.1, use {@link #EnumMapper(Mapper)}
+     * @deprecated As of 1.3.1, use {@link #EnumMapper(Mapper)}
      */
+    @Deprecated
     public EnumMapper(Mapper wrapped, ConverterLookup lookup) {
         super(wrapped);
-        this.converterLookup = lookup;
         readResolve();
     }
 
-    @Deprecated
     public EnumMapper(Mapper wrapped) {
         super(wrapped);
-        this.converterLookup = null;
         readResolve();
-    }
-
-    /**
-     * @deprecated since 1.2, use {@link #EnumMapper(Mapper))}
-     */
-    @Deprecated
-    public EnumMapper(ClassMapper wrapped) {
-        this((Mapper)wrapped);
     }
 
     @Override
@@ -102,12 +91,13 @@ public class EnumMapper extends MapperWrapper {
             && Enum.class.isAssignableFrom(type)
             && attributeMapper.shouldLookForSingleValueConverter(fieldName, type, definedIn)) {
             synchronized (enumConverterMap) {
-                SingleValueConverter singleValueConverter = (SingleValueConverter)enumConverterMap
-                    .get(type);
+                SingleValueConverter singleValueConverter = enumConverterMap.get(type);
                 if (singleValueConverter == null) {
                     singleValueConverter = super.getConverterFromItemType(fieldName, type, definedIn);
                     if (singleValueConverter == null) {
-                        singleValueConverter = new EnumSingleValueConverter(type);
+                        @SuppressWarnings("unchecked")
+                        Class<? extends Enum> enumType = type;
+                        singleValueConverter = new EnumSingleValueConverter(enumType);
                     }
                     enumConverterMap.put(type, singleValueConverter);
                 }
@@ -117,8 +107,16 @@ public class EnumMapper extends MapperWrapper {
         return null;
     }
 
+    public void flushCache() {
+        if (enumConverterMap.size() > 0) {
+            synchronized (enumConverterMap) {
+                enumConverterMap.clear();
+            }
+        }
+    }
+
     private Object readResolve() {
-        this.enumConverterMap = new WeakHashMap();
+        this.enumConverterMap = new HashMap<Class, SingleValueConverter>();
         this.attributeMapper = (AttributeMapper)lookupMapperOfType(AttributeMapper.class);
         return this;
     }

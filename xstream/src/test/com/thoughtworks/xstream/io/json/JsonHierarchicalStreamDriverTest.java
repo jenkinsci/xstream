@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2011, 2012 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -14,6 +14,8 @@ package com.thoughtworks.xstream.io.json;
 import java.awt.Color;
 import java.io.InputStream;
 import java.io.Reader;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -29,7 +31,9 @@ import java.util.TimeZone;
 import java.util.TreeMap;
 
 import com.thoughtworks.acceptance.objects.Original;
+import com.thoughtworks.acceptance.objects.OwnerOfExternalizable;
 import com.thoughtworks.acceptance.objects.Replaced;
+import com.thoughtworks.acceptance.objects.SomethingExternalizable;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.core.JVM;
 
@@ -87,18 +91,32 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
             + "  'long1': 5,\n"
             + "  'long2': 42,\n"
             + "  'greeting': 'hello',\n"
-            + "  'num1': 2,\n"
-            + "  'num2': 3,\n"
-            + "  'bool': true,\n"
-            + "  'bool2': true,\n"
+            + "  'int1': 2,\n"
+            + "  'int2': 3,\n"
+            + "  'short1': 6,\n"
+            + "  'short2': 7,\n"
+            + "  'byte1': 8,\n"
+            + "  'byte2': 9,\n"
+            + "  'bool1': true,\n"
+            + "  'bool2': false,\n"
             + "  'char1': 'A',\n"
             + "  'char2': 'B',\n"
+            + "  'float1': 1.1,\n"
+            + "  'float2': 1.2,\n"
+            + "  'double1': 2.1,\n"
+            + "  'double2': 2.2,\n"
+            + "  'bigInt': 511,\n"
+            + "  'bigDec': 3.14,\n"
             + "  'innerMessage': {\n"
             + "    'long1': 0,\n"
             + "    'greeting': 'bonjour',\n"
-            + "    'num1': 3,\n"
-            + "    'bool': false,\n"
-            + "    'char1': '\\u0000'\n"
+            + "    'int1': 3,\n"
+            + "    'short1': 0,\n"
+            + "    'byte1': 0,\n"
+            + "    'bool1': false,\n"
+            + "    'char1': '\\u0000',\n"
+            + "    'float1': 0.0,\n"
+            + "    'double1': 0.0\n"
             + "  }\n"
             + "}}");
 
@@ -107,15 +125,26 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
         Message message = new Message("hello");
         message.long1 = 5L;
         message.long2 = new Long(42);
-        message.num1 = 2;
-        message.num2 = new Integer(3);
-        message.bool = true;
-        message.bool2 = Boolean.TRUE;
+        message.int1 = 2;
+        message.int2 = new Integer(3);
+        message.short1 = (short)6;
+        message.short2 = new Short((short)7);
+        message.byte1 = (byte)8;
+        message.byte2 = new Byte((byte)9);
+        message.bool1 = true;
+        message.bool2 = Boolean.FALSE;
         message.char1 = 'A';
         message.char2 = new Character('B');
+        message.float1 = 1.1f;
+        message.float2 = new Float(1.2f);
+        message.double1 = 2.1;
+        message.double2 = new Double(2.2);
+        message.bigInt = new BigInteger(new byte[]{(byte)1, (byte)0xFF});
+        message.bigDec = new BigDecimal(314).divide(
+            new BigDecimal(100), 2, BigDecimal.ROUND_FLOOR);
 
         Message message2 = new Message("bonjour");
-        message2.num1 = 3;
+        message2.int1 = 3;
 
         message.innerMessage = message2;
 
@@ -126,12 +155,22 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
         long long1;
         Long long2;
         String greeting;
-        int num1;
-        Integer num2;
-        boolean bool;
+        int int1;
+        Integer int2;
+        short short1;
+        Short short2;
+        byte byte1;
+        Byte byte2;
+        boolean bool1;
         Boolean bool2;
         char char1;
         Character char2;
+        float float1;
+        Float float2;
+        double double1;
+        Double double2;
+        BigInteger bigInt;
+        BigDecimal bigDec;
         Message innerMessage;
 
         public Message(String greeting) {
@@ -419,8 +458,7 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
 
         String expected = normalizeExpectation("" // 
             + "{'element': {\n"
-            + "  'array': [\n"
-            + "  ]\n"
+            + "  'array': []\n"
             + "}}");
         assertEquals(expected, xstream.toXML(new ElementWithEmptyArray()));
     }
@@ -574,7 +612,6 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
             + "      'timezone': 'Europe/London'\n"
             + "    },\n"
             + "    'titles': [\n"
-            + "      {},\n" // no-comparator element
             + "      [\n"
             + "        '1',\n"
             + "        'Mr'\n"
@@ -644,5 +681,73 @@ public class JsonHierarchicalStreamDriverTest extends TestCase {
                 + "}}");
 
         assertEquals(expected, xstream.toXML(sa));
+    }
+    
+    public void testRealTypeIsHonoredWhenWritingTheValue() {
+        xstream.alias("sa", SystemAttributes.class);
+
+        List list = new ArrayList();
+        list.add("joe");
+        list.add("mauro");
+        SystemAttributes[] sa = new SystemAttributes[2];
+        sa[0] = new SystemAttributes();
+        sa[0].name = "year";
+        sa[0].object = new Integer(2000);
+        sa[1] = new SystemAttributes();
+        sa[1].name = "names";
+        sa[1].object = list;
+
+        String expected = normalizeExpectation(""
+                + "{'sa-array': [\n"
+                + "  {\n"
+                + "    'name': 'year',\n"
+                + "    'object': {\n"
+                + "      '@class': 'int',\n"
+                + "      '$': 2000\n" 
+                + "    }\n"
+                + "  },\n"
+                + "  {\n"
+                + "    'name': 'names',\n"
+                + "    'object': [\n"
+                + "      'joe',\n" 
+                + "      'mauro'\n" 
+                + "    ]\n"
+                + "  }\n"
+                + "]}");
+
+        assertEquals(expected, xstream.toXML(sa));
+    }
+
+    public void testCanMarshalExternalizable() {
+        xstream.alias("ext", SomethingExternalizable.class);
+        
+        SomethingExternalizable in = new SomethingExternalizable("Joe", "Walnes");
+        String expected = normalizeExpectation(""
+            + "{'ext': [\n"
+            + "  3,\n"
+            + "  'JoeWalnes',\n"
+            + "  {},\n"
+            + "  'XStream'\n"
+            + "]}");
+
+        assertEquals(expected, xstream.toXML(in));
+    }
+
+    public void testCanMarshalEmbeddedExternalizable() {
+        xstream.alias("owner", OwnerOfExternalizable.class);
+        
+        OwnerOfExternalizable in = new OwnerOfExternalizable();
+        in.target = new SomethingExternalizable("Joe", "Walnes");
+        String expected = normalizeExpectation(""
+            + "{'owner': {\n"
+            + "  'target': [\n"
+            + "    3,\n"
+            + "    'JoeWalnes',\n"
+            + "    {},\n"
+            + "    'XStream'\n"
+            + "  ]\n"
+            + "}}");
+
+        assertEquals(expected, xstream.toXML(in));
     }
 }

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -11,34 +11,37 @@
  */
 package com.thoughtworks.xstream.io.xml;
 
-import com.thoughtworks.xstream.io.xml.xppdom.Xpp3Dom;
+import com.thoughtworks.xstream.io.naming.NameCoder;
+import com.thoughtworks.xstream.io.xml.xppdom.XppDom;
 
 /**
- * @author <a href="mailto:jason@maven.org">Jason van Zyl</a>
- * @version $Id: XppDomReader.java 1345 2007-12-11 01:50:12Z joehni $
+ * @author Jason van Zyl
  */
 public class XppDomReader extends AbstractDocumentReader {
 
-    private Xpp3Dom currentElement;
+    private XppDom currentElement;
 
-    public XppDomReader(Xpp3Dom xpp3Dom) {
-        super(xpp3Dom);
+    public XppDomReader(XppDom xppDom) {
+        super(xppDom);
+    }
+
+    /**
+     * @since 1.4
+     */
+    public XppDomReader(XppDom xppDom, NameCoder nameCoder) {
+        super(xppDom, nameCoder);
     }
 
     /**
      * @since 1.2
+     * @deprecated As of 1.4 use {@link XppDomReader#XppDomReader(XppDom, NameCoder)} instead.
      */
-    public XppDomReader(Xpp3Dom xpp3Dom, XmlFriendlyReplacer replacer) {
-        super(xpp3Dom, replacer);
+    public XppDomReader(XppDom xppDom, XmlFriendlyReplacer replacer) {
+        this(xppDom, (NameCoder)replacer);
     }
     
     public String getNodeName() {
-        return unescapeXmlName(currentElement.getName());
-    }
-
-    public String peekNextChild() {
-        if(currentElement.getChildCount()==0)   return null;
-        return unescapeXmlName(currentElement.getChild(0).getName());
+        return decodeNode(currentElement.getName());
     }
 
     public String getValue() {
@@ -54,7 +57,7 @@ public class XppDomReader extends AbstractDocumentReader {
     }
 
     public String getAttribute(String attributeName) {
-        return currentElement.getAttribute(attributeName);
+        return currentElement.getAttribute(encodeAttribute(attributeName));
     }
 
     public String getAttribute(int index) {
@@ -66,7 +69,7 @@ public class XppDomReader extends AbstractDocumentReader {
     }
 
     public String getAttributeName(int index) {
-        return unescapeXmlName(currentElement.getAttributeNames()[index]);
+        return decodeAttribute(currentElement.getAttributeNames()[index]);
     }
 
     protected Object getParent() {
@@ -82,7 +85,14 @@ public class XppDomReader extends AbstractDocumentReader {
     }
 
     protected void reassignCurrentElement(Object current) {
-        this.currentElement = (Xpp3Dom) current;
+        this.currentElement = (XppDom) current;
+    }
+
+    public String peekNextChild() {
+        if (currentElement.getChildCount() == 0) {
+            return null;
+        }
+        return decodeNode(currentElement.getChild(0).getName());
     }
 
 }

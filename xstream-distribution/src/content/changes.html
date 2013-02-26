@@ -1,7 +1,7 @@
 <html>
 <!--
  Copyright (C) 2005, 2006 Joe Walnes.
- Copyright (C) 2006, 2007, 2008 XStream committers.
+ Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013 XStream committers.
  All rights reserved.
  
  The software in this package is published under the terms of the BSD
@@ -24,15 +24,287 @@
     </ul>
 
 	<p>Full details can be found in Jira's
-	<a href="http://jira.codehaus.org/browse/XSTR?report=com.atlassian.jira.plugin.system.project:roadmap-panel">Roadmap</a>  and
+	<a href="http://jira.codehaus.org/browse/XSTR?report=com.atlassian.jira.plugin.system.project:roadmap-panel">Roadmap</a> and
 	<a href="http://jira.codehaus.org/browse/XSTR?report=com.atlassian.jira.plugin.system.project:changelog-panel">Change Log</a>.
 	</p>
- 
- <!--
-    <h1 id="Upcoming">Upcoming</h1>
 
-    <p>Not yet released</p>
+<!--  
+    <h1 id="upcoming">Upcoming</h1>
+
+    <p>Not yet released.</p>
+
+    <h2>Major changes</h2>
+    
+    <ul>
+    </ul>
 -->
+
+    <h1 id="1.4.4">1.4.4</h1>
+
+    <p>Released 19. January 2013.</p>
+
+    <h2>Minor changes</h2>
+    
+    <ul>
+    	<li>JIRA:XSTR-709: Locks up on Mac with Apple JVM due to unwanted initialization of AWT.</li>
+    	<li>JIRA:XSTR-711: DateConverter cannot handle dates in different era.</li>
+    	<li>JIRA:XSTR-712: HibernateMapper throws NPE if a collection contains null.</li>
+    	<li>DateConverter supports now localized formats.</li>
+    	<li>JIRA:XSTR-710: JsonWriter does not write BigInteger and BigDecimal as number values.</li>
+    	<li>JIRA:XSTR-708: SqlTimestampConverter does not ignore timezone.</li>
+    	<li>JIRA:XSTR-707: Creation of XmllPullParser with the XmlPullParserFactory may fail in OSGi environment.</li>
+    	<li>JIRA:XSTR-705: Unnecessary synchronization accessing the field cache decreases performance.</li>
+    	<li>JIRA:XSTR-714: Fields not found when XStream12FieldKeySorter used.</li>
+    </ul>
+
+    <h2>API changes</h2>
+
+    <ul>
+    	<li>Deprecated method c.t.x.core.util.JVM.is14(), c.t.x.core.util.JVM.is15() and c.t.x.core.util.JVM.is16().</li>
+    </ul>
+
+    <h1 id="1.4.3">1.4.3</h1>
+
+    <p>Released 17. July 2012.</p>
+
+    <h2>Major changes</h2>
+    
+    <ul>
+    	<li>Support java.util.concurrent.ConcurrentHashMap with the MapConverter. This will also avoid a bug in JRockit
+    	JDK reported in JIRA:XSTR-608.</li>
+    	<li>JIRA:XSTR-699: Support for Hibernate 4 with XStream's Hibernate module as default for Java 6 or higher.</li>
+    </ul>
+
+    <h2>Minor changes</h2>
+    
+    <ul>
+    	<li>JVM.loadClass will now also initialize the loaded class and ignore any occurring LinkageError.</li>
+    	<li>JIRA:XSTR-596: SubjectConverter will be no longer registered if initialization of javax.security.auth.Subject fails.</li>
+    	<li>JIRA:XSTR-683: Inheritance of implicit collections, arrays or maps is dependent on declaration sequence.</li>
+    	<li>Inherited implicit collections, arrays or maps can be overwritten with own definition in subtype.</li>
+    	<li>JIRA:XSTR-688: Cannot omit XML elements from derived fields.</li>
+    	<li>JIRA:XSTR-696: Ill-formed JSON generated, because JSON writer is fed with type of declaring field instead of
+    	the real object's type.</li>
+    	<li>JIRA:XSTR-685: Deserialization from file or URL keeps stream open.</li>
+    	<li>JIRA:XSTR-684: XML 1.0 character validation fails for characters from 0x10 to 0x1f.</li>
+    	<li>JavaBeanConverter supports now instantiation for a specific type and can therefore be used in
+    	@XStreamConverter annotation.</li>
+    	<li>SerializableConverter is broken if the serialized type is the default implementation.</li>
+    	<li>Method marshalUnserializableParent of SerializableConverter is protected now to skip the default mechanism
+    	in a derived converter that uses the default constructor to create the original type (as an alternative for
+    	JIRA:XSTR-695).</li>
+    	<li>FieldDictionary may call sort of FieldKeySorter implementation with wrong type as key.</li>
+    	<li>Sometimes DependencyInjectionFactory tries to instantiate objects with mismatching constructor arguments.</li>
+    	<li>HSQLDB has to be a test dependency only for XStream's Hibernate module.</li>
+    </ul>
+
+    <h1 id="1.4.2">1.4.2</h1>
+
+    <p>Released 3. November 2011.</p>
+
+    <h2>Major changes</h2>
+
+    <ul>
+    	<li>XStream libraries can be used now directly in Android, therefore support of Java 1.4.2 has been stopped with the delivery.
+    	Anyone who needs a version for Java 1.4.2 can build it easily from source, this build is still supported and part of CI.</li>
+    	<li>JIRA:XSTR-675: New extended HierarchicalStreamReader interface with peekNextChild method. All XStream
+    	readers implement the new interface (by Nikita Levyankov).</li>
+    	<li>JIRA:XSTR-673: Collections.EMPTY_LIST, Collections.EMPTY_SET and Collections.EMPTY_MAP supported with own
+    	alias and defined as immutable.</li>
+    	<li>JIRA:XSTR-631: Collections.singletonList(), Collections.singletonSet() and Collections.singletonMap()
+    	supported with own alias and own converters.</li>
+    	<li>JIRA:XSTR-406 + JIRA:XSTR-663: Support additional parameters for XStreamConverter annotation (e.g. to declare a
+    	ToAttributedValueConverter).</li>
+    </ul>
+
+    <h2>Minor changes</h2>
+
+    <ul>
+    	<li>WstxDriver did not trigger Woodstox, but BEA StAX implementation.</li>
+    	<li>JIRA:XSTR-260: PrettyPrintWriter does not handle tab and new line characters in attributes.</li>
+    	<li>JIRA:XSTR-667: Cannot serialize empty list with JsonHierarchicalStreamDriver.</li>
+    	<li>JIRA:XSTR-661: TreeMarshaller.CircularReference is not a ConversionException.</li>
+    	<li>JIRA:XSTR-562: StAX: Namespace attribute is not written in non-repairing mode for second sibling.</li>
+    	<li>JIRA:XSTR-664: ClassCastException in HibernatePersistentSortedSetConverter and
+    	HibernatePersistentSortedMapConverter.</li>
+    	<li>JIRA:XSTR-674: Recreate binary compatibility with 1.3.x series for method
+    	CustomObjectInputStream.getInstance(...).</li>
+    	<li>JIRA:XSTR-671: CannotResolveClassException should accept cause.</li>
+    	<li>JIRA:XSTR-672: Collections.EMPTY_LIST, Collections.EMPTY_SET and Collections.EMPTY_MAP used for in implicit
+    	collection should not throw ReferencedImplicitElementException.</li>
+    	<li>JIRA:XSTR-676: Introduce MissingFieldException thrown at deserialization time indicating a missing field or
+    	property (by Nikita Levyankov).</li>
+    	<li>Add length limit for cached strings in StringConverter, 38 characters by default.</li>
+    	<li>The JsonHierarchicalStreamDriver and the JsonWriter did not support the inherited NameCoder instance.</li>
+    	<li>Add BinaryStreamDriver.</li>
+    	<li>NPE in XppDomComparator.</li>
+    	<li>Dom4JXmlWriter fails to flush the underlying writer.</li>
+    	<li>Known control characters are not encoded with JsonWriter as proposed at json.org.</li>
+    	<li>Detect duplicate property processing in JavaBeanConverter and throw DuplicatePropertyException instead	of
+    	clobbering silently.</li>
+    	<li>Allow access to Mapper and JavaBeanProvider in derived instances of JavaBeanConverter.</li>
+    	<li>DependencyInjectionFactory failed to create instance when a matching constructor was found, but a default
+    	constructor was also present.</li>
+    </ul>
+
+    <h2>API changes</h2>
+
+    <ul>
+    	<li>Added interface c.t.x.io.ExtendedHierarchicalStreamReader extending c.t.x.io.HierarchicalStreamReader. All
+    	implementations of c.t.x.io.HierarchicalStreamReader will implement also the extended interface.</li>
+    	<li>Added c.t.x.converters.reflection.MissingFieldException derived from
+    	c.t.x.converters.reflection.ObjectAccessException and used instead when the unmarshalling process should write
+    	a field or property that is missing and does not exist.</li>
+    	<li>Added methods c.t.x.io.path.PathTracker.peekElement(), c.t.x.io.path.PathTracker.peekElement(int), and
+    	c.t.x.io.path.PathTracker.depth().</li>
+    	<li>Deprecated method c.t.x.core.ReferencingMarshallingContext.currentPath(). Wrong approach.</li>
+    </ul>
+
+    <h1 id="1.4.1">1.4.1</h1>
+
+    <p>Released 11. August 2011.</p>
+
+    <h2>Major changes</h2>
+
+    <ul>
+    	<li>JIRA:XSTR-659: Use again Xpp3 as default parser, now with additional XmlPullParser API as regular
+    	dependency for the XPP factory. Only standard kXML2 package contains the XPP factory, but not the minimal kXML2
+    	version.</li>
+    </ul>
+
+    <h2>Minor changes</h2>
+
+    <ul>
+    	<li>Add utility class c.t.x.io.xml.xppdom.XppFactory and a path tracking comparator for XppDom.</li>
+    </ul>
+
+    <h1 id="1.4">1.4</h1>
+
+    <p>Released 6. August 2011.</p>
+
+    <h2>Major changes</h2>
+
+    <ul>
+    	<li>Java 7 is detected and supported.</li>
+    	<li>JIRA:XSTR-542: The XppDriver uses now the official XmlPullParser API to locate an available parser using
+    	the XmlPullParserFactory. This allows the usage of XPP technology with XStream in Android.</li>
+    	<li>Additional explicit XPP drivers for the Xpp3 and kXML2 implementations.</li>
+    	<li>Additional explicit XPP DOM drivers for the Xpp3 and kXML2 implementations.</li>
+    	<li>kXML2 is now the preferred parser implementation, Xpp3 is optional.</li>
+    	<li>Additional explicit StAX drivers for Woodstox, BEA StAX and SJSXP of the JDK 6 implementations.</li>
+    	<li>JDK 1.3 is no longer officially supported.</li>
+    	<li>JIRA:XSTR-377+JIRA:XSTR-226: New artifact xstream-hibernate with converters and mapper to process Hibernate
+    	object graphs (by Costin Leau, Konstantin Pribluda and in special Jaime Metcher).</li>
+    	<li>New NameCoder interface and implementations to support a generic name translation between names from the
+    	object graph and a target format. The new XmlFriendlyNameCoder replaces the XmlFriendlyReplacer used for XML
+    	only.</li>
+    	<li>JIRA:XSTR-553: Support annotations in Android.</li>
+    	<li>JIRA:XSTR-556: DateConverter uses format with 3-letter time zones that are ambiguous. Therefore it will now
+    	always use UTC to write dates. Unmarshalled dates are not affected as long as they contain a time zone.</li>
+    	<li>The type java.lang.reflect.Field is now handled by an own converter, that can still read the old format.</li>
+    	<li>JIRA:XSTR-490: Provide path in Converter for contexts that track the path.</li>
+    	<li>JIRA:XSTR-592+JIRA:XSTR-579: OmitField respected at deserialization time even for existing fields.</li>
+    	<li>JIRA:XSTR-593: Direct support for java.net.URI instances (by Carlos Roman).</li>
+    	<li>JIRA:XSTR-615+JIRA:XSTR-580: Dynamic proxies cannot be referenced recursively.</li>
+    	<li>JIRA:XSTR-547: Wrong class loader used for Serializable types deserialized with an ObjectInputStream.</li>
+    	<li>JIRA:XSTR-341: Support of implicit arrays.</li>
+    	<li>JIRA:XSTR-306+JIRA:XSTR-406: Support of implicit maps.</li>
+    	<li>JIRA:XSTR-344: New ToAttributedValueConverter to allow conversion of an element with string body and
+    	attributes.</li>
+    	<li>JIRA:XSTR-573: SortedSet added with TreeSet as the default implementation.</li>
+    	<li>JIRA:XSTR-576: TreeMap and TreeSet no longer add an element without comparator (by Jason Greanya),
+    	solves also invalid format with JSON for such objects (JIRA:XSTR-640).</li>
+    </ul>
+
+    <h2>Minor changes</h2>
+
+    <ul>
+    	<li>JIRA:XSTR-612: Improve extensibility of c.t.x.javabean.* package by reintroducing a PropertyDictionary with
+    	the additional interface PropertySorter.</li>
+    	<li>JIRA:XSTR-591: EnumSingleValueConverter did use toString() instead of name() to create the String
+    	representation of an enum value.</li>
+    	<li>JIRA:XSTR-618: Add Oracle as vendor used for recent JRockit versions and former Sun JDK.</li>
+    	<li>JIRA:XSTR-656: DomReader and Dom4JReader do not escape attribute names retrieving their values.</li>
+    	<li>JIRA:XSTR-604: StringConverter's cache may cause an OutOfMemoryException.</li>
+    	<li>JIRA:XSTR-577: Skip UTF-8 BOM in XmlHeaderAwareReader.</li>
+    	<li>The XppReader no longer uses a BufferedReader.</li>
+    	<li>JIRA:XSTR-543: Better deserialization support of the defined-in system attribute in combination with field
+    	aliases.</li>
+    	<li>JIRA:XSTR-551: Deprecated XStream.InitializationException still thrown instead of InitializationException.</li>
+    	<li>JIRA:XSTR-655: JsonWriter generates invalid JSON for Externalizable types.</li>
+    	<li>JIRA:XSTR-540: Support Jettison-based configuration of JettisonMappedXmlDriver (by Doug Daniels).</li>
+    	<li>JIRA:XSTR-633: JettisonMappedXmlDriver escaped property names according escape rules for XML tag names.</li>
+    	<li>JIRA:XSTR-625: Optionally ignore XStream's hints for Jettison to generate JSON arrays (by Dejan Bosanac).</li>
+    	<li>JIRA:XSTR-605: Upgrade to Jettison 1.2 (for Java 5 or higher).</li>
+    	<li>New JsonWriter.EXPLICIT_MODE generating JSON that enforces property sequence.</li>
+    	<li>JIRA:XSTR-552: Improve performance of ReflectionProvider (by Keith Kowalczykowski).</li>
+    	<li>JIRA:XSTR-559: Improve performance of Sun14ReflectionProvider (by Keith Kowalczykowski).</li>
+    	<li>JIRA:XSTR-564: Improve performance of AnnotationMapper (by Keith Kowalczykowski).</li>
+    	<li>JIRA:XSTR-563: Use ReferenceQueue for cleaning-up WeakReferences in ObjectIdDictionary (by Keith
+    	Kowalczykowski).</li>
+    	<li>JIRA:XSTR-646: Cache of Sun14ReflectionProvider consumes more PermGen space than necessary.</li>
+    	<li>JIRA:XSTR-636: Ineffective cache in FieldDictionary using WeakHashMap with WeakReference values.</li>
+    	<li>Ineffective cache for SerializationMethodInvoker (related to JIRA:XSTR-636).</li>
+    	<li>Introduction of Caching interface implemented by all types in XStream that create local caches that may
+    	have to be flushed manually.</li>
+    	<li>Avoid excessive creation of AbstractPullReader.Event objects by using a pool.</li>
+    	<li>Possibility to generate XPath expressions that select always a single node instead of a node list.</li>
+    	<li>Cannot reference replaced object using ID references.</li>
+    	<li>Implicit collection functionality will no longer use custom collection converters that may write tags that are not
+    	recognized at deserialization time again.</li>
+    	<li>JIRA:XSTR-654: Unmarshal fails when an implicit collection is defined and an element is named equal to the field.</li>
+    	<li>JIRA:XSTR-574: AbstractReferenceUnmarshaller cannot handle null values for references.</li>
+    	<li>Improve exception output in case of a missing field.</li>
+    	<li>JIRA:XSTR-555: StAX driver tests do not honor repairing mode.</li>
+    	<li>JIRA:XSTR-570: The @XStreamConverter provides now also the current type as possible constructor argument.</li>
+    	<li>JIRA:XSTR-629: Deserialization of Externalizable with non-accessible default constructor fails.</li>
+    	<li>JIRA:XSTR-571: Cannot serialize synchronized RandomAccessList types.</li>
+    	<li>JIRA:XSTR-583: BinaryDriver fails to handle Strings with more than 64K bytes.</li>
+    	<li>JIRA:XSTR-639: Cannot omit field at deserialization if the field has a class attribute.</li>
+    	<li>JIRA:XSTR-599: EncodedByteArrayConverter should implement SingleValueConverter.</li>
+    	<li>JIRA:XSTR-584: Race condition in XmlFriendlyReplacer.</li>
+    	<li>JIRA:XSTR-623: XmlFriendlyReplacer may write illegal name characters (by Michael Schnell).</li>
+    	<li>The ConversionException hides information if its ErrorWriter contains the added key already.</li>
+    	<li>JIRA:XSTR-598: Attribute &quot;defined-in&quot; was wrongly evaluated for other attributes.</li>
+    	<li>JIRA:XSTR-650: Possible NullPointerException at initialization on platforms like Android that do not
+    	support all types of the JDK.</li>
+    	<li>JIRA:XSTR-652: Initialization of XStream fails if DurationConverter constructor throws a
+    	javax.xml.datatype.DatatypeConfigurationException. Converter will no longer handle Duration types if no
+    	instance of the internal DatatypeFactory can be created.</li>
+    	<li>Constructor DocumentWriter(Element) forgets the provided element.</li>
+    	<li>JIRA:XSTR-597: Optimize AbstractReflectionConverter.</li>
+    	<li>Introduce Caching interface to flush the internal cache of specific components.</li>
+    	<li>Support JIRA:XSTR-407 also for IBM JRE 1.6 and greater.</li>
+    	<li>java.nio.charset.Charset's converter was added as immutable type instead of the type itself.</li>
+    	<li>java.util.Currency added as immutable type.</li>
+    	<li>Fix selection of same parameter types in DependencyInjectionFactory.</li>
+    	<li>Deprecation of c.t.x.javabean.PropertyDictionary has been countermanded.</li>
+    </ul>
+
+    <h2>API changes</h2>
+
+    <ul>
+    	<li>Any deprecated stuff of the 1.2.x releases has been removed.</li>
+    	<li>Deprecated constructors of c.t.x.converters.reflection.SerializableConverter, c.t.x.converters.reflection.ExternalizableConverter
+    	 and c.t.x.converters.reflection.CGLIBEnhancedConverter; new versions take an additional argument for class loader (as a result
+    	 for JIRA:XSTR-547).</li>
+    	<li>Deprecated constructors of c.t.x.io.xml.XppReader, new versions take an additional argument for the XmlPullParser.</li>
+    	<li>Deprecated c.t.x.io.xml.XppReader.createParser(), the XPP parser is now created by the driver.</li>
+    	<li>Package c.t.x.io.xml.xppdom is now part of the official API.</li>
+    	<li>c.t.x.io.xml.xppdom.Xpp3Dom and c.t.x.io.xmlxpp.dom.Xpp3DomBuilder have been deprecated. Functionality is
+    	merged in c.t.x.io.xml.xppdom.XppDom.</li>
+    	<li>Deprecated c.t.x.mapper.XStream11XmlFriendlyMapper and c.t.x.mapper.AbstractXmlFriendlyMapper.</li>
+    	<li>Added interface c.t.x.core.ReferencingMarshallingContext which is implemented by all referencing marshallers.</li>
+    	<li>Added interface c.t.x.io.naming.NameCoder and implementations.</li>
+    	<li>Deprecated c.t.x.io.xml.XmlFriendlyReplacer, c.t.x.io.xml.XmlFriendlyReader and c.t.x.io.xml.XmlFriendlyWriter.</li>
+    	<li>Deprecated c.t.x.io.xml.AbstractXmlDriver, c.t.x.io.xml.AbstractXmlReader and c.t.x.io.xml.AbstractXmlWriter, added
+    	c.t.x.io.AbstractDriver, c.t.x.io.AbstractReader and c.t.x.io.AbstractWriter instead.</li>
+    	<li>Deprecated all constructors of Driver, Reader and Writer implementations that take a XmlFriendlyReplacer as argument,
+    	added constructors taking a NameCoder instead.</li>
+    	<li>Added interface com.thoughtworks.xstream.converters.ErrorReporter to allow other types to report
+    	also errors (apart from a HierarchicalStreamReader). Any converter and the parent object of the currently deserialized
+    	element may provide additional error information now.</li>
+    </ul>
 
     <h1 id="1.3.1">1.3.1</h1>
 
@@ -116,6 +388,9 @@
     	<li>Support for Converter definition at field level.</li>
     	<li>Refactoring of Annotation support, invent auto-detection mode.</li>
     	<li>Annotated converters are no longer detected automatically, all annotations are now handled in the same way.</li>
+    	<li>JIRA:XSTR-334: XStream will deserialize directly from a file or URL. Some parser take advantage of these objects to
+    	define a SystemId used to resolve further references in XML, schema or DTD. Appropriate createReader methods have been
+    	added to c.t.x.io.HierarchicalStreamDriver.</li>
     	<li>JIRA:XSTR-261: All c.t.x.io.HierarchicalStreamDriver implementations respect now the encoding of an XML header
     	if read from an InputStream.</li>
     	<li>DomDriver does no longer use explicitly UTF-8 by default, DomReader will therefore respect the encoding defined 

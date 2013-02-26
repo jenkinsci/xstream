@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2010, 2012 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -16,6 +16,12 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.TimeZone;
 
 import com.thoughtworks.acceptance.AbstractAcceptanceTest;
 
@@ -222,4 +228,85 @@ public class SerializationNestedWriteObjectsTest extends AbstractAcceptanceTest 
         RawString rawString = (RawString) objectInputStream.readObject();
         assertEquals("XStream", rawString.getS());
     }
+    
+    static class Store implements Serializable {
+        List store;
+        public Store() {
+            store = new ArrayList();
+        }
+        private void writeObject(ObjectOutputStream out) throws IOException {
+            out.defaultWriteObject();
+        }
+    }
+    static class OtherStore extends Store {
+        private Object readResolve() {
+            if (this.store instanceof LinkedList) {
+                Store replacement = new MyStore();
+                replacement.store = store;
+                return replacement;
+            }
+            return this;
+        }
+    }
+    static class MyStore extends OtherStore {
+        public MyStore() {
+            store = new LinkedList();
+        }
+        private Object writeReplace() {
+            Store replacement = new OtherStore();
+            replacement.store = store;
+            return replacement;
+        }
+    }
+
+    public void testCachingInheritedWriteObject() throws Exception {
+        xstream.alias("store", Store.class);
+        xstream.alias("my", MyStore.class);
+        xstream.alias("other", OtherStore.class);
+
+        String expectedXml = ""
+                + "<store-array>\n"
+                + "  <my resolves-to=\"other\" serialization=\"custom\">\n"
+                + "    <store>\n"
+                + "      <default>\n"
+                + "        <store class=\"linked-list\">\n"
+                + "          <string>one</string>\n"
+                + "        </store>\n"
+                + "      </default>\n"
+                + "    </store>\n"
+                + "  </my>\n"
+                + "  <other serialization=\"custom\">\n"
+                + "    <store>\n"
+                + "      <default>\n"
+                + "        <store>\n"
+                + "          <string>two</string>\n"
+                + "        </store>\n"
+                + "      </default>\n"
+                + "    </store>\n"
+                + "  </other>\n"
+                + "</store-array>";
+
+        Store[] stores = new Store[]{
+            new MyStore(),
+            new OtherStore()
+        };
+        stores[0].store.add("one");
+        stores[1].store.add("two");
+        
+        assertBothWays(stores, expectedXml);
+    }
+
+	static class MoscowCalendar extends GregorianCalendar {
+		public MoscowCalendar() {
+			super(TimeZone.getTimeZone("Europe/Moscow"));
+		}
+	}
+
+	public void testNestedSerializationOfDefaultType() {
+	    Calendar in = new MoscowCalendar();
+	    in.setTimeInMillis(44444);
+	    String xml = xstream.toXML(in);
+	    Calendar out = (Calendar) xstream.fromXML(xml);
+	    assertEquals(in.getTime(), out.getTime());
+	}
 }

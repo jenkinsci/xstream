@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -20,7 +20,7 @@ import java.util.Iterator;
  *
  * @author Joe Walnes
  */
-public abstract class ReaderWrapper implements HierarchicalStreamReader {
+public abstract class ReaderWrapper implements ExtendedHierarchicalStreamReader {
 
     protected HierarchicalStreamReader wrapped;
 
@@ -30,10 +30,6 @@ public abstract class ReaderWrapper implements HierarchicalStreamReader {
 
     public boolean hasMoreChildren() {
         return wrapped.hasMoreChildren();
-    }
-
-    public String peekNextChild() {
-        return wrapped.peekNextChild();
     }
 
     public void moveDown() {
@@ -78,6 +74,13 @@ public abstract class ReaderWrapper implements HierarchicalStreamReader {
 
     public void close() {
         wrapped.close();
+    }
+
+    public String peekNextChild() {
+        if (! (wrapped instanceof ExtendedHierarchicalStreamReader)) {
+            throw new UnsupportedOperationException("peekNextChild");
+        }
+        return ((ExtendedHierarchicalStreamReader)wrapped).peekNextChild();
     }
 
     public HierarchicalStreamReader underlyingReader() {

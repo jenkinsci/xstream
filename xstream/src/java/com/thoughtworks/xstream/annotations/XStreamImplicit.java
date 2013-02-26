@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -16,16 +16,22 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * An annotation for marking a field as an implicit collection.
+ * An annotation for marking a field as an implicit collection or array.
  *
  * @author Lucio Benfante
+ * @author J&ouml;rg Schaible
  * @since 1.2.2
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
 public @interface XStreamImplicit {
     /**
-     * Element name of the implicit collection
+     * Element name of the implicit collection.
      */
     String itemFieldName() default "";
+    /**
+     * Field name of map entries that are used as key for the element in the implicit map.
+     * @since 1.4
+     */
+    String keyFieldName() default "";
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006, 2007, 2008 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2010, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -60,9 +60,16 @@ public class CGLIBEnhancedConverter extends SerializableConverter {
     private static String CALLBACK_MARKER = "CGLIB$CALLBACK_";
     private transient Map fieldCache;
 
-    public CGLIBEnhancedConverter(Mapper mapper, ReflectionProvider reflectionProvider) {
-        super(mapper, new CGLIBFilteringReflectionProvider(reflectionProvider));
+    public CGLIBEnhancedConverter(Mapper mapper, ReflectionProvider reflectionProvider, ClassLoader classLoader) {
+        super(mapper, new CGLIBFilteringReflectionProvider(reflectionProvider), classLoader);
         this.fieldCache = new HashMap();
+    }
+
+    /**
+     * @deprecated As of 1.4 use {@link #CGLIBEnhancedConverter(Mapper, ReflectionProvider, ClassLoader)}
+     */
+    public CGLIBEnhancedConverter(Mapper mapper, ReflectionProvider reflectionProvider) {
+        this(mapper, new CGLIBFilteringReflectionProvider(reflectionProvider), null);
     }
 
     public boolean canConvert(Class type) {
@@ -141,9 +148,9 @@ public class CGLIBEnhancedConverter extends SerializableConverter {
         } catch (NoSuchFieldException e) {
             // OK, ignore
         } catch (IllegalAccessException e) {
-            throw new ObjectAccessException("Access to serialverionUID of "
+            throw new ObjectAccessException("Access to serialVersionUID of "
                 + type.getName()
-                + " not allowed");
+                + " not allowed", e);
         }
         if (hasInterceptor) {
             writer.startNode("instance");
@@ -180,7 +187,7 @@ public class CGLIBEnhancedConverter extends SerializableConverter {
                     + "."
                     + CALLBACK_MARKER
                     + i
-                    + " not allowed");
+                    + " not allowed", e);
             }
         }
         return (Callback[])list.toArray(new Callback[list.size()]);
@@ -242,7 +249,7 @@ public class CGLIBEnhancedConverter extends SerializableConverter {
                 } catch (IllegalAccessException e) {
                     throw new ObjectAccessException("Access to "
                         + calledMethod
-                        + " not allowed");
+                        + " not allowed", e);
                 } catch (InvocationTargetException e) {
                     // OK, ignore
                 } catch (NoSuchMethodException e) {

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -11,12 +11,14 @@
  */
 package com.thoughtworks.xstream.io.xml;
 
+import java.io.File;
 import java.io.FilterWriter;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
+import java.net.URL;
 
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
@@ -28,6 +30,7 @@ import org.dom4j.io.XMLWriter;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.StreamException;
+import com.thoughtworks.xstream.io.naming.NameCoder;
 
 public class Dom4JDriver extends AbstractXmlDriver {
 
@@ -35,21 +38,36 @@ public class Dom4JDriver extends AbstractXmlDriver {
     private OutputFormat outputFormat;
 
     public Dom4JDriver() {
-        this(new DocumentFactory(), OutputFormat.createPrettyPrint());
+        this(new XmlFriendlyNameCoder());
+    }
+
+    /**
+     * @since 1.4
+     */
+    public Dom4JDriver(NameCoder nameCoder) {
+        this(new DocumentFactory(), OutputFormat.createPrettyPrint(), nameCoder);
         outputFormat.setTrimText(false);
     }
 
     public Dom4JDriver(DocumentFactory documentFactory, OutputFormat outputFormat) {
-        this(documentFactory, outputFormat, new XmlFriendlyReplacer());
+        this(documentFactory, outputFormat, new XmlFriendlyNameCoder());
+    }
+
+    /**
+     * @since 1.4
+     */
+    public Dom4JDriver(DocumentFactory documentFactory, OutputFormat outputFormat, NameCoder nameCoder) {
+        super(nameCoder);
+        this.documentFactory = documentFactory;
+        this.outputFormat = outputFormat;
     }
 
     /**
      * @since 1.2
+     * @deprecated As of 1.4, use {@link Dom4JDriver#Dom4JDriver(DocumentFactory, OutputFormat, NameCoder)} instead.
      */
     public Dom4JDriver(DocumentFactory documentFactory, OutputFormat outputFormat, XmlFriendlyReplacer replacer) {
-        super(replacer);
-        this.documentFactory = documentFactory;
-        this.outputFormat = outputFormat;
+        this(documentFactory, outputFormat, (NameCoder)replacer);
     }
 
 
@@ -73,7 +91,7 @@ public class Dom4JDriver extends AbstractXmlDriver {
         try {
             SAXReader reader = new SAXReader();
             Document document = reader.read(text);
-            return new Dom4JReader(document, xmlFriendlyReplacer());
+            return new Dom4JReader(document, getNameCoder());
         } catch (DocumentException e) {
             throw new StreamException(e);
         }
@@ -83,7 +101,33 @@ public class Dom4JDriver extends AbstractXmlDriver {
         try {
             SAXReader reader = new SAXReader();
             Document document = reader.read(in);
-            return new Dom4JReader(document, xmlFriendlyReplacer());
+            return new Dom4JReader(document, getNameCoder());
+        } catch (DocumentException e) {
+            throw new StreamException(e);
+        }
+    }
+
+    /**
+     * @since 1.4
+     */
+    public HierarchicalStreamReader createReader(URL in) {
+        try {
+            SAXReader reader = new SAXReader();
+            Document document = reader.read(in);
+            return new Dom4JReader(document, getNameCoder());
+        } catch (DocumentException e) {
+            throw new StreamException(e);
+        }
+    }
+
+    /**
+     * @since 1.4
+     */
+    public HierarchicalStreamReader createReader(File in) {
+        try {
+            SAXReader reader = new SAXReader();
+            Document document = reader.read(in);
+            return new Dom4JReader(document, getNameCoder());
         } catch (DocumentException e) {
             throw new StreamException(e);
         }
@@ -96,7 +140,7 @@ public class Dom4JDriver extends AbstractXmlDriver {
                 writer[0].close();
             }
         };
-        writer[0] = new Dom4JXmlWriter(new XMLWriter(filter,  outputFormat), xmlFriendlyReplacer());
+        writer[0] = new Dom4JXmlWriter(new XMLWriter(filter,  outputFormat), getNameCoder());
         return writer[0];
     }
 

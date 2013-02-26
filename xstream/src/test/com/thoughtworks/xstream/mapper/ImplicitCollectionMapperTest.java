@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -11,9 +11,13 @@
  */
 package com.thoughtworks.xstream.mapper;
 
+import java.util.Map;
+
 import com.thoughtworks.acceptance.objects.Hardware;
 import com.thoughtworks.acceptance.objects.OpenSourceSoftware;
+import com.thoughtworks.acceptance.objects.Product;
 import com.thoughtworks.acceptance.objects.SampleLists;
+import com.thoughtworks.acceptance.objects.SampleMaps;
 import com.thoughtworks.acceptance.objects.Software;
 
 import junit.framework.TestCase;
@@ -23,7 +27,7 @@ public class ImplicitCollectionMapperTest extends TestCase {
     private ImplicitCollectionMapper implicitCollections = new ImplicitCollectionMapper(new DefaultMapper(null));
 
     public void testAllowsFieldsToBeMarkedAsImplicitCollectionsToBeAdded() {
-        implicitCollections.add(SampleLists.class, "good", Object.class);
+        implicitCollections.add(SampleLists.class, "good", null);
         assertNotNull(implicitCollections.getImplicitCollectionDefForFieldName(SampleLists.class, "good"));
         assertEquals("good", implicitCollections.getFieldNameForItemTypeAndName(SampleLists.class, Object.class, null));
     }
@@ -50,7 +54,7 @@ public class ImplicitCollectionMapperTest extends TestCase {
 
     public void testAllowsFieldsToBeMarkedAsNamedImplicitCollectionsToBeAdded() {
         implicitCollections.add(SampleLists.class, "good", "good-item", Object.class);
-        implicitCollections.add(SampleLists.class, "bad", Object.class);
+        implicitCollections.add(SampleLists.class, "bad", null);
         Mapper.ImplicitCollectionMapping mappingGood = implicitCollections.getImplicitCollectionDefForFieldName(SampleLists.class, "good");
         assertNotNull(mappingGood);
         assertEquals("good-item", mappingGood.getItemFieldName());
@@ -60,6 +64,7 @@ public class ImplicitCollectionMapperTest extends TestCase {
         Mapper.ImplicitCollectionMapping mappingBad = implicitCollections.getImplicitCollectionDefForFieldName(SampleLists.class, "bad");
         assertNotNull(mappingBad);
         assertNull(mappingBad.getItemFieldName());
+        assertNull(mappingBad.getItemType());
 
         assertEquals("good", implicitCollections.getFieldNameForItemTypeAndName(SampleLists.class, Object.class, "good-item"));
         assertEquals("bad", implicitCollections.getFieldNameForItemTypeAndName(SampleLists.class, Object.class, null));
@@ -92,8 +97,23 @@ public class ImplicitCollectionMapperTest extends TestCase {
 
     public void testGetItemTypeForItemFieldName() {
         implicitCollections.add(SampleLists.class, "good", "good-item", Software.class);
-        implicitCollections.add(SampleLists.class, "bad", "bad-item", Software.class);
+        implicitCollections.add(SampleLists.class, "bad", "bad-item", Product.class);
 
         assertEquals(Software.class, implicitCollections.getItemTypeForItemFieldName(SampleLists.class, "good-item"));
+        assertEquals(Product.class, implicitCollections.getItemTypeForItemFieldName(SampleLists.class, "bad-item"));
+    }
+
+    public void testAllowsFieldsToBeMarkedAsImplicitMapsToBeAdded() {
+        implicitCollections.add(SampleMaps.class, "good", null);
+        assertNotNull(implicitCollections.getImplicitCollectionDefForFieldName(SampleMaps.class, "good"));
+        assertEquals("good", implicitCollections.getFieldNameForItemTypeAndName(SampleMaps.class, Map.Entry.class, null));
+    }
+
+    public void testGetKeyFieldNameForItemFieldName() {
+        implicitCollections.add(SampleMaps.class, "good", "good-item", Software.class, "name");
+        implicitCollections.add(SampleMaps.class, "bad", "bad-item", Software.class, "vendor");
+
+        assertEquals("name", implicitCollections.getImplicitCollectionDefForFieldName(SampleMaps.class, "good").getKeyFieldName());
+        assertEquals("vendor", implicitCollections.getImplicitCollectionDefForFieldName(SampleMaps.class, "bad").getKeyFieldName());
     }
 }

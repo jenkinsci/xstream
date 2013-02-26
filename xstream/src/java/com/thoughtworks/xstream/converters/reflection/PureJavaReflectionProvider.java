@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -26,10 +26,9 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.WeakHashMap;
 
 /**
  * Pure Java ObjectFactory that instantiates objects using standard Java reflection, however the types of objects
@@ -44,7 +43,7 @@ import java.util.Map;
  */
 public class PureJavaReflectionProvider implements ReflectionProvider {
 
-    private transient Map serializedDataCache = Collections.synchronizedMap(new HashMap());
+    private transient Map serializedDataCache = new WeakHashMap();
     protected FieldDictionary fieldDictionary;
 
 	public PureJavaReflectionProvider() {
@@ -59,11 +58,12 @@ public class PureJavaReflectionProvider implements ReflectionProvider {
         try {
             Constructor[] constructors = type.getDeclaredConstructors();
             for (int i = 0; i < constructors.length; i++) {
-                if (constructors[i].getParameterTypes().length == 0) {
-                    if (!Modifier.isPublic(constructors[i].getModifiers())) {
-                        constructors[i].setAccessible(true);
+                final Constructor constructor = constructors[i];
+                if (constructor.getParameterTypes().length == 0) {
+                    if (!constructor.isAccessible()) {
+                        constructor.setAccessible(true);
                     }
-                    return constructors[i].newInstance(new Object[0]);
+                    return constructor.newInstance(new Object[0]);
                 }
             }
             if (Serializable.class.isAssignableFrom(type)) {
@@ -87,34 +87,39 @@ public class PureJavaReflectionProvider implements ReflectionProvider {
         }
     }
 
-    private Object instantiateUsingSerialization(Class type) {
+    private Object instantiateUsingSerialization(final Class type) {
         try {
-            byte[] data;
-            if (serializedDataCache.containsKey(type)) {
-                data = (byte[]) serializedDataCache.get(type);
-            } else {
-                ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-                DataOutputStream stream = new DataOutputStream(bytes);
-                stream.writeShort(ObjectStreamConstants.STREAM_MAGIC);
-                stream.writeShort(ObjectStreamConstants.STREAM_VERSION);
-                stream.writeByte(ObjectStreamConstants.TC_OBJECT);
-                stream.writeByte(ObjectStreamConstants.TC_CLASSDESC);
-                stream.writeUTF(type.getName());
-                stream.writeLong(ObjectStreamClass.lookup(type).getSerialVersionUID());
-                stream.writeByte(2);  // classDescFlags (2 = Serializable)
-                stream.writeShort(0); // field count
-                stream.writeByte(ObjectStreamConstants.TC_ENDBLOCKDATA);
-                stream.writeByte(ObjectStreamConstants.TC_NULL);
-                data = bytes.toByteArray();
-                serializedDataCache.put(type, data);
+            synchronized (serializedDataCache) {
+                byte[] data = (byte[]) serializedDataCache.get(type);
+                if (data ==  null) {
+                    ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+                    DataOutputStream stream = new DataOutputStream(bytes);
+                    stream.writeShort(ObjectStreamConstants.STREAM_MAGIC);
+                    stream.writeShort(ObjectStreamConstants.STREAM_VERSION);
+                    stream.writeByte(ObjectStreamConstants.TC_OBJECT);
+                    stream.writeByte(ObjectStreamConstants.TC_CLASSDESC);
+                    stream.writeUTF(type.getName());
+                    stream.writeLong(ObjectStreamClass.lookup(type).getSerialVersionUID());
+                    stream.writeByte(2);  // classDescFlags (2 = Serializable)
+                    stream.writeShort(0); // field count
+                    stream.writeByte(ObjectStreamConstants.TC_ENDBLOCKDATA);
+                    stream.writeByte(ObjectStreamConstants.TC_NULL);
+                    data = bytes.toByteArray();
+                    serializedDataCache.put(type, data);
+                }
+                
+                ObjectInputStream in = new ObjectInputStream(new ByteArrayInputStream(data)) {
+                    protected Class resolveClass(ObjectStreamClass desc)
+                        throws IOException, ClassNotFoundException {
+                        return Class.forName(desc.getName(), false, type.getClassLoader());
+                    }
+                };
+                return in.readObject();
             }
-
-            ObjectInputStream in = new ObjectInputStream(new ByteArrayInputStream(data));
-            return in.readObject();
         } catch (IOException e) {
             throw new ObjectAccessException("Cannot create " + type.getName() + " by JDK serialization", e);
         } catch (ClassNotFoundException e) {
-            throw new ObjectAccessException("Cannot find class " + e.getMessage());
+            throw new ObjectAccessException("Cannot find class " + e.getMessage(), e);
         }
     }
 
@@ -154,13 +159,12 @@ public class PureJavaReflectionProvider implements ReflectionProvider {
 
     public boolean fieldDefinedInClass(String fieldName, Class type) {
         Field field = fieldDictionary.fieldOrNull(type, fieldName, null);
-        if(field==null)     return false;
-        return fieldModifiersSupported(field) || Modifier.isTransient(field.getModifiers());
+        return field != null && (fieldModifiersSupported(field) || Modifier.isTransient(field.getModifiers()));
     }
 
     protected boolean fieldModifiersSupported(Field field) {
-        return !(Modifier.isStatic(field.getModifiers())
-                || (Modifier.isTransient(field.getModifiers()) && field.getAnnotation(XStreamSerializable.class)==null));
+        int modifiers = field.getModifiers();
+        return !(Modifier.isStatic(modifiers) || (Modifier.isTransient(modifiers) && field.getAnnotation(XStreamSerializable.class)==null));
     }
 
     protected void validateFieldAccess(Field field) {
@@ -178,16 +182,12 @@ public class PureJavaReflectionProvider implements ReflectionProvider {
         return fieldDictionary.field(definedIn, fieldName, null);
     }
 
-    public Field getFieldOrNull(Class definedIn, String fieldName) {
-        return fieldDictionary.fieldOrNull(definedIn, fieldName,  null);
-    }
-
     public void setFieldDictionary(FieldDictionary dictionary) {
         this.fieldDictionary = dictionary;
     }
 
     protected Object readResolve() {
-        serializedDataCache = Collections.synchronizedMap(new HashMap());
+        serializedDataCache = new WeakHashMap();
         return this;
     }
 

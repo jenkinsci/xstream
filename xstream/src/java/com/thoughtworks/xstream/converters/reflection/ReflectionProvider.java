@@ -60,10 +60,4 @@ public interface ReflectionProvider {
      */
 	Field getField(Class definedIn, String fieldName);
 
-    /**
-     * Works like {@link #getField(Class, String)} but returns null
-     * instead of throwing {@link ObjectAccessException}.
-     */
-    Field getFieldOrNull(Class definedIn, String fieldName);
-
 }

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003, 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2010, 2011, 2012 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -29,8 +29,8 @@ import java.util.Map;
  * <p>Note: 'key' and 'value' is not the name of the generated tag. The
  * children are serialized as normal elements and the implementation expects
  * them in the order 'key'/'value'.</p>
- * <p>Supports java.util.HashMap, java.util.Hashtable and
- * java.util.LinkedHashMap.</p>
+ * <p>Supports java.util.HashMap, java.util.Hashtable,
+ * java.util.LinkedHashMap and java.util.concurrent.ConcurrentHashMap.</p>
  *
  * @author Joe Walnes
  */
@@ -44,6 +44,7 @@ public class MapConverter extends AbstractCollectionConverter {
         return type.equals(HashMap.class)
                 || type.equals(Hashtable.class)
                 || type.getName().equals("java.util.LinkedHashMap")
+                || type.getName().equals("java.util.concurrent.ConcurrentHashMap")
                 || type.getName().equals("sun.font.AttributeMap") // Used by java.awt.Font in JDK 6
                 ;
     }
@@ -52,7 +53,7 @@ public class MapConverter extends AbstractCollectionConverter {
         Map map = (Map) source;
         for (Iterator iterator = map.entrySet().iterator(); iterator.hasNext();) {
             Map.Entry entry = (Map.Entry) iterator.next();
-            ExtendedHierarchicalStreamWriterHelper.startNode(writer, mapper().serializedClass(Map.Entry.class), Map.Entry.class);
+            ExtendedHierarchicalStreamWriterHelper.startNode(writer, mapper().serializedClass(Map.Entry.class), entry.getClass());
 
             writeItem(entry.getKey(), context, writer);
             writeItem(entry.getValue(), context, writer);
@@ -68,21 +69,28 @@ public class MapConverter extends AbstractCollectionConverter {
     }
 
     protected void populateMap(HierarchicalStreamReader reader, UnmarshallingContext context, Map map) {
+        populateMap(reader, context, map, map);
+    }
+
+    protected void populateMap(HierarchicalStreamReader reader, UnmarshallingContext context, Map map, Map target) {
         while (reader.hasMoreChildren()) {
             reader.moveDown();
-
-            reader.moveDown();
-            Object key = readItem(reader, context, map);
-            reader.moveUp();
-
-            reader.moveDown();
-            Object value = readItem(reader, context, map);
-            reader.moveUp();
-
-            map.put(key, value);
-
+            putCurrentEntryIntoMap(reader, context, map, target);
             reader.moveUp();
         }
+    }
+
+    protected void putCurrentEntryIntoMap(HierarchicalStreamReader reader, UnmarshallingContext context,
+        Map map, Map target) {
+        reader.moveDown();
+        Object key = readItem(reader, context, map);
+        reader.moveUp();
+
+        reader.moveDown();
+        Object value = readItem(reader, context, map);
+        reader.moveUp();
+
+        target.put(key, value);
     }
 
 }

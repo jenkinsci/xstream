@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -30,7 +30,9 @@ import java.util.EnumSet;
 import java.util.Iterator;
 
 /**
- * Serializes a Java 5 EnumSet.
+ * Serializes a Java 5 EnumSet. If a SecurityManager is set, the converter will only work with permissions
+ * for SecurityManager.checkPackageAccess, SecurityManager.checkMemberAccess(this, EnumSet.MEMBER)
+ * and ReflectPermission("suppressAccessChecks").   
  *
  * @author Joe Walnes
  * @author J&ouml;rg Schaible
@@ -39,19 +41,23 @@ public class EnumSetConverter implements Converter {
 
     private final static Field typeField;
     static {
-        // field name is "elementType" in Sun JDK, but different in Harmony 
+        // field name is "elementType" in Sun JDK, but different in Harmony
         Field assumedTypeField = null;
-        Field[] fields = EnumSet.class.getDeclaredFields();
-        for (int i = 0; i < fields.length; i++) {
-            if (fields[i].getType() == Class.class) {
-                // take the fist member of type "Class"
-                assumedTypeField = fields[i];
-                assumedTypeField.setAccessible(true);
-                break;
+        try {
+            Field[] fields = EnumSet.class.getDeclaredFields();
+            for (int i = 0; i < fields.length; i++ ) {
+                if (fields[i].getType() == Class.class) {
+                    // take the fist member of type "Class"
+                    assumedTypeField = fields[i];
+                    assumedTypeField.setAccessible(true);
+                    break;
+                }
             }
-        }
-        if (assumedTypeField == null) {
-            throw new ExceptionInInitializerError("Cannot detect element type of EnumSet");
+            if (assumedTypeField == null) {
+                throw new ExceptionInInitializerError("Cannot detect element type of EnumSet");
+            }
+        } catch (SecurityException ex) {
+            // ignore, no access possible with current SecurityManager
         }
         typeField = assumedTypeField;
     }
@@ -63,7 +69,7 @@ public class EnumSetConverter implements Converter {
     }
 
     public boolean canConvert(Class type) {
-        return EnumSet.class.isAssignableFrom(type);
+        return typeField != null && EnumSet.class.isAssignableFrom(type);
     }
 
     public void marshal(Object source, HierarchicalStreamWriter writer, MarshallingContext context) {
@@ -91,6 +97,7 @@ public class EnumSetConverter implements Converter {
         return result.toString();
     }
 
+    @SuppressWarnings("unchecked")
     public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
         String attributeName = mapper.aliasForSystemAttribute("enum-type");
         if (attributeName == null) {

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -16,7 +16,7 @@ import com.thoughtworks.acceptance.objects.Software;
 import com.thoughtworks.acceptance.someobjects.WithList;
 import com.thoughtworks.acceptance.someobjects.X;
 import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.io.xml.XmlFriendlyReplacer;
+import com.thoughtworks.xstream.io.xml.XmlFriendlyNameCoder;
 import com.thoughtworks.xstream.io.xml.XppDriver;
 import com.thoughtworks.xstream.mapper.CannotResolveClassException;
 
@@ -50,7 +50,7 @@ public class AliasTest extends AbstractAcceptanceTest {
     }
     
     public void testWithUnderscore() {
-        xstream = new XStream(new XppDriver(new XmlFriendlyReplacer("_-", "_")));
+        xstream = new XStream(new XppDriver(new XmlFriendlyNameCoder("_-", "_")));
         String xml = "" +
                 "<X_alias>\n" +
                 "  <anInt>0</anInt>\n" +
@@ -233,6 +233,24 @@ public class AliasTest extends AbstractAcceptanceTest {
             + "  <c>testC</c>\n"
             + "</test>";
         assertBothWays(object, xml);
+    }
+
+    public void testCanDeserializeAliasedInheritedFieldsToSameName() {
+        xstream.alias("test", TypeC.class);
+        xstream.alias("A", TypeA.class);
+        xstream.alias("B", TypeB.class);
+        xstream.aliasField("attr", TypeA.class, "attrA");
+        xstream.aliasField("attr", TypeB.class, "attrB");
+        xstream.aliasField("attr", TypeC.class, "attrC");
+        TypeC object = new TypeC();
+        String xml = ""
+            + "<test>\n"
+            + "  <attr defined-in=\"A\">testA</attr>\n"
+            + "  <attr defined-in=\"B\">testB</attr>\n"
+            + "  <attr>testC</attr>\n"
+            + "</test>";
+        assertObjectsEqual(object, xstream.fromXML(xml));
+        //assertBothWays(object, xml);
     }
 
     public void testCanOverwriteInheritedAlias() {

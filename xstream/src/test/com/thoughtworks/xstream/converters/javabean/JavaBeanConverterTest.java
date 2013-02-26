@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2010, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -312,7 +312,7 @@ public class JavaBeanConverterTest extends TestCase {
         TypesOfFields fields = new TypesOfFields();
         String xml = "" 
             + "<types>\n" 
-            + "  <normal>normal</normal>\n" 
+            + "  <normal>foo</normal>\n" 
             + "  <foo>bar</foo>\n" 
             + "</types>";
 
@@ -320,6 +320,7 @@ public class JavaBeanConverterTest extends TestCase {
         xstream.registerConverter(new JavaBeanConverter(xstream.getMapper()), XStream.PRIORITY_VERY_LOW);
         xstream.alias("types", TypesOfFields.class);
         xstream.omitField(TypesOfFields.class, "foo");
+        xstream.omitField(TypesOfFields.class, "normal");
 
         TypesOfFields unmarshalledFields = (TypesOfFields)xstream.fromXML(xml);  
         assertEquals(fields, unmarshalledFields);
@@ -423,5 +424,26 @@ public class JavaBeanConverterTest extends TestCase {
             + "</man>";
 
         assertEquals(expected, xstream.toXML(man));
+    }
+
+    public void testFailsFastIfPropertyIsDefinedTwice() {
+        XStream xstream = new XStream();
+        xstream.registerConverter(
+            new JavaBeanConverter(xstream.getMapper()), XStream.PRIORITY_VERY_LOW);
+        String input = ""
+            + "<types>\n"
+            + "  <normal>foo</normal>\n"
+            + "  <normal>bar</normal>\n"
+            + "</types>";
+        xstream.alias("types", TypesOfFields.class);
+
+        try {
+
+            xstream.fromXML(input);
+            fail("Expected exception");
+
+        } catch (JavaBeanConverter.DuplicatePropertyException expected) {
+            assertEquals("normal", expected.get("property"));
+        }
     }
 }

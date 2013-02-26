@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2007 XStream Committers.
+ * Copyright (c) 2007, 2009, 2010, 2011, 2012 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -14,6 +14,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.BitSet;
 import java.util.Comparator;
 import java.util.List;
 
@@ -39,127 +40,193 @@ public class DependencyInjectionFactory {
      * @param dependencies the possible dependencies
      * @return the instantiated object
      * @throws ObjectAccessException if no instance can be generated
+     * @since 1.2.2
      */
     public static Object newInstance(final Class type, final Object[] dependencies) {
-        // sort available ctors according their arity
-        final Constructor[] ctors = type.getConstructors();
-        if (ctors.length > 1) {
-            Arrays.sort(ctors, new Comparator() {
-                public int compare(final Object o1, final Object o2) {
-                    return ((Constructor)o2).getParameterTypes().length - ((Constructor)o1).getParameterTypes().length;
-                }
-            });
-        }
-
-        final TypedValue[] typedDependencies = new TypedValue[dependencies.length];
-        for (int i = 0; i < dependencies.length; i++) {
-            Object dependency = dependencies[i];
-            Class depType = dependency.getClass();
-            if (depType.isPrimitive()) {
-                depType = Primitives.box(depType);
-            } else if (depType == TypedNull.class) {
-                depType = ((TypedNull)dependency).getType();
-                dependency = null;
-            }
-
-            typedDependencies[i] = new TypedValue(depType, dependency);
-        }
-
+        return newInstance(type, dependencies, null);
+    }
+    
+    /**
+     * Create an instance with dependency injection. The given dependencies are used to match the parameters of the
+     * constructors of the type. Constructors with most parameters are examined first. A parameter type sequence
+     * matching the sequence of the dependencies' types match first. Otherwise all the types of the dependencies must
+     * match one of the the parameters although no dependency is used twice. Use a {@link TypedNull} instance to inject
+     * <code>null</code> as parameter.
+     * 
+     * @param type the type to create an instance of
+     * @param dependencies the possible dependencies
+     * @param usedDependencies bit mask set by the method for all used dependencies (may be <code>null</code>)
+     * @return the instantiated object
+     * @throws ObjectAccessException if no instance can be generated
+     * @since 1.4
+     */
+    public static Object newInstance(final Class type, final Object[] dependencies, final BitSet usedDependencies) {
         Constructor bestMatchingCtor = null;
-        Constructor possibleCtor = null;
-        int arity = Integer.MAX_VALUE;
-        final List matchingDependencies = new ArrayList();
-        for (int i = 0; bestMatchingCtor == null && i < ctors.length; i++) {
-            final Constructor constructor = ctors[i];
-            final Class[] parameterTypes = constructor.getParameterTypes();
-            if (parameterTypes.length > dependencies.length) {
-                continue;
-            } else if (parameterTypes.length == 0) {
-                bestMatchingCtor = constructor;
-                break;
+        final ArrayList matchingDependencies = new ArrayList();
+        List possibleMatchingDependencies = null;
+        BitSet possibleUsedDependencies = null;
+
+        if (dependencies != null && dependencies.length > 0) {
+            // sort available ctors according their arity
+            final Constructor[] ctors = type.getConstructors();
+            if (ctors.length > 1) {
+                Arrays.sort(ctors, new Comparator() {
+                    public int compare(final Object o1, final Object o2) {
+                        return ((Constructor)o2).getParameterTypes().length
+                            - ((Constructor)o1).getParameterTypes().length;
+                    }
+                });
             }
-            if (arity > parameterTypes.length) {
-                if (possibleCtor != null) {
-                    bestMatchingCtor = possibleCtor;
+
+            final TypedValue[] typedDependencies = new TypedValue[dependencies.length];
+            for (int i = 0; i < dependencies.length; i++ ) {
+                Object dependency = dependencies[i];
+                Class depType = dependency.getClass();
+                if (depType.isPrimitive()) {
+                    depType = Primitives.box(depType);
+                } else if (depType == TypedNull.class) {
+                    depType = ((TypedNull)dependency).getType();
+                    dependency = null;
+                }
+
+                typedDependencies[i] = new TypedValue(depType, dependency);
+            }
+
+            Constructor possibleCtor = null;
+            int arity = Integer.MAX_VALUE;
+            for (int i = 0; bestMatchingCtor == null && i < ctors.length; i++ ) {
+                final Constructor constructor = ctors[i];
+                final Class[] parameterTypes = constructor.getParameterTypes();
+                if (parameterTypes.length > dependencies.length) {
                     continue;
-                }
-                arity = parameterTypes.length;
-            }
-
-            for (int j = 0; j < parameterTypes.length; j++) {
-                if (parameterTypes[j].isPrimitive()) {
-                    parameterTypes[j] = Primitives.box(parameterTypes[j]);
-                }
-            }
-
-            // first approach: test the ctor params against the dependencies in the sequence of the parameter
-            // declaration
-            matchingDependencies.clear();
-            for (int j = 0, k = 0; j < parameterTypes.length
-                    && parameterTypes.length + k - j <= typedDependencies.length; k++) {
-                if (parameterTypes[j].isAssignableFrom(typedDependencies[k].type)) {
-                    matchingDependencies.add(typedDependencies[k].value);
-                    if (++j == parameterTypes.length) {
+                } else if (parameterTypes.length == 0) {
+                    if (possibleCtor == null) {
                         bestMatchingCtor = constructor;
-                        break;
+                    }
+                    break;
+                }
+                if (arity > parameterTypes.length) {
+                    if (possibleCtor != null) {
+                        continue;
+                    }
+                    arity = parameterTypes.length;
+                }
+
+                for (int j = 0; j < parameterTypes.length; j++ ) {
+                    if (parameterTypes[j].isPrimitive()) {
+                        parameterTypes[j] = Primitives.box(parameterTypes[j]);
                     }
                 }
-            }
 
-            if (bestMatchingCtor == null && possibleCtor == null) {
-                possibleCtor = constructor; // assumption
-
-                // try to match all dependencies in the sequence of the parameter declaration
-                final TypedValue[] deps = new TypedValue[typedDependencies.length];
-                System.arraycopy(typedDependencies, 0, deps, 0, deps.length);
+                // first approach: test the ctor params against the dependencies in the sequence
+                // of the parameter
+                // declaration
                 matchingDependencies.clear();
-                for (int j = 0; j < parameterTypes.length; j++) {
-                    int assignable = -1;
-                    for (int k = 0; k < deps.length; k++) {
-                        if (deps[k] == null) {
-                            continue;
+                clear(usedDependencies);
+                for (int j = 0, k = 0; j < parameterTypes.length
+                    && parameterTypes.length + k - j <= typedDependencies.length; k++ ) {
+                    if (parameterTypes[j].isAssignableFrom(typedDependencies[k].type)) {
+                        matchingDependencies.add(typedDependencies[k].value);
+                        if (usedDependencies != null) {
+                            usedDependencies.set(k);
                         }
-                        if (deps[k].type == parameterTypes[j]) {
-                            assignable = k;
-                            // optimal match
+                        if ( ++j == parameterTypes.length) {
+                            bestMatchingCtor = constructor;
                             break;
-                        } else if (parameterTypes[j].isAssignableFrom(deps[k].type)) {
-                            // use most specific type
-                            if (assignable < 0 || deps[assignable].type.isAssignableFrom(deps[k].type)) {
+                        }
+                    }
+                }
+
+                if (bestMatchingCtor == null && possibleCtor == null) {
+                    possibleCtor = constructor; // assumption
+
+                    // try to match all dependencies in the sequence of the parameter
+                    // declaration
+                    final TypedValue[] deps = new TypedValue[typedDependencies.length];
+                    System.arraycopy(typedDependencies, 0, deps, 0, deps.length);
+                    matchingDependencies.clear();
+                    clear(usedDependencies);
+                    for (int j = 0; j < parameterTypes.length; j++ ) {
+                        int assignable = -1;
+                        for (int k = 0; k < deps.length; k++ ) {
+                            if (deps[k] == null) {
+                                continue;
+                            }
+                            if (deps[k].type == parameterTypes[j]) {
                                 assignable = k;
+                                // optimal match
+                                break;
+                            } else if (parameterTypes[j].isAssignableFrom(deps[k].type)) {
+                                // use most specific type
+                                if (assignable < 0
+                                    || (deps[assignable].type != deps[k].type && deps[assignable].type
+                                        .isAssignableFrom(deps[k].type))) {
+                                    assignable = k;
+                                }
                             }
                         }
-                    }
 
-                    if (assignable >= 0) {
-                        matchingDependencies.add(deps[assignable].value);
-                        deps[assignable] = null; // do not match same dep twice
-                    } else {
-                        possibleCtor = null;
-                        break;
+                        if (assignable >= 0) {
+                            matchingDependencies.add(deps[assignable].value);
+                            if (usedDependencies != null) {
+                                usedDependencies.set(assignable);
+                            }
+                            deps[assignable] = null; // do not match same dep twice
+                        } else {
+                            possibleCtor = null;
+                            break;
+                        }
+                    }
+                    
+                    if (possibleCtor != null) {
+                        possibleMatchingDependencies = (List)matchingDependencies.clone();
+                        if (usedDependencies != null) {
+                            possibleUsedDependencies = (BitSet)usedDependencies.clone();
+                        }
                     }
                 }
             }
-        }
 
-        if (bestMatchingCtor == null) {
-            if (possibleCtor == null) {
-                throw new ObjectAccessException("Cannot construct "
+            if (bestMatchingCtor == null) {
+                if (possibleCtor == null) {
+                    clear(usedDependencies);
+                    throw new ObjectAccessException("Cannot construct "
                         + type.getName()
                         + ", none of the dependencies match any constructor's parameters");
-            } else {
-                bestMatchingCtor = possibleCtor;
+                } else {
+                    bestMatchingCtor = possibleCtor;
+                    matchingDependencies.clear();
+                    matchingDependencies.addAll(possibleMatchingDependencies);
+                    if (usedDependencies != null) {
+                        clear(usedDependencies);
+                        usedDependencies.or(possibleUsedDependencies);
+                    }
+                }
             }
         }
 
         try {
-            return bestMatchingCtor.newInstance(matchingDependencies.toArray());
+            final Object instance;
+            if (bestMatchingCtor == null) {
+                instance = type.newInstance();
+            } else {
+                instance = bestMatchingCtor.newInstance(matchingDependencies.toArray());
+            }
+            return instance;
         } catch (final InstantiationException e) {
             throw new ObjectAccessException("Cannot construct " + type.getName(), e);
         } catch (final IllegalAccessException e) {
             throw new ObjectAccessException("Cannot construct " + type.getName(), e);
         } catch (final InvocationTargetException e) {
             throw new ObjectAccessException("Cannot construct " + type.getName(), e);
+        }
+    }
+
+    private static void clear(final BitSet usedDependencies) {
+        if (usedDependencies != null) {
+            for (int j = usedDependencies.length(); j-- > 0;) {
+                usedDependencies.clear(j); // JDK 1.3, BitSet.clear() is JDK 1.4
+            }
         }
     }
 
@@ -171,6 +238,11 @@ public class DependencyInjectionFactory {
             super();
             this.type = type;
             this.value = value;
+        }
+
+        public String toString()
+        {
+            return type.getName() + ":" + value;
         }
     }
 

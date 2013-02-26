@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2010, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -11,6 +11,8 @@
  */
 package com.thoughtworks.acceptance;
 
+import com.thoughtworks.acceptance.objects.OwnerOfExternalizable;
+import com.thoughtworks.acceptance.objects.SomethingExternalizable;
 import com.thoughtworks.acceptance.objects.StandardObject;
 
 import java.io.Externalizable;
@@ -19,32 +21,6 @@ import java.io.ObjectInput;
 import java.io.ObjectOutput;
 
 public class ExternalizableTest extends AbstractAcceptanceTest {
-
-    public static class SomethingExternalizable extends StandardObject implements Externalizable {
-
-        private String first;
-        private String last;
-
-        public SomethingExternalizable() {
-        }
-
-        public SomethingExternalizable(String first, String last) {
-            this.first = first;
-            this.last = last;
-        }
-
-        public void writeExternal(ObjectOutput out) throws IOException {
-            out.writeInt(first.length());
-            out.writeObject(first + last);
-        }
-
-        public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
-            int offset = in.readInt();
-            String full = (String) in.readObject();
-            first = full.substring(0, offset);
-            last = full.substring(offset);
-        }
-    }
 
     public void testExternalizable() {
         xstream.alias("something", SomethingExternalizable.class);
@@ -55,20 +31,18 @@ public class ExternalizableTest extends AbstractAcceptanceTest {
                 + "<something>\n"
                 + "  <int>3</int>\n"
                 + "  <string>JoeWalnes</string>\n"
+                + "  <null/>\n"
+                + "  <string>XStream</string>\n"
                 + "</something>";
 
         assertBothWays(in, expected);
     }
 
-    static class Owner extends StandardObject {
-        SomethingExternalizable target;
-    }
-
     public void testExternalizableAsFieldOfAnotherObject() {
         xstream.alias("something", SomethingExternalizable.class);
-        xstream.alias("owner", Owner.class);
+        xstream.alias("owner", OwnerOfExternalizable.class);
 
-        Owner in = new Owner();
+        OwnerOfExternalizable in = new OwnerOfExternalizable();
         in.target = new SomethingExternalizable("Joe", "Walnes");
 
         String expected = ""
@@ -76,6 +50,8 @@ public class ExternalizableTest extends AbstractAcceptanceTest {
                 + "  <target>\n"
                 + "    <int>3</int>\n"
                 + "    <string>JoeWalnes</string>\n"
+                + "    <null/>\n"
+                + "    <string>XStream</string>\n"
                 + "  </target>\n"
                 + "</owner>";
 
@@ -148,5 +124,78 @@ public class ExternalizableTest extends AbstractAcceptanceTest {
             + "</elem>";
 
         assertBothWays(parent, expected);
+    }
+    
+    public static class OtherOwner extends StandardObject {
+        Object member1;
+        Object member2;
+        public OtherOwner(int i) {
+            member1 = new InnerExternalizable1(i);
+            member2 = new InnerExternalizable2(i);
+        }
+        
+        private static class InnerExternalizable1 extends StandardObject implements Externalizable {
+            private int i;
+
+            public InnerExternalizable1() {
+            }
+
+            InnerExternalizable1(int i) {
+                this.i = i;
+            }
+            
+            public void writeExternal(ObjectOutput out) throws IOException {
+                out.writeInt(i);
+            }
+
+            public void readExternal(ObjectInput in)
+                throws IOException {
+                this.i = in.readInt();
+            }
+        };
+        
+        private static class InnerExternalizable2 extends StandardObject implements Externalizable {
+            private int i;
+
+            private InnerExternalizable2() {
+            }
+
+            InnerExternalizable2(int i) {
+                this.i = i;
+            }
+            
+            public void writeExternal(ObjectOutput out) throws IOException {
+                out.writeInt(i);
+            }
+
+            public void readExternal(ObjectInput in)
+                throws IOException {
+                this.i = in.readInt();
+            }
+        };
+    }
+    
+    public void testWithPrivateDefaultConstructor() {
+        String name1 = OtherOwner.class.getDeclaredClasses()[0].getName();
+        String name2 = OtherOwner.class.getDeclaredClasses()[1].getName();
+        xstream.alias("owner", OtherOwner.class);
+        xstream.alias("inner" + name1.charAt(name1.length() - 1), 
+            OtherOwner.class.getDeclaredClasses()[0]);
+        xstream.alias("inner" + name2.charAt(name2.length() - 1),
+            OtherOwner.class.getDeclaredClasses()[1]);
+
+        OtherOwner owner = new OtherOwner(42);
+
+        String expected = ""
+            + "<owner>\n"
+            + "  <member1 class=\"inner1\">\n"
+            + "    <int>42</int>\n"
+            + "  </member1>\n"
+            + "  <member2 class=\"inner2\">\n"
+            + "    <int>42</int>\n"
+            + "  </member2>\n"
+            + "</owner>";
+
+        assertBothWays(owner, expected);
     }
 }

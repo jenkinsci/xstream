@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -47,26 +47,6 @@ public interface Mapper {
     boolean isImmutableValueType(Class type);
 
     Class defaultImplementationOf(Class type);
-
-    /**
-     * @deprecated since 1.2, use aliasForAttribute instead.
-     */
-    String attributeForImplementationClass();
-
-    /**
-     * @deprecated since 1.2, use aliasForAttribute instead.
-     */
-    String attributeForClassDefiningField();
-
-    /**
-     * @deprecated since 1.2, use aliasForAttribute instead.
-     */
-    String attributeForReadResolveField();
-
-    /**
-     * @deprecated since 1.2, use aliasForAttribute instead.
-     */
-    String attributeForEnumType();
 
     /**
      * Get the alias for an attribute's name.
@@ -119,20 +99,21 @@ public interface Mapper {
         String getFieldName();
         String getItemFieldName();
         Class getItemType();
+        String getKeyFieldName();
     }
 
     /**
-     * @deprecated since 1.3, use {@link #getConverterFromItemType(String, Class, Class)}
+     * @deprecated As of 1.3, use {@link #getConverterFromItemType(String, Class, Class)}
      */
     SingleValueConverter getConverterFromItemType(String fieldName, Class type);
 
     /**
-     * @deprecated since 1.3, use {@link #getConverterFromItemType(String, Class, Class)}
+     * @deprecated As of 1.3, use {@link #getConverterFromItemType(String, Class, Class)}
      */
     SingleValueConverter getConverterFromItemType(Class type);
 
     /**
-     * @deprecated since 1.3, use {@link #getConverterFromAttribute(Class, String, Class)}
+     * @deprecated As of 1.3, use {@link #getConverterFromAttribute(Class, String, Class)}
      */
     SingleValueConverter getConverterFromAttribute(String name);
 
@@ -159,7 +140,7 @@ public interface Mapper {
      * @param fieldName the field name
      * @return the alias for this field or its own name if no alias was defined
      * @since 1.2.2
-     * @deprecated since 1.3, use combination of {@link #serializedMember(Class, String)} and {@link #getConverterFromItemType(String, Class, Class)} 
+     * @deprecated As of 1.3, use combination of {@link #serializedMember(Class, String)} and {@link #getConverterFromItemType(String, Class, Class)} 
      */
     String aliasForAttribute(Class definedIn, String fieldName);
 
@@ -170,7 +151,7 @@ public interface Mapper {
      * @param alias the alias
      * @return the original attribute name
      * @since 1.2.2
-     * @deprecated since 1.3, use combination of {@link #realMember(Class, String)} and {@link #getConverterFromItemType(String, Class, Class)} 
+     * @deprecated As of 1.3, use combination of {@link #realMember(Class, String)} and {@link #getConverterFromItemType(String, Class, Class)} 
      */
     String attributeForAlias(Class definedIn, String alias);
 
@@ -179,7 +160,7 @@ public interface Mapper {
      * 
      * @param definedIn the field's parent
      * @param attribute the attribute name
-     * @deprecated since 1.3.1, use {@link #getConverterFromAttribute(Class, String, Class)} 
+     * @deprecated As of 1.3.1, use {@link #getConverterFromAttribute(Class, String, Class)} 
      */
     SingleValueConverter getConverterFromAttribute(Class definedIn, String attribute);
 

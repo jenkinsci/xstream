@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -12,8 +12,8 @@
 package com.thoughtworks.xstream.io.xml;
 
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
-import com.thoughtworks.xstream.io.xml.xppdom.Xpp3Dom;
-import com.thoughtworks.xstream.io.xml.xppdom.Xpp3DomBuilder;
+import com.thoughtworks.xstream.io.xml.xppdom.XppDom;
+import com.thoughtworks.xstream.io.xml.xppdom.XppFactory;
 
 import java.io.StringReader;
 import java.util.HashMap;
@@ -21,7 +21,7 @@ import java.util.Map;
 
 public class XppDomReaderTest extends AbstractXMLReaderTest {
     protected HierarchicalStreamReader createReader(String xml) throws Exception {
-        return new XppDomDriver().createReader(new StringReader(xml));
+        return new Xpp3DomDriver().createReader(new StringReader(xml));
     }
 
     public void testCanReadFromElementOfLargerDocument()
@@ -35,9 +35,9 @@ public class XppDomReaderTest extends AbstractXMLReaderTest {
                 "  </small-two>" +
                 "</big>";
 
-        Xpp3Dom document = Xpp3DomBuilder.build(new StringReader(xml));
+        XppDom document = XppFactory.buildDom(xml);
 
-        Xpp3Dom small = document.getChild("small");
+        XppDom small = document.getChild("small");
 
         HierarchicalStreamReader xmlReader = new XppDomReader(small);
 
