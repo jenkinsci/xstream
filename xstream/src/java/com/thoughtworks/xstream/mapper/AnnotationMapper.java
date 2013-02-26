@@ -70,7 +70,7 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
     private final Map<Class<?>, Map<List<Object>, Converter>> converterCache =
             new HashMap<Class<?>, Map<List<Object>, Converter>>();
     private final Set<Class<?>> annotatedTypes = new HashSet<Class<?>>();
-    private final Set<Class<?>> processedTypes = new WeakHashSet<Class<?>>();
+    private final Set<Class<?>> processedTypes = new HashSet<Class<?>>();
 
     private final Map<Class,String> serializedClass = new ConcurrentHashMap<Class, String>();
 
