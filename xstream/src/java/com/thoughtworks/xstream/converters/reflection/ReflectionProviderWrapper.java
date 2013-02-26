@@ -34,6 +34,10 @@ public class ReflectionProviderWrapper implements ReflectionProvider {
         return this.wrapped.getField(definedIn, fieldName);
     }
 
+    public Field getFieldOrNull(Class definedIn, String fieldName) {
+        return this.wrapped.getFieldOrNull(definedIn, fieldName);
+    }
+
     public Class getFieldType(Object object, String fieldName, Class definedIn) {
         return this.wrapped.getFieldType(object, fieldName, definedIn);
     }
