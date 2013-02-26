@@ -70,7 +70,7 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
     private final Map<Class<?>, Map<List<Object>, Converter>> converterCache =
             new HashMap<Class<?>, Map<List<Object>, Converter>>();
     private final Set<Class<?>> annotatedTypes = new HashSet<Class<?>>();
-    private final Set<Class<?>> processedTypes = new HashSet<Class<?>>();
+    private final Map<Class<?>,Object> processedTypes = new ConcurrentHashMap<Class<?>,Object>(); // used like a set since there's no ConcurrentHashSet
 
     private final Map<Class,String> serializedClass = new ConcurrentHashMap<Class, String>();
 
@@ -159,7 +159,7 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
         if (initialType == null) {
             return;
         }
-        if (processedTypes.contains(initialType))   return;
+        if (processedTypes.containsKey(initialType))   return;
         synchronized (annotatedTypes) {
             final Set<Class<?>> types = new UnprocessedTypesSet();
             types.add(initialType);
@@ -215,7 +215,7 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
                         processLocalConverterAnnotation(field);
                     }
                 } finally {
-                    processedTypes.add(type);
+                    processedTypes.put(type,type);
                 }
             }
         }
