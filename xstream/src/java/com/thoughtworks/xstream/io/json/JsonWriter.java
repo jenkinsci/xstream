@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -11,16 +11,13 @@
  */
 package com.thoughtworks.xstream.io.json;
 
+import java.io.Writer;
+
 import com.thoughtworks.xstream.converters.ConversionException;
-import com.thoughtworks.xstream.core.util.FastStack;
-import com.thoughtworks.xstream.core.util.Primitives;
 import com.thoughtworks.xstream.core.util.QuickWriter;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
-import com.thoughtworks.xstream.io.ExtendedHierarchicalStreamWriter;
-
-import java.io.Writer;
-import java.util.Collection;
-import java.util.Map;
+import com.thoughtworks.xstream.io.naming.NameCoder;
+import com.thoughtworks.xstream.io.naming.NoNameCoder;
 
 
 /**
@@ -31,299 +28,126 @@ import java.util.Map;
  * @author J&ouml;rg Schaible
  * @since 1.3.1
  */
-public class JsonWriter implements ExtendedHierarchicalStreamWriter {
+public class JsonWriter extends AbstractJsonWriter {
 
-    /**
-     * DROP_ROOT_MODE drops the JSON root node.
-     * <p>
-     * The root node is the first level of the JSON object i.e.
-     * 
-     * <pre>
-     * { &quot;person&quot;: {
-     *     &quot;name&quot;: &quot;Joe&quot;
-     * }}
-     * </pre>
-     * 
-     * will be written without root simply as
-     * 
-     * <pre>
-     * {
-     *     &quot;name&quot;: &quot;Joe&quot;
-     * }
-     * </pre>
-     * 
-     * Without a root node, the top level element might now also be an array. However, it is
-     * possible to generate invalid JSON unless {@link #STRICT_MODE} is also set.
-     * </p>
-     * 
-     * @since 1.3.1
-     */
-    public static final int DROP_ROOT_MODE = 1;
-    /**
-     * STRICT_MODE prevents invalid JSON for single value objects when dropping the root.
-     * <p>
-     * The mode is only useful in combination with the {@link #DROP_ROOT_MODE}. An object with a
-     * single value as first node i.e.
-     * 
-     * <pre>
-     * { &quot;name&quot;: &quot;Joe&quot; }
-     * </pre>
-     * 
-     * is simply written as
-     * 
-     * <pre>
-     * &quot;Joe&quot;
-     * </pre>
-     * 
-     * However, this is no longer valid JSON. Therefore you can activate {@link #STRICT_MODE}
-     * and a {@link ConversionException} is thrown instead.
-     * </p>
-     * 
-     * @since 1.3.1
-     */
-    public static final int STRICT_MODE = 2;
-
-    private final QuickWriter writer;
-    private final FastStack elementStack = new FastStack(16);
-    private final char[] lineIndenter;
-
+    protected final QuickWriter writer;
+    protected final Format format;
     private int depth;
-    private boolean readyForNewLine;
-    private boolean tagIsEmpty;
-    private final String newLine;
-    private int mode;
+    private boolean newLineProposed;
 
+    /**
+     * @deprecated As of 1.4 use {@link JsonWriter#JsonWriter(Writer, Format) instead}
+     */
     public JsonWriter(Writer writer, char[] lineIndenter, String newLine) {
-        this(writer, lineIndenter, newLine, 0);
+        this(writer, 0, new Format(
+            lineIndenter, newLine.toCharArray(), Format.SPACE_AFTER_LABEL
+                | Format.COMPACT_EMPTY_ELEMENT));
     }
 
+    /**
+     * @deprecated As of 1.4 use {@link JsonWriter#JsonWriter(Writer, Format) instead}
+     */
     public JsonWriter(Writer writer, char[] lineIndenter) {
-        this(writer, lineIndenter, "\n");
+        this(writer, 0, new Format(lineIndenter, new char[]{'\n'}, Format.SPACE_AFTER_LABEL
+            | Format.COMPACT_EMPTY_ELEMENT));
     }
 
+    /**
+     * @deprecated As of 1.4 use {@link JsonWriter#JsonWriter(Writer, Format) instead}
+     */
     public JsonWriter(Writer writer, String lineIndenter, String newLine) {
-        this(writer, lineIndenter.toCharArray(), newLine);
+        this(writer, 0, new Format(
+            lineIndenter.toCharArray(), newLine.toCharArray(), Format.SPACE_AFTER_LABEL
+                | Format.COMPACT_EMPTY_ELEMENT));
     }
 
+    /**
+     * @deprecated As of 1.4 use {@link JsonWriter#JsonWriter(Writer, Format) instead}
+     */
     public JsonWriter(Writer writer, String lineIndenter) {
-        this(writer, lineIndenter.toCharArray());
+        this(writer, 0, new Format(
+            lineIndenter.toCharArray(), new char[]{'\n'}, Format.SPACE_AFTER_LABEL
+                | Format.COMPACT_EMPTY_ELEMENT));
     }
 
     public JsonWriter(Writer writer) {
-        this(writer, new char[]{' ', ' '});
+        this(writer, 0, new Format(
+            new char[]{' ', ' '}, new char[]{'\n'}, Format.SPACE_AFTER_LABEL
+                | Format.COMPACT_EMPTY_ELEMENT));
     }
 
     /**
      * @since 1.3.1
+     * @deprecated As of 1.4 use {@link JsonWriter#JsonWriter(Writer, int, Format) instead}
      */
     public JsonWriter(Writer writer, char[] lineIndenter, String newLine, int mode) {
-        this.writer = new QuickWriter(writer);
-        this.lineIndenter = lineIndenter;
-        this.newLine = newLine;
-        this.mode = mode;
+        this(writer, mode, new Format(
+            lineIndenter, newLine.toCharArray(), Format.SPACE_AFTER_LABEL
+                | Format.COMPACT_EMPTY_ELEMENT));
     }
 
     /**
      * Create a JsonWriter where the writer mode can be chosen.
+     * 
+     * @param writer the {@link Writer} where the JSON is written to
+     * @param mode the JsonWriter mode
+     * @since 1.3.1
+     * @see #JsonWriter(Writer, int, Format)
+     */
+    public JsonWriter(Writer writer, int mode) {
+        this(writer, mode, new Format());
+    }
+
+    /**
+     * Create a JsonWriter where the format is provided.
+     * 
+     * @param writer the {@link Writer} where the JSON is written to
+     * @param format the JSON format definition
+     * @since 1.4
+     * @see #JsonWriter(Writer, int, Format)
+     */
+    public JsonWriter(Writer writer, Format format) {
+        this(writer, 0, format);
+    }
+
+    /**
+     * Create a JsonWriter where the writer mode can be chosen and the format definition is
+     * provided.
      * <p>
-     * Following constants can be used as bit mask:
+     * Following constants can be used as bit mask for the mode:
      * <ul>
      * <li>{@link #DROP_ROOT_MODE}: drop the root node</li>
      * <li>{@link #STRICT_MODE}: do not throw {@link ConversionException}, if writer should
      * generate invalid JSON</li>
+     * <li>{@link #EXPLICIT_MODE}: ensure that all available data is explicitly written even if
+     * addition objects must be added</li>
      * </ul>
      * </p>
      * 
      * @param writer the {@link Writer} where the JSON is written to
      * @param mode the JsonWriter mode
-     * @since 1.3.1
+     * @param format the JSON format definition
+     * @since 1.4
      */
-    public JsonWriter(Writer writer, int mode) {
-        this(writer, new char[]{' ', ' '}, "\n", mode);
+    public JsonWriter(Writer writer, int mode, Format format) {
+        this(writer, mode, format, 1024);
     }
 
     /**
-     * @deprecated since 1.2, use startNode(String name, Class clazz) instead.
+     * Create a JsonWriter.
+     * 
+     * @param writer the {@link Writer} where the JSON is written to
+     * @param mode the JsonWriter mode
+     * @param format the JSON format definition
+     * @param bufferSize the buffer size of the internally used QuickWriter
+     * @see JsonWriter#JsonWriter(Writer, int, Format)
+     * @since 1.4
      */
-    public void startNode(String name) {
-        startNode(name, null);
-    }
-
-    public void startNode(String name, Class clazz) {
-        Node currNode = (Node)elementStack.peek();
-        if (currNode == null
-            && ((mode & DROP_ROOT_MODE) == 0 || (depth > 0 && !isCollection(clazz)))) {
-            writer.write("{");
-        }
-        if (currNode != null && currNode.fieldAlready) {
-            writer.write(",");
-            readyForNewLine = true;
-        }
-        tagIsEmpty = false;
-        finishTag();
-        if (currNode == null
-            || currNode.clazz == null
-            || (currNode.clazz != null && !currNode.isCollection)) {
-            if (currNode != null && !currNode.fieldAlready) {
-                writer.write("{");
-                readyForNewLine = true;
-                finishTag();
-            }
-            if ((mode & DROP_ROOT_MODE) == 0 || depth > 0) {
-                writer.write("\"");
-                writer.write(name);
-                writer.write("\": ");
-            }
-        }
-        if (isCollection(clazz)) {
-            writer.write("[");
-            readyForNewLine = true;
-        }
-        if (currNode != null) {
-            currNode.fieldAlready = true;
-        }
-        elementStack.push(new Node(name, clazz));
-        depth++ ;
-        tagIsEmpty = true;
-    }
-
-    public class Node {
-        public final String name;
-        public final Class clazz;
-        public boolean fieldAlready;
-        public boolean isCollection;
-
-        public Node(String name, Class clazz) {
-            this.name = name;
-            this.clazz = clazz;
-            isCollection = isCollection(clazz);
-        }
-    }
-
-    public void setValue(String text) {
-        Node currNode = (Node)elementStack.peek();
-        if (currNode != null && currNode.fieldAlready) {
-            startNode("$", String.class);
-            tagIsEmpty = false;
-            writeText(text, String.class);
-            endNode();
-        } else {
-            if ((mode & (DROP_ROOT_MODE | STRICT_MODE)) == (DROP_ROOT_MODE | STRICT_MODE)
-                && depth == 1) {
-                throw new ConversionException("Single value cannot be JSON root element");
-            }
-            readyForNewLine = false;
-            tagIsEmpty = false;
-            finishTag();
-            writeText(writer, text);
-        }
-    }
-
-    public void addAttribute(String key, String value) {
-        Node currNode = (Node)elementStack.peek();
-        if (currNode == null || !currNode.isCollection) {
-            startNode('@' + key, String.class);
-            tagIsEmpty = false;
-            writeText(value, String.class);
-            endNode();
-        }
-    }
-
-    protected void writeAttributeValue(QuickWriter writer, String text) {
-        writeText(text, null);
-    }
-
-    protected void writeText(QuickWriter writer, String text) {
-        Node foo = (Node)elementStack.peek();
-
-        writeText(text, foo.clazz);
-    }
-
-    private void writeText(String text, Class clazz) {
-        if (needsQuotes(clazz)) {
-            writer.write("\"");
-        }
-        if ((clazz == Character.class || clazz == Character.TYPE) && "".equals(text)) {
-            text = "\0";
-        }
-
-        int length = text.length();
-        for (int i = 0; i < length; i++ ) {
-            char c = text.charAt(i);
-            switch (c) {
-            case '"':
-                this.writer.write("\\\"");
-                break;
-            case '\\':
-                this.writer.write("\\\\");
-                break;
-            default:
-                if (c > 0x1f) {
-                    this.writer.write(c);
-                } else {
-                    this.writer.write("\\u");
-                    String hex = "000" + Integer.toHexString(c);
-                    this.writer.write(hex.substring(hex.length() - 4));
-                }
-            }
-        }
-
-        if (needsQuotes(clazz)) {
-            writer.write("\"");
-        }
-    }
-
-    private boolean isCollection(Class clazz) {
-        return clazz != null
-            && (Collection.class.isAssignableFrom(clazz)
-                || clazz.isArray()
-                || Map.class.isAssignableFrom(clazz) || Map.Entry.class.isAssignableFrom(clazz));
-    }
-
-    private boolean needsQuotes(Class clazz) {
-        clazz = clazz != null && clazz.isPrimitive() ? clazz : Primitives.unbox(clazz);
-        return clazz == null || clazz == Character.TYPE;
-    }
-
-    public void endNode() {
-        depth-- ;
-        Node node = (Node)elementStack.pop();
-        if (node.clazz != null && node.isCollection) {
-            if (node.fieldAlready) {
-                readyForNewLine = true;
-            }
-            finishTag();
-            writer.write("]");
-        } else if (tagIsEmpty) {
-            readyForNewLine = false;
-            writer.write("{}");
-            finishTag();
-        } else {
-            finishTag();
-            if (node.fieldAlready) {
-                writer.write("}");
-            }
-        }
-        readyForNewLine = true;
-        if (depth == 0 && ((mode & DROP_ROOT_MODE) == 0 || (depth > 0 && !node.isCollection))) {
-            writer.write("}");
-            writer.flush();
-        }
-    }
-
-    private void finishTag() {
-        if (readyForNewLine) {
-            endOfLine();
-        }
-        readyForNewLine = false;
-        tagIsEmpty = false;
-    }
-
-    protected void endOfLine() {
-        writer.write(newLine);
-        for (int i = 0; i < depth; i++ ) {
-            writer.write(lineIndenter);
-        }
+    public JsonWriter(Writer writer, int mode, Format format, int bufferSize) {
+        super(mode, format.getNameCoder());
+        this.writer = new QuickWriter(writer, bufferSize);
+        this.format = format;
+        depth = (mode & DROP_ROOT_MODE) == 0 ? -1 : 0;
     }
 
     public void flush() {
@@ -336,5 +160,247 @@ public class JsonWriter implements ExtendedHierarchicalStreamWriter {
 
     public HierarchicalStreamWriter underlyingWriter() {
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected void startObject() {
+        if (newLineProposed) {
+            writeNewLine();
+        }
+        writer.write('{');
+        startNewLine();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected void addLabel(String name) {
+        if (newLineProposed) {
+            writeNewLine();
+        }
+        writer.write('"');
+        writeText(name);
+        writer.write("\":");
+        if ((format.mode() & Format.SPACE_AFTER_LABEL) != 0) {
+            writer.write(' ');
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected void addValue(String value, Type type) {
+        if (newLineProposed) {
+            writeNewLine();
+        }
+        if (type == Type.STRING) {
+            writer.write('"');
+        }
+        writeText(value);
+        if (type == Type.STRING) {
+            writer.write('"');
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected void startArray() {
+        if (newLineProposed) {
+            writeNewLine();
+        }
+        writer.write("[");
+        startNewLine();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected void nextElement() {
+        writer.write(",");
+        writeNewLine();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected void endArray() {
+        endNewLine();
+        writer.write("]");
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected void endObject() {
+        endNewLine();
+        writer.write("}");
+    }
+
+    private void startNewLine() {
+        if ( ++depth > 0) {
+            newLineProposed = true;
+        }
+    }
+
+    private void endNewLine() {
+        if (depth-- > 0) {
+            if (((format.mode() & Format.COMPACT_EMPTY_ELEMENT) != 0) && newLineProposed) {
+                newLineProposed = false;
+            } else {
+                writeNewLine();
+            }
+        }
+    }
+
+    private void writeNewLine() {
+        int depth = this.depth;
+        writer.write(format.getNewLine());
+        while (depth-- > 0) {
+            writer.write(format.getLineIndenter());
+        }
+        newLineProposed = false;
+    }
+
+    private void writeText(String text) {
+        int length = text.length();
+        for (int i = 0; i < length; i++ ) {
+            char c = text.charAt(i);
+            switch (c) {
+            case '"':
+                this.writer.write("\\\"");
+                break;
+            case '\\':
+                this.writer.write("\\\\");
+                break;
+            // turn this off - it is no CTRL char anyway
+            // case '/':
+            // this.writer.write("\\/");
+            // break;
+            case '\b':
+                this.writer.write("\\b");
+                break;
+            case '\f':
+                this.writer.write("\\f");
+                break;
+            case '\n':
+                this.writer.write("\\n");
+                break;
+            case '\r':
+                this.writer.write("\\r");
+                break;
+            case '\t':
+                this.writer.write("\\t");
+                break;
+            default:
+                if (c > 0x1f) {
+                    this.writer.write(c);
+                } else {
+                    this.writer.write("\\u");
+                    String hex = "000" + Integer.toHexString(c);
+                    this.writer.write(hex.substring(hex.length() - 4));
+                }
+            }
+        }
+    }
+
+    /**
+     * Format definition for JSON.
+     * 
+     * @author J&ouml;rg Schaible
+     * @since 1.4
+     */
+    public static class Format {
+
+        public static int SPACE_AFTER_LABEL = 1;
+        public static int COMPACT_EMPTY_ELEMENT = 2;
+
+        private char[] lineIndenter;
+        private char[] newLine;
+        private final int mode;
+        private final NameCoder nameCoder;
+
+        /**
+         * Create a new default Formatter. The formatter uses two spaces, normal line feed
+         * character, adds a space after the label and will try to compact the output.
+         * 
+         * @since 1.4.2
+         */
+        public Format() {
+            this(new char[]{' ', ' '}, new char[]{'\n'}, Format.SPACE_AFTER_LABEL
+                | Format.COMPACT_EMPTY_ELEMENT);
+        }
+
+
+        /**
+         * Create a new Formatter.
+         * 
+         * @param lineIndenter the characters used for indenting the line
+         * @param newLine the characters used to create a new line
+         * @param mode the flags for the format modes
+         * @since 1.4
+         */
+        public Format(char[] lineIndenter, char[] newLine, int mode) {
+            this(lineIndenter, newLine, mode, new NoNameCoder());
+        }
+
+        /**
+         * Create a new Formatter.
+         * 
+         * @param lineIndenter the characters used for indenting the line
+         * @param newLine the characters used to create a new line
+         * @param mode the flags for the format modes
+         * @param nameCoder the name encoder and decoder
+         * @since 1.4.2
+         */
+        public Format(char[] lineIndenter, char[] newLine, int mode, NameCoder nameCoder) {
+            this.lineIndenter = lineIndenter;
+            this.newLine = newLine;
+            this.mode = mode;
+            this.nameCoder = nameCoder;
+        }
+
+        /**
+         * Retrieve the lineIndenter.
+         * 
+         * @return the lineIndenter
+         * @since 1.4
+         */
+        public char[] getLineIndenter() {
+            return this.lineIndenter;
+        }
+
+        /**
+         * Retrieve the newLine.
+         * 
+         * @return the newLine
+         * @since 1.4
+         */
+        public char[] getNewLine() {
+            return this.newLine;
+        }
+
+        /**
+         * Retrieve the mode flags of the formatter.
+         * 
+         * @return the mode
+         * @since 1.4
+         */
+        public int mode() {
+            return this.mode;
+        }
+
+
+        /**
+         * Retrieve the NameCoder.
+         * 
+         * @return the name coder
+         * @since 1.4.2
+         */
+        public NameCoder getNameCoder() {
+            return nameCoder;
+        }
     }
 }

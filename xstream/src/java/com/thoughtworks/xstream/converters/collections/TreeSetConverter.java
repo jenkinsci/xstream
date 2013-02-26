@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2010, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -14,16 +14,19 @@ package com.thoughtworks.xstream.converters.collections;
 import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
+import com.thoughtworks.xstream.core.JVM;
+import com.thoughtworks.xstream.core.util.PresortedSet;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.mapper.Mapper;
 
-import java.util.ArrayList;
-import java.util.Collection;
+import java.lang.reflect.Field;
+import java.util.AbstractList;
 import java.util.Comparator;
-import java.util.Iterator;
-import java.util.List;
+import java.util.Map;
+import java.util.SortedMap;
 import java.util.SortedSet;
+import java.util.TreeMap;
 import java.util.TreeSet;
 
 /**
@@ -36,9 +39,35 @@ import java.util.TreeSet;
  * @author J&ouml;rg Schaible
  */
 public class TreeSetConverter extends CollectionConverter {
+    private transient TreeMapConverter treeMapConverter;  
+    private final static Field sortedMapField;
+    static {
+        Field smField = null;
+        if (!JVM.hasOptimizedTreeSetAddAll()) {
+            try {
+                Field[] fields = TreeSet.class.getDeclaredFields();
+                for (int i = 0; i < fields.length; i++ ) {
+                    if (SortedMap.class.isAssignableFrom(fields[i].getType())) {
+                        // take the fist member assignable to type "SortedMap"
+                        smField = fields[i];
+                        smField.setAccessible(true);
+                        break;
+                    }
+                }
+                if (smField == null) {
+                    throw new ExceptionInInitializerError("Cannot detect field of backing map of TreeSet");
+                }
+    
+            } catch (SecurityException ex) {
+                // ignore, no access possible with current SecurityManager
+            }
+        }
+        sortedMapField = smField;
+    }
 
     public TreeSetConverter(Mapper mapper) {
         super(mapper);
+        readResolve();
     }
 
     public boolean canConvert(Class type) {
@@ -46,139 +75,78 @@ public class TreeSetConverter extends CollectionConverter {
     }
 
     public void marshal(Object source, HierarchicalStreamWriter writer, MarshallingContext context) {
-        TreeSet treeSet = (TreeSet) source;
-        Comparator comparator = treeSet.comparator();
-        if (comparator == null) {
-            writer.startNode("no-comparator");
-            writer.endNode();
-        } else {
-            writer.startNode("comparator");
-            writer.addAttribute("class", mapper().serializedClass(comparator.getClass()));
-            context.convertAnother(comparator);
-            writer.endNode();
-        }
+        SortedSet sortedSet = (SortedSet) source;
+        treeMapConverter.marshalComparator(sortedSet.comparator(), writer, context);
         super.marshal(source, writer, context);
     }
 
     public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
-        reader.moveDown();
-        final SortedSet sortedSet;
-        final TreeSet result;
-        if (reader.getNodeName().equals("comparator")) {
-            String comparatorClass = reader.getAttribute("class");
-            Comparator comparator = (Comparator) context.convertAnother(null, mapper().realClass(comparatorClass));
-            sortedSet = new PresortedSet(comparator);
-            result = new TreeSet(comparator);
-        } else if (reader.getNodeName().equals("no-comparator")) {
-            sortedSet = new PresortedSet();
-            result = new TreeSet();
+        TreeSet result = null;
+        final TreeMap treeMap;
+        Comparator unmarshalledComparator = treeMapConverter.unmarshalComparator(reader, context, null);
+        boolean inFirstElement = unmarshalledComparator instanceof Mapper.Null;
+        Comparator comparator = inFirstElement ? null : unmarshalledComparator;
+        if (sortedMapField != null) {
+            TreeSet possibleResult = comparator == null ? new TreeSet() : new TreeSet(comparator);
+            Object backingMap = null;
+            try {
+                backingMap = sortedMapField.get(possibleResult);
+            } catch (IllegalAccessException e) {
+                throw new ConversionException("Cannot get backing map of TreeSet", e);
+            }
+            if (backingMap instanceof TreeMap) {
+                treeMap = (TreeMap)backingMap;
+                result = possibleResult;
+            } else {
+                treeMap = null;
+            }
         } else {
-            throw new ConversionException("TreeSet does not contain <comparator> element");
+            treeMap = null;
         }
-        reader.moveUp();
-        super.populateCollection(reader, context, sortedSet);
-        result.addAll(sortedSet); // internal optimization will not call comparator
+        if (treeMap == null) {
+            final PresortedSet set = new PresortedSet(comparator);
+            result = comparator == null ? new TreeSet() : new TreeSet(comparator);
+            if (inFirstElement) {
+                // we are already within the first element
+                addCurrentElementToCollection(reader, context, result, set);
+                reader.moveUp();
+            }
+            populateCollection(reader, context, result, set);
+            if (set.size() > 0) {
+                result.addAll(set); // comparator will not be called if internally optimized
+            }
+        } else {
+            treeMapConverter.populateTreeMap(reader, context, treeMap, unmarshalledComparator);
+        }
         return result;
     }
 
-    private static class PresortedSet implements SortedSet {
-        private final List list = new ArrayList();
-        private final Comparator comparator;
+    private Object readResolve() {
+        treeMapConverter = new TreeMapConverter(mapper()) {
 
-        PresortedSet() {
-            this(null);
-        }
+            protected void populateMap(HierarchicalStreamReader reader,
+                UnmarshallingContext context, Map map, final Map target) {
+                populateCollection(reader, context, new AbstractList() {
+                    public boolean add(Object object) {
+                        return target.put(object, object) != null;
+                    }
 
-        PresortedSet(Comparator comparator) {
-            this.comparator = comparator;
-        }
+                    public Object get(int location) {
+                        return null;
+                    }
 
-        public boolean add(Object e) {
-            return this.list.add(e);
-        }
+                    public int size() {
+                        return target.size();
+                    }
+                });
+            }
 
-        public boolean addAll(Collection c) {
-            return this.list.addAll(c);
-        }
-
-        public void clear() {
-            this.list.clear();
-        }
-
-        public boolean contains(Object o) {
-            return this.list.contains(o);
-        }
-
-        public boolean containsAll(Collection c) {
-            return this.list.containsAll(c);
-        }
-
-        public boolean equals(Object o) {
-            return this.list.equals(o);
-        }
-
-        public int hashCode() {
-            return this.list.hashCode();
-        }
-
-        public boolean isEmpty() {
-            return this.list.isEmpty();
-        }
-
-        public Iterator iterator() {
-            return this.list.iterator();
-        }
-
-        public boolean remove(Object o) {
-            return this.list.remove(o);
-        }
-
-        public boolean removeAll(Collection c) {
-            return this.list.removeAll(c);
-        }
-
-        public boolean retainAll(Collection c) {
-            return this.list.retainAll(c);
-        }
-
-        public int size() {
-            return this.list.size();
-        }
-
-        public List subList(int fromIndex, int toIndex) {
-            return this.list.subList(fromIndex, toIndex);
-        }
-
-        public Object[] toArray() {
-            return this.list.toArray();
-        }
-
-        public Object[] toArray(Object[] a) {
-            return this.list.toArray(a);
-        }
-
-        public Comparator comparator() {
-            return comparator;
-        }
-
-        public Object first() {
-            return list.isEmpty() ? null : list.get(0);
-        }
-
-        public SortedSet headSet(Object toElement) {
-            throw new UnsupportedOperationException();
-        }
-
-        public Object last() {
-            return list.isEmpty() ? null : list.get(list.size() - 1);
-        }
-
-        public SortedSet subSet(Object fromElement, Object toElement) {
-            throw new UnsupportedOperationException();
-        }
-
-        public SortedSet tailSet(Object fromElement) {
-            throw new UnsupportedOperationException();
-        }
+            protected void putCurrentEntryIntoMap(HierarchicalStreamReader reader, UnmarshallingContext context,
+                Map map, Map target) {
+                Object key = readItem(reader, context, map);
+                target.put(key, key);
+            }
+        };
+        return this;
     }
 }

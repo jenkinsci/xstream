@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2010, 2012 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -48,7 +48,7 @@ public class OmitFieldsTest extends AbstractAcceptanceTest {
         assertEquals("c", out.neverIgnore);
     }
 
-    public void testAdditionalFieldsCanBeExplicitlyOmittedThroughFacade() {
+    public void testAdditionalFieldsCanBeExplicitlyOmitted() {
         Thing in = new Thing();
         in.alwaysIgnore = "a";
         in.sometimesIgnore = "b";
@@ -99,6 +99,32 @@ public class OmitFieldsTest extends AbstractAcceptanceTest {
         assertEquals(null, out.sometimesIgnore);
         assertEquals("c", out.neverIgnore);
         assertEquals("d", out.derived);
+    }
+
+    public void testFieldsOfDerivedTypesCanBeExplicitlyOmittedThroughFacade() {
+        DerivedThing in = new DerivedThing();
+        in.alwaysIgnore = "a";
+        in.sometimesIgnore = "b";
+        in.neverIgnore = "c";
+        in.derived = "d";
+
+        String expectedXml = ""
+            + "<thing>\n"
+            + "  <sometimesIgnore>b</sometimesIgnore>\n"
+            + "  <neverIgnore>c</neverIgnore>\n"
+            + "</thing>";
+
+        xstream.alias("thing", DerivedThing.class);
+        xstream.omitField(DerivedThing.class, "derived");
+
+        String actualXml = xstream.toXML(in);
+        assertEquals(expectedXml, actualXml);
+
+        DerivedThing out = (DerivedThing)xstream.fromXML(actualXml);
+        assertEquals(null, out.alwaysIgnore);
+        assertEquals("b", out.sometimesIgnore);
+        assertEquals("c", out.neverIgnore);
+        assertEquals(null, out.derived);
     }
 
     public static class AnotherThing extends StandardObject {
@@ -165,6 +191,38 @@ public class OmitFieldsTest extends AbstractAcceptanceTest {
         assertEquals("c", out.neverIgnore);
     }
 
+    public void testDeletedElementWithReferenceCanBeOmitted() {
+        String expectedXml = ""
+            + "<thing>\n"
+            + "  <meanwhileDeletedIgnore reference=\"..\"/>\n"
+            + "  <sometimesIgnore>b</sometimesIgnore>\n"
+            + "  <neverIgnore>c</neverIgnore>\n"
+            + "</thing>";
+
+        xstream.alias("thing", Thing.class);
+        xstream.omitField(Thing.class, "meanwhileDeletedIgnore");
+
+        Thing out = (Thing)xstream.fromXML(expectedXml);
+        assertEquals("b", out.sometimesIgnore);
+        assertEquals("c", out.neverIgnore);
+    }
+
+    public void testDeletedElementWithClassAttributeCanBeOmitted() {
+        String expectedXml = ""
+            + "<thing>\n"
+            + "  <meanwhileDeletedIgnore class=\"thing\"/>\n"
+            + "  <sometimesIgnore>b</sometimesIgnore>\n"
+            + "  <neverIgnore>c</neverIgnore>\n"
+            + "</thing>";
+
+        xstream.alias("thing", Thing.class);
+        xstream.omitField(Thing.class, "meanwhileDeletedIgnore");
+
+        Thing out = (Thing)xstream.fromXML(expectedXml);
+        assertEquals("b", out.sometimesIgnore);
+        assertEquals("c", out.neverIgnore);
+    }
+
     public void testDeletedAttributeCanBeOmitted() {
         String expectedXml = ""
             + "<thing meanwhileDeletedIgnore='c'>\n"
@@ -196,6 +254,58 @@ public class OmitFieldsTest extends AbstractAcceptanceTest {
         Thing out = (Thing)xstream.fromXML(expectedXml);
         assertNull(out.sometimesIgnore);
         assertEquals("c", out.neverIgnore);
+    }
+
+    public void testExistingFieldsCanBeExplicitlyOmittedAtDeserialization() {
+        String actualXml = ""
+            + "<thing>\n"
+            + "  <sometimesIgnore>foo</sometimesIgnore>\n" 
+            + "  <neverIgnore>c</neverIgnore>\n" 
+            + "</thing>";
+
+        xstream.alias("thing", Thing.class);
+        xstream.omitField(Thing.class, "sometimesIgnore");
+
+        Thing out = (Thing)xstream.fromXML(actualXml);
+        assertEquals(null, out.alwaysIgnore);
+        assertEquals(null, out.sometimesIgnore);
+        assertEquals("c", out.neverIgnore);
+    }
+
+    public void testExistingFieldsInDerivedClassesCanBeExplicitlyOmittedAtDeserialization() {
+        String actualXml = ""
+            + "<thing>\n"
+            + "  <sometimesIgnore>b</sometimesIgnore>\n" 
+            + "  <neverIgnore>c</neverIgnore>\n" 
+            + "  <derived>foo</derived>\n" 
+            + "</thing>";
+
+        xstream.alias("thing", DerivedThing.class);
+        xstream.omitField(DerivedThing.class, "derived");
+
+        DerivedThing out = (DerivedThing)xstream.fromXML(actualXml);
+        assertEquals(null, out.alwaysIgnore);
+        assertEquals("b", out.sometimesIgnore);
+        assertEquals("c", out.neverIgnore);
+        assertEquals(null, out.derived);
+    }
+
+    public void testExistingInheritedFieldsCanBeExplicitlyOmittedAtDeserialization() {
+        String actualXml = ""
+            + "<thing>\n"
+            + "  <sometimesIgnore>foo</sometimesIgnore>\n" 
+            + "  <neverIgnore>c</neverIgnore>\n" 
+            + "  <derived>d</derived>\n" 
+            + "</thing>";
+
+        xstream.alias("thing", DerivedThing.class);
+        xstream.omitField(Thing.class, "sometimesIgnore");
+
+        DerivedThing out = (DerivedThing)xstream.fromXML(actualXml);
+        assertEquals(null, out.alwaysIgnore);
+        assertEquals(null, out.sometimesIgnore);
+        assertEquals("c", out.neverIgnore);
+        assertEquals("d", out.derived);
     }
 
     static class ThingAgain extends Thing {

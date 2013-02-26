@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2011, 2012 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -107,14 +107,15 @@ public abstract class AbstractXMLReaderTest extends TestCase {
     }
 
     public void testTextCanBeExtractedFromTag() throws Exception {
-        HierarchicalStreamReader xmlReader = createReader("<root><a>some<!-- ignore me --> getValue!</a><b>more</b></root>");
+        HierarchicalStreamReader xmlReader = createReader(
+        	"<root><a>some<!-- ignore me --> getValue!</a><b><![CDATA[more&&more;]]></b></root>");
 
         xmlReader.moveDown();
         assertEquals("some getValue!", xmlReader.getValue());
         xmlReader.moveUp();
 
         xmlReader.moveDown();
-        assertEquals("more", xmlReader.getValue());
+        assertEquals("more&&more;", xmlReader.getValue());
         xmlReader.moveUp();
     }
 
@@ -220,6 +221,21 @@ public abstract class AbstractXMLReaderTest extends TestCase {
         assertEquals("FNARR", xmlReader.getValue());
     }
 
+    public void testCanReadLineFeedInString() throws Exception {
+        HierarchicalStreamReader xmlReader = createReader("<string>a\nb</string>");
+        assertEquals("a\nb", xmlReader.getValue());
+    }
+
+    public void testCanReadEncodedAttribute() throws Exception {
+        HierarchicalStreamReader xmlReader = createReader("<string __attr='value'/>");
+        assertEquals("value", xmlReader.getAttribute("_attr"));
+    }
+
+    public void testCanReadAttributeWithEncodedWhitespace() throws Exception {
+        HierarchicalStreamReader xmlReader = createReader("<string attr='  A\r\t\nB  C&#x9;&#xa;&#xd;  '/>");
+        assertEquals("  A   B  C\t\n\r  ", xmlReader.getAttribute("attr"));
+    }
+    
     // TODO: See XSTR-473
     public void todoTestCanReadNullValueInString() throws Exception {
         HierarchicalStreamReader xmlReader = createReader("<string>&#x0;</string>");

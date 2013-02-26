@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -14,11 +14,10 @@ package com.thoughtworks.xstream.converters.reflection;
 import sun.misc.Unsafe;
 import sun.reflect.ReflectionFactory;
 
-import java.lang.ref.WeakReference;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.WeakHashMap;
 
@@ -34,6 +33,8 @@ public class Sun14ReflectionProvider extends PureJavaReflectionProvider {
 
     private final static Unsafe unsafe;
     private final static Exception exception;
+    // references to the Field key are kept in the FieldDictionary
+    private transient Map fieldOffsetCache = new WeakHashMap();
     static {
         Unsafe u = null;
         Exception ex = null;
@@ -58,7 +59,7 @@ public class Sun14ReflectionProvider extends PureJavaReflectionProvider {
     }
 
     private transient ReflectionFactory reflectionFactory = ReflectionFactory.getReflectionFactory();
-    private transient Map constructorCache = Collections.synchronizedMap(new WeakHashMap());
+    private transient Map constructorCache =new HashMap();
 
     public Sun14ReflectionProvider() {
     	super();
@@ -88,13 +89,14 @@ public class Sun14ReflectionProvider extends PureJavaReflectionProvider {
     }
 
     private Constructor getMungedConstructor(Class type) throws NoSuchMethodException {
-        final WeakReference ref = (WeakReference)constructorCache.get(type);
-        Constructor ctor = (Constructor)(ref == null ? null : ref.get());
-        if (ctor == null) {
-            ctor = reflectionFactory.newConstructorForSerialization(type, Object.class.getDeclaredConstructor(new Class[0]));
-            constructorCache.put(type, new WeakReference(ctor));
+        synchronized (constructorCache) {
+            Constructor ctor = (Constructor)constructorCache.get(type);
+            if (ctor == null) {
+                ctor = reflectionFactory.newConstructorForSerialization(type, Object.class.getDeclaredConstructor(new Class[0]));
+                constructorCache.put(type, ctor);
+            }
+            return ctor;
         }
-        return ctor;
     }
 
     public void writeField(Object object, String fieldName, Object value, Class definedIn) {
@@ -106,7 +108,7 @@ public class Sun14ReflectionProvider extends PureJavaReflectionProvider {
             throw new ObjectAccessException("Could not set field " + object.getClass() + "." + field.getName(), exception);
         }
         try {
-            long offset = unsafe.objectFieldOffset(field);
+            long offset = getFieldOffset(field);
             Class type = field.getType();
             if (type.isPrimitive()) {
                 if (type.equals(Integer.TYPE)) {
@@ -138,6 +140,18 @@ public class Sun14ReflectionProvider extends PureJavaReflectionProvider {
             throw new ObjectAccessException("Could not set field " + object.getClass() + "." + field.getName(), e);
         }
     }
+    
+    private synchronized long  getFieldOffset(Field f)
+    {
+        Long l = (Long)fieldOffsetCache.get(f);
+        if (l == null)
+        {
+            l = new Long(unsafe.objectFieldOffset(f));
+            fieldOffsetCache.put(f, l);
+        }
+        
+        return l.longValue();
+    }
 
     protected void validateFieldAccess(Field field) {
         // (overriden) don't mind final fields.
@@ -145,8 +159,9 @@ public class Sun14ReflectionProvider extends PureJavaReflectionProvider {
 
     protected Object readResolve() {
         super.readResolve();
-        constructorCache = Collections.synchronizedMap(new WeakHashMap());
+        constructorCache = new HashMap();
         reflectionFactory = ReflectionFactory.getReflectionFactory();
+        fieldOffsetCache = new WeakHashMap();
         return this;
     }
 }

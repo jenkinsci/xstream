@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -16,7 +16,7 @@ import java.util.Iterator;
 import com.thoughtworks.xstream.converters.ErrorWriter;
 import com.thoughtworks.xstream.core.util.FastStack;
 import com.thoughtworks.xstream.io.AttributeNameIterator;
-import com.thoughtworks.xstream.io.HierarchicalStreamReader;
+import com.thoughtworks.xstream.io.naming.NameCoder;
 
 public abstract class AbstractDocumentReader extends AbstractXmlReader implements DocumentReader {
 
@@ -24,17 +24,25 @@ public abstract class AbstractDocumentReader extends AbstractXmlReader implement
     private Object current;
 
     protected AbstractDocumentReader(Object rootElement) {
-        this(rootElement, new XmlFriendlyReplacer());
+        this(rootElement, new XmlFriendlyNameCoder());
+    }
+
+    /**
+    * @since 1.4
+    */ 
+    protected AbstractDocumentReader(Object rootElement, NameCoder nameCoder) {
+        super(nameCoder);
+        this.current = rootElement;
+        pointers.push(new Pointer());
+        reassignCurrentElement(current);
     }
 
     /**
     * @since 1.2
+    * @deprecated As of 1.4, use {@link AbstractDocumentReader#AbstractDocumentReader(Object, NameCoder)} instead.
     */ 
     protected AbstractDocumentReader(Object rootElement, XmlFriendlyReplacer replacer) {
-        super(replacer);
-        this.current = rootElement;
-        pointers.push(new Pointer());
-        reassignCurrentElement(current);
+        this(rootElement, (NameCoder)replacer);
     }
     
     protected abstract void reassignCurrentElement(Object current);
@@ -78,13 +86,6 @@ public abstract class AbstractDocumentReader extends AbstractXmlReader implement
 
     public void appendErrors(ErrorWriter errorWriter) {
     }
-
-    /**
-     * @deprecated As of 1.2, use {@link #getCurrent() }
-     */
-    public Object peekUnderlyingNode() {
-        return current;
-    }
     
     public Object getCurrent() {
         return this.current;
@@ -92,9 +93,5 @@ public abstract class AbstractDocumentReader extends AbstractXmlReader implement
 
     public void close() {
         // don't need to do anything
-    }
-
-    public HierarchicalStreamReader underlyingReader() {
-        return this;
     }
 }

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -11,11 +11,11 @@
  */
 package com.thoughtworks.xstream.mapper;
 
-import com.thoughtworks.xstream.alias.ClassMapper;
-
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+
+import com.thoughtworks.xstream.core.util.Primitives;
 
 /**
  * Mapper that allows a fully qualified class name to be replaced with an alias.
@@ -33,20 +33,13 @@ public class ClassAliasingMapper extends MapperWrapper {
         super(wrapped);
     }
 
-    /**
-     * @deprecated since 1.2, use {@link #ClassAliasingMapper(Mapper)}
-     */
-    public ClassAliasingMapper(ClassMapper wrapped) {
-        this((Mapper)wrapped);
-    }
-
     public void addClassAlias(String name, Class type) {
         nameToType.put(name, type.getName());
         classToName.put(type.getName(), name);
     }
 
     /**
-     * @deprecated since 1.3, method was a leftover of an old implementation
+     * @deprecated As of 1.3, method was a leftover of an old implementation
      */
     public void addClassAttributeAlias(String name, Class type) {
         addClassAlias(name, type);
@@ -76,7 +69,7 @@ public class ClassAliasingMapper extends MapperWrapper {
         String mappedName = (String) nameToType.get(elementName);
 
         if (mappedName != null) {
-            Class type = primitiveClassNamed(mappedName);
+            Class type = Primitives.primitiveType(mappedName);
             if (type != null) {
                 return type;
             }
@@ -105,19 +98,5 @@ public class ClassAliasingMapper extends MapperWrapper {
             nameToType.put(typeToName.get(type), type.getName());
         }
         return this;
-    }
-    
-    private Class primitiveClassNamed(String name) {
-        return
-                name.equals("void") ? Void.TYPE :
-                name.equals("boolean") ? Boolean.TYPE :
-                name.equals("byte") ? Byte.TYPE :
-                name.equals("char") ? Character.TYPE :
-                name.equals("short") ? Short.TYPE :
-                name.equals("int") ? Integer.TYPE :
-                name.equals("long") ? Long.TYPE :
-                name.equals("float") ? Float.TYPE :
-                name.equals("double") ? Double.TYPE :
-                null;
     }
 }

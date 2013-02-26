@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -11,23 +11,39 @@
  */
 package com.thoughtworks.xstream.io.xml;
 
-import com.thoughtworks.xstream.io.xml.xppdom.Xpp3Dom;
+import com.thoughtworks.xstream.io.naming.NameCoder;
+import com.thoughtworks.xstream.io.xml.xppdom.XppDom;
 
 
 public class XppDomWriter extends AbstractDocumentWriter {
     public XppDomWriter() {
-        this(null, new XmlFriendlyReplacer());
+        this(null, new XmlFriendlyNameCoder());
     }
 
     /**
      * @since 1.2.1
      */
-    public XppDomWriter(final Xpp3Dom parent) {
-        this(parent, new XmlFriendlyReplacer());
+    public XppDomWriter(final XppDom parent) {
+        this(parent, new XmlFriendlyNameCoder());
+    }
+
+    /**
+     * @since 1.4
+     */
+    public XppDomWriter(final NameCoder nameCoder) {
+        this(null, nameCoder);
+    }
+
+    /**
+     * @since 1.4
+     */
+    public XppDomWriter(final XppDom parent, final NameCoder nameCoder) {
+        super(parent, nameCoder);
     }
 
     /**
      * @since 1.2
+     * @deprecated As of 1.4 use {@link XppDomWriter#XppDomWriter(NameCoder)} instead
      */
     public XppDomWriter(final XmlFriendlyReplacer replacer) {
         this(null, replacer);
@@ -35,18 +51,19 @@ public class XppDomWriter extends AbstractDocumentWriter {
 
     /**
      * @since 1.2.1
+     * @deprecated As of 1.4 use {@link XppDomWriter#XppDomWriter(XppDom, NameCoder)} instead.
      */
-    public XppDomWriter(final Xpp3Dom parent, final XmlFriendlyReplacer replacer) {
-        super(parent, replacer);
+    public XppDomWriter(final XppDom parent, final XmlFriendlyReplacer replacer) {
+        this(parent, (NameCoder)replacer);
     }
 
-    public Xpp3Dom getConfiguration() {
-        return (Xpp3Dom)getTopLevelNodes().get(0);
+    public XppDom getConfiguration() {
+        return (XppDom)getTopLevelNodes().get(0);
     }
 
     protected Object createNode(final String name) {
-        final Xpp3Dom newNode = new Xpp3Dom(escapeXmlName(name));
-        final Xpp3Dom top = top();
+        final XppDom newNode = new XppDom(encodeNode(name));
+        final XppDom top = top();
         if (top != null) {
             top().addChild(newNode);
         }
@@ -58,10 +75,10 @@ public class XppDomWriter extends AbstractDocumentWriter {
     }
 
     public void addAttribute(final String key, final String value) {
-        top().setAttribute(escapeXmlName(key), value);
+        top().setAttribute(encodeAttribute(key), value);
     }
 
-    private Xpp3Dom top() {
-        return (Xpp3Dom)getCurrent();
+    private XppDom top() {
+        return (XppDom)getCurrent();
     }
 }

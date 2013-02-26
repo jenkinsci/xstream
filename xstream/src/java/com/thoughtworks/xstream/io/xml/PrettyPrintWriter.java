@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -14,6 +14,7 @@ package com.thoughtworks.xstream.io.xml;
 import com.thoughtworks.xstream.core.util.FastStack;
 import com.thoughtworks.xstream.core.util.QuickWriter;
 import com.thoughtworks.xstream.io.StreamException;
+import com.thoughtworks.xstream.io.naming.NameCoder;
 
 import java.io.Writer;
 
@@ -70,9 +71,9 @@ public class PrettyPrintWriter extends AbstractXmlWriter {
     private static final char[] CLOSE = "</".toCharArray();
 
     private PrettyPrintWriter(
-        Writer writer, int mode, char[] lineIndenter, XmlFriendlyReplacer replacer,
+        Writer writer, int mode, char[] lineIndenter, NameCoder nameCoder,
         String newLine) {
-        super(replacer);
+        super(nameCoder);
         this.writer = new QuickWriter(writer);
         this.lineIndenter = lineIndenter;
         this.newLine = newLine;
@@ -84,7 +85,7 @@ public class PrettyPrintWriter extends AbstractXmlWriter {
 
     /**
      * @since 1.2
-     * @deprecated since 1.3
+     * @deprecated As of 1.3
      */
     public PrettyPrintWriter(
         Writer writer, char[] lineIndenter, String newLine, XmlFriendlyReplacer replacer) {
@@ -92,7 +93,16 @@ public class PrettyPrintWriter extends AbstractXmlWriter {
     }
 
     /**
+     * @since 1.4
+     */
+    public PrettyPrintWriter(
+        Writer writer, int mode, char[] lineIndenter, NameCoder nameCoder) {
+        this(writer, mode, lineIndenter, nameCoder, "\n");
+    }
+
+    /**
      * @since 1.3
+     * @deprecated As of 1.4 use {@link PrettyPrintWriter#PrettyPrintWriter(Writer, int, char[], NameCoder)} instead
      */
     public PrettyPrintWriter(
         Writer writer, int mode, char[] lineIndenter, XmlFriendlyReplacer replacer) {
@@ -100,7 +110,7 @@ public class PrettyPrintWriter extends AbstractXmlWriter {
     }
 
     /**
-     * @deprecated since 1.3
+     * @deprecated As of 1.3
      */
     public PrettyPrintWriter(Writer writer, char[] lineIndenter, String newLine) {
         this(writer, lineIndenter, newLine, new XmlFriendlyReplacer());
@@ -110,15 +120,15 @@ public class PrettyPrintWriter extends AbstractXmlWriter {
      * @since 1.3
      */
     public PrettyPrintWriter(Writer writer, int mode, char[] lineIndenter) {
-        this(writer, mode, lineIndenter, new XmlFriendlyReplacer());
+        this(writer, mode, lineIndenter, new XmlFriendlyNameCoder());
     }
 
     public PrettyPrintWriter(Writer writer, char[] lineIndenter) {
-        this(writer, lineIndenter, "\n");
+        this(writer, XML_QUIRKS, lineIndenter);
     }
 
     /**
-     * @deprecated since 1.3
+     * @deprecated As of 1.3
      */
     public PrettyPrintWriter(Writer writer, String lineIndenter, String newLine) {
         this(writer, lineIndenter.toCharArray(), newLine);
@@ -136,12 +146,30 @@ public class PrettyPrintWriter extends AbstractXmlWriter {
     }
 
     /**
+     * @since 1.4
+     */
+    public PrettyPrintWriter(Writer writer, int mode, NameCoder nameCoder) {
+        this(writer, mode, new char[]{' ', ' '}, nameCoder);
+    }
+
+    /**
      * @since 1.3
+     * @deprecated As of 1.4 use {@link PrettyPrintWriter#PrettyPrintWriter(Writer, int, NameCoder)} instead
      */
     public PrettyPrintWriter(Writer writer, int mode, XmlFriendlyReplacer replacer) {
         this(writer, mode, new char[]{' ', ' '}, replacer);
     }
 
+    /**
+     * @since 1.4
+     */
+    public PrettyPrintWriter(Writer writer, NameCoder nameCoder) {
+        this(writer, XML_QUIRKS, new char[]{' ', ' '}, nameCoder, "\n");
+    }
+
+    /**
+     * @deprecated As of 1.4 use {@link PrettyPrintWriter#PrettyPrintWriter(Writer, NameCoder)} instead.
+     */
     public PrettyPrintWriter(Writer writer, XmlFriendlyReplacer replacer) {
         this(writer, new char[]{' ', ' '}, "\n", replacer);
     }
@@ -158,7 +186,7 @@ public class PrettyPrintWriter extends AbstractXmlWriter {
     }
 
     public void startNode(String name) {
-        String escapedName = escapeXmlName(name);
+        String escapedName = encodeNode(name);
         tagIsEmpty = false;
         finishTag();
         writer.write('<');
@@ -184,7 +212,7 @@ public class PrettyPrintWriter extends AbstractXmlWriter {
 
     public void addAttribute(String key, String value) {
         writer.write(' ');
-        writer.write(escapeXmlName(key));
+        writer.write(encodeAttribute(key));
         writer.write('=');
         writer.write('\"');
         writeAttributeValue(writer, value);
@@ -192,14 +220,14 @@ public class PrettyPrintWriter extends AbstractXmlWriter {
     }
 
     protected void writeAttributeValue(QuickWriter writer, String text) {
-        writeText(text);
+        writeText(text, true);
     }
 
     protected void writeText(QuickWriter writer, String text) {
-        writeText(text);
+        writeText(text, false);
     }
 
-    private void writeText(String text) {
+    private void writeText(String text, boolean isAttribute) {
         int length = text.length();
         for (int i = 0; i < length; i++ ) {
             char c = text.charAt(i);
@@ -231,8 +259,10 @@ public class PrettyPrintWriter extends AbstractXmlWriter {
                 break;
             case '\t':
             case '\n':
-                this.writer.write(c);
-                break;
+                if (!isAttribute) {
+                    this.writer.write(c);
+                    break;
+                }
             default:
                 if (Character.isDefined(c) && !Character.isISOControl(c)) {
                     if (mode != XML_QUIRKS) {
@@ -249,7 +279,7 @@ public class PrettyPrintWriter extends AbstractXmlWriter {
                             || c == '\u000b'
                             || c == '\u000c'
                             || c == '\u000e'
-                            || c == '\u000f') {
+                            || (c >= '\u000f' && c <= '\u001f')) {
                             throw new StreamException("Invalid character 0x"
                                 + Integer.toHexString(c)
                                 + " in XML 1.0 stream");

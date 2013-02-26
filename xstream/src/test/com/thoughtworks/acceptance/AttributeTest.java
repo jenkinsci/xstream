@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -55,6 +55,10 @@ public class AttributeTest extends AbstractAcceptanceTest {
 
     public static class Three {
         public Date date;
+    }
+    
+    public static class Four extends One {
+        public ID id;
     }
 
     public static class ID {
@@ -130,6 +134,25 @@ public class AttributeTest extends AbstractAcceptanceTest {
         assertBothWays(one, expected);
     }
 
+    // TODO: Currently not possible, see comment in AbstractReflectionProvider.doUnmarshal 
+    public void todoTestHidingMemberCanBeWrittenIfAliasDiffers() {
+        Four four = new Four();
+        four.two = new Two();
+        four.id  = new ID("4");
+        four.setID(new ID("1"));
+
+        xstream.alias("four", Four.class);
+        xstream.aliasField("id4", Four.class, "id");
+        xstream.useAttributeFor(ID.class);
+        xstream.registerConverter(new MyIDConverter());
+
+        String expected =
+                "<four id=\"1\" id4=\"4\">\n" +
+                "  <two/>\n" +
+                "</four>";
+        assertBothWays(four, expected);
+    }
+
     public void testAllowsAttributeWithKnownConverterAndFieldName() throws Exception {
         Three three = new Three();
         DateFormat format = new SimpleDateFormat("dd/MM/yyyy");
@@ -139,7 +162,7 @@ public class AttributeTest extends AbstractAcceptanceTest {
         xstream.useAttributeFor("date", Date.class);
         
         String expected =
-            "<three date=\"2006-02-19 00:00:00.0 GMT\"/>";
+            "<three date=\"2006-02-19 00:00:00.0 UTC\"/>";
         assertBothWays(three, expected);
     }
 

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -24,31 +24,17 @@ import com.thoughtworks.xstream.converters.SingleValueConverter;
  */
 public class DefaultMapper implements Mapper {
 
+    private static String XSTREAM_PACKAGE_ROOT;
+    static {
+        String packageName = DefaultMapper.class.getName();
+        int idx = packageName.indexOf(".xstream.");
+        XSTREAM_PACKAGE_ROOT = idx > 0 ? packageName.substring(0, idx+9) : null;
+    }
+    
     private final ClassLoader classLoader;
-    /**
-     * @deprecated since 1.2, no necessity for field anymore.
-     */
-    private transient String classAttributeIdentifier;
 
     public DefaultMapper(ClassLoader classLoader) {
         this.classLoader = classLoader;
-        this.classAttributeIdentifier = "class";
-    }
-
-    /**
-     * @deprecated since 1.2, use XStream.aliasAttrbute() for a different attribute name.
-     */
-    public DefaultMapper(ClassLoader classLoader, String classAttributeIdentifier) {
-        this(classLoader);
-        this.classAttributeIdentifier = classAttributeIdentifier == null ? "class" : classAttributeIdentifier;
-    }
-
-    /**
-     * @deprecated since 1.2, no necessity for method anymore.
-     */
-    private Object readResolve() {
-        classAttributeIdentifier = "class";
-        return this;
     }
 
     public String serializedClass(Class type) {
@@ -57,7 +43,9 @@ public class DefaultMapper implements Mapper {
 
     public Class realClass(String elementName) {
         try {
-            if (elementName.charAt(0) != '[') {
+            if (elementName.startsWith(XSTREAM_PACKAGE_ROOT)) {
+                return DefaultMapper.class.getClassLoader().loadClass(elementName);
+            } else if (elementName.charAt(0) != '[') {
                 return classLoader.loadClass(elementName);
             } else if (elementName.endsWith(";")) {
                 return Class.forName(elementName.toString(), false, classLoader);
@@ -65,40 +53,12 @@ public class DefaultMapper implements Mapper {
                 return Class.forName(elementName.toString());
             }
         } catch (ClassNotFoundException e) {
-            throw new CannotResolveClassException(elementName + " : " + e.getMessage());
+            throw new CannotResolveClassException(elementName);
         }
     }
 
     public Class defaultImplementationOf(Class type) {
         return type;
-    }
-
-    /**
-     * @deprecated since 1.2, use aliasForAttribute instead.
-     */
-    public String attributeForClassDefiningField() {
-        return "defined-in";
-    }
-
-    /**
-     * @deprecated since 1.2, use aliasForAttribute instead.
-     */
-    public String attributeForReadResolveField() {
-        return "resolves-to";
-    }
-
-    /**
-     * @deprecated since 1.2, use aliasForAttribute instead.
-     */
-    public String attributeForEnumType() {
-        return "enum-type";
-    }
-
-    /**
-     * @deprecated since 1.2, use aliasForAttribute instead.
-     */
-    public String attributeForImplementationClass() {
-        return classAttributeIdentifier;
     }
 
     public String aliasForAttribute(String attribute) {
@@ -150,21 +110,21 @@ public class DefaultMapper implements Mapper {
     }
 
     /**
-     * @deprecated since 1.3, use {@link #getConverterFromAttribute(Class, String, Class)}
+     * @deprecated As of 1.3, use {@link #getConverterFromAttribute(Class, String, Class)}
      */
     public SingleValueConverter getConverterFromAttribute(String name) {
         return null;
     }
 
     /**
-     * @deprecated since 1.3, use {@link #getConverterFromItemType(String, Class, Class)}
+     * @deprecated As of 1.3, use {@link #getConverterFromItemType(String, Class, Class)}
      */
     public SingleValueConverter getConverterFromItemType(String fieldName, Class type) {
         return null;
     }
 
     /**
-     * @deprecated since 1.3, use {@link #getConverterFromItemType(String, Class, Class)}
+     * @deprecated As of 1.3, use {@link #getConverterFromItemType(String, Class, Class)}
      */
     public SingleValueConverter getConverterFromItemType(Class type) {
         return null;
@@ -184,21 +144,21 @@ public class DefaultMapper implements Mapper {
     }
 
     /**
-     * @deprecated since 1.3, use combination of {@link #serializedMember(Class, String)} and {@link #getConverterFromItemType(String, Class, Class)} 
+     * @deprecated As of 1.3, use combination of {@link #serializedMember(Class, String)} and {@link #getConverterFromItemType(String, Class, Class)} 
      */
     public String aliasForAttribute(Class definedIn, String fieldName) {
         return fieldName;
     }
 
     /**
-     * @deprecated since 1.3, use combination of {@link #realMember(Class, String)} and {@link #getConverterFromItemType(String, Class, Class)} 
+     * @deprecated As of 1.3, use combination of {@link #realMember(Class, String)} and {@link #getConverterFromItemType(String, Class, Class)} 
      */
     public String attributeForAlias(Class definedIn, String alias) {
         return alias;
     }
 
     /**
-     * @deprecated since 1.3.1, use {@link #getConverterFromAttribute(Class, String, Class)} 
+     * @deprecated As of 1.3.1, use {@link #getConverterFromAttribute(Class, String, Class)} 
      */
     public SingleValueConverter getConverterFromAttribute(Class definedIn, String attribute) {
         return null;

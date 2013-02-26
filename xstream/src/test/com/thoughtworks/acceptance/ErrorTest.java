@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -29,10 +29,11 @@ public class ErrorTest extends AbstractAcceptanceTest {
 
     public void testUnmarshallerThrowsExceptionWithDebuggingInfo() {
         try {
-            xstream.fromXML("<thing>\n" +
-                    "  <one>string 1</one>\n" +
-                    "  <two>another string</two>\n" +
-                    "</thing>");
+            xstream.fromXML(""
+                + "<thing>\n" 
+                + "  <one>string 1</one>\n" 
+                + "  <two>another string</two>\n" 
+                + "</thing>");
             fail("Error expected");
         } catch (ConversionException e) {
             assertEquals("java.lang.NumberFormatException",
@@ -44,7 +45,7 @@ public class ErrorTest extends AbstractAcceptanceTest {
                 assertEquals("another string",
                         e.get("cause-message"));
             }
-            assertEquals(Thing.class.getName(),
+            assertEquals(Integer.class.getName(),
                     e.get("class"));
             assertEquals("/thing/two",
                     e.get("path"));
@@ -52,21 +53,23 @@ public class ErrorTest extends AbstractAcceptanceTest {
                     e.get("line number"));
             assertEquals("java.lang.Integer",
                     e.get("required-type"));
+            assertEquals(Thing.class.getName(),
+                e.get("class[1]"));
         }
     }
 
     public void testInvalidXml() {
         try {
-            xstream.fromXML("<thing>\n" +
-                    "  <one>string 1</one>\n" +
-                    "  <two><<\n" +
-                    "</thing>");
+            xstream.fromXML(""
+                + "<thing>\n" 
+                + "  <one>string 1</one>\n" 
+                + "  <two><<\n" 
+                + "</thing>");
             fail("Error expected");
         } catch (ConversionException e) {
             assertEquals(StreamException.class.getName(),
                     e.get("cause-exception"));
-            assertContains("unexpected character in markup",
-                    e.get("cause-message"));
+            assertNotNull(e.get("cause-message")); // depends on parser
             assertEquals("/thing/two",
                     e.get("path"));
             assertEquals("3",
@@ -74,9 +77,23 @@ public class ErrorTest extends AbstractAcceptanceTest {
         }
 
     }
-
-    private void assertContains(String expected, String actual) {
-        assertTrue("Substring not found. Expected <" + expected + "> but got <" + actual + ">",
-                actual.indexOf(expected) > -1);
+    
+    public void testNonExistingMember() {
+        try {
+            xstream.fromXML("" 
+                + "<thing>\n" 
+                + "  <one>string 1</one>\n" 
+                + "  <three>3</three>\n" 
+                + "</thing>");
+            fail("Error expected");
+        } catch (ConversionException e) {
+            assertEquals("three",
+                    e.get("field"));
+            assertEquals("/thing/three",
+                    e.get("path"));
+            assertEquals("3",
+                    e.get("line number"));
+        }
+        
     }
 }

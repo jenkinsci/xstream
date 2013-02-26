@@ -1,7 +1,7 @@
 <html>
 <!--
  Copyright (C) 2005, 2006 Joe Walnes.
- Copyright (C) 2006, 2007, 2008 XStream committers.
+ Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012 XStream committers.
  All rights reserved.
  
  The software in this package is published under the terms of the BSD
@@ -31,7 +31,14 @@
 
     <!-- ...................................................... -->
     <h2 id="Compatibility_JDK">Which JDK is required to use XStream?</h2>
-    <p>1.3 or later.</p>
+    <p>1.4 or later.</p>
+
+    <!-- ...................................................... -->
+    <h2 id="Compatibility_Dependencies">Which dependencies are required to run XStream?</h2>
+    <p>All dependencies are optional, XStream uses since version 1.4.1 by default xpp3:xpp3_min and xmlpull:xmlpull.
+    However it depends on the use case. XStream will run without dependencies using the DOM driver on all Java runtimes
+    or the StAX driver in combination with Java 6 or greater. See the list of <a 
+    href="download.html#optional-deps">optional dependencies</a>.</p>
 
     <!-- ...................................................... -->
     <h2 id="Compatibility_JVMs">Does XStream behave differently across different JVMs?</h2>
@@ -46,7 +53,8 @@
 
     <p>Currently on the Sun, Apple, HP, IBM and Blackdown 1.4 JVMs and onwards.
     Also for Hitachi, SAP and Diablo from 1.5 and onwards.
-    Support for BEA JRockit starting with R25.1.0. 
+    Support for BEA JRockit starting with R25.1.0.
+    OpenJDK 6 is also supported. 
     For all other JVMs, XStream should be used in pure Java mode.</p>
 
     <!-- ...................................................... -->
@@ -66,19 +74,31 @@
     </table>
 
     <!-- ...................................................... -->
-    <h2 id="Compatibility_Android">Can I use XStream in an Android application?</h2>
-
-	<p>XStream does work in Android 1.0, but has limited capabilities. XStream does not support enhanced mode for
-	Android. Additionally Android reports itself as implementation of JDK specification 0.9, so it is not possible to write
-	into final fields. Android also does not include the java.beans package. Therefore you cannot use the JavaBeanConverter.
-	</p>
+    <h2 id="Compatibility_XPP">Why is my application not able to create a XmlPullParser with the XppDriver since XStream 1.4?</h2>
+    
+    <p>The <a href="http://www.xmlpull.org/">XML Pull Parser API</a> defines an own mechanism to load the factory for
+    the available XPP implementation. XStream's XppDriver never used this lookup mechanism automatically before version
+    1.4, now it will. Therefore you will have to add a <a href="download.html#optional-deps">dependency to xmlpull</a>
+    if the XPP implementation does not deliver the classes on its own. This dependency is necessary for Xpp3 in
+    contrast to kXML2 that contains the classes. Use the Xpp3Driver or the KXml2Driver if you want to select one of the
+    directly supported XPP implementation on your own without using the XPP factory. Note, that the minimal version of
+    kXML2 does not support the XPP factory, but can be used by the KXml2Driver.</p>
 
     <!-- ...................................................... -->
-    <h2 id="Compatibility_Harmony">Why does XStream fail on Harmony?</h2>
+    <h2 id="Compatibility_Android">Can I use XStream in an Android application?</h2>
+
+	<p>XStream does work in Android 1.0, but is reported to have limited capabilities. Since XStream 1.4 Android is 
+	treated at least as JD 5 platform, but it e.g. does not include the java.beans package. Therefore you cannot use
+	the JavaBeanConverter. Note, that Android provides an XML Pull Parser, therefore XStream can work without
+	additional dependencies.</p>
+
+    <!-- ...................................................... -->
+    <h2 id="Compatibility_Harmony">Why does XStream fail on Apache Harmony?</h2>
 
 	<p>Since JDK 5 it is possible according the Java specification to write into final fields using reflection. This is not yet 
 	supported by Harmony and therefore the PureJavaReflectionProvider fails. We have also already investigated into
-	enhanced mode in Harmony, but the Harmony JVM currently crashes running the unit tests. It is simply not yet ready.</p>
+	enhanced mode in Harmony, but the Harmony JVM crashed running the unit tests. However, Harmony has been retired,
+	we will no longer make any efforts in this direction.</p>
 
     <!-- ...................................................... -->
     <h2 id="Compatibility_unsupported_JVM">Are there plans to provide enhanced mode support to other JVMs?</h2>
@@ -161,6 +181,9 @@
     	As a result the JVM might crash easily because of freeing unallocated memory or freeing the same memory twice. It might be possible to create a custom converter, 
     	but the data structure is really complex in this area and nobody has been investigating so far to such an extent. However, <strong>do not use the reflection converter
     	for these types! You have been warned!</strong></li>
+    	<li>Inner class types of the JDK can often vary in implementation details between JDK versions and vendors and are therefore only compatible for the same JDK. This
+    	includes	collection types returned by the methods of the Collections class that wrap another one (like unmodifiableList) or the collections that are returned by the
+    	different Map implementations for the keySet(), entrySet() and values() methods.</li>
     </ol>
 
     <!-- ...................................................... -->
@@ -181,22 +204,23 @@
     return this;
   }
 }</pre></div>
+<p>or</p>
+<div class="Source Java"><pre>class ThreadAwareComponent {
+  private transient ThreadLocal component;
+  // ...
+  private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+    in.defaultReadObject();
+    component = new ThreadLocal();
+  }
+}</pre></div>
+<p>Use the latter in class hierarchies, readResolve is not called for base classes.</p>
 
     <!-- ...................................................... -->
     <h2 id="Serialization_no_ctor_running">XStream is not calling the default constructor during deserialization.</h2>
 
     <p>This is, in fact, the same case as above. XStream uses the same mechanism as the JDK serialization. When using
     the enhanced mode with the optimized reflection API, it does not invoke the default constructor. The solution is to
-    implement the readResolve method as above:</p>
-
-<div class="Source Java"><pre>class MyExecutor {
-  private Object readResolve() {
-    // do what you need to do here
-    System.out.println("After instantiating MyExecutor");
-    // at the end returns itself
-    return this;
-  }
-}</pre></div>
+    implement the readResolve or readObject as demonstrated with the last question.</p>
 
     <!-- ...................................................... -->
     <h2 id="Serialization_collections">What do serialized collections look like?</h2>
@@ -205,8 +229,28 @@
 	<p>Note, that it is possible to configure XStream to omit the container element <i>toys</i> using implicit collections.</p>
 
     <!-- ...................................................... -->
+    <h2 id="Serialization_implicit_null">My implicit collection is suddenly null after deserialization instead of empty!</h2>
+
+	<p>By declaring a collection as implicit, the result will have no direct representation of the collection container
+	itself anymore. Therefore, if the collection was empty at serialization time, the serialized result does not
+	contain a trace of the collection anymore. At deserialization time it will therefore not know anything about the
+	collection and will not initialize it. XStream cannot decide anyway at deserialization time, if the collection was
+	empty or null.</p>
+
+    <!-- ...................................................... -->
+    <h2 id="Serialization_implicit_different_type">The type of my implicit collection is different after deserialization.</h2>
+
+	<p>By declaring a collection as implicit, the result will have no direct representation of the collection container
+	itself anymore. Therefore XStream cannot track the original type of the collection. At deserialization time it will
+	therefore look at the declaration type of the field that holds the collection and use this type's default
+	implementation, e.g. for a List this is by default an ArrayList.</p>
+
+	<p>Beware, that this also means that collections with additional information (e.g. a TreeSet with a Comparator)
+	cannot be restored, since the comparator was already omitted at serialization time.</p>
+
+    <!-- ...................................................... -->
     <h2 id="Serialization_Serializable">Do my classes have to implement Serializable if XStream is to serialize them?</h2>
-    <p>No.</p>
+    <p>No, but XStream respects the Java serialization methods even for types not declared as Serializable.</p>
 
     <!-- ...................................................... -->
     <h2 id="Serialization_proxies">Can dynamic proxies be serialized?</h2>
@@ -239,6 +283,22 @@ xstream.registerConverter(new CGLIBEnhancedConverter(xstream.getMapper(), xstrea
     <p>XStream uses this method to detect a CGLIB-enhanced proxy. Unfortunately the method is not available in the 
     cglib-2.0 version. Since this version is many years old and the method is available starting with cglib-2.0.1, please 
     consider an upgrade of the dependency, it works usually smoothly.</p>
+
+    <!-- ...................................................... -->
+    <h2 id="Serialization_Hibernate">How do I use XStream's Hibernate package to serialize my objects?</h2>
+    <p>Support of Hibernate enhanced collections and proxied types. To drop the internals of Hibernate when marshalling
+    such objects to XStream, all converters and the mapper has to be registered for the XStream instance:</p>
+<div class="Source Java"><pre>final XStream xstream = new XStream() {
+  protected MapperWrapper wrapMapper(final MapperWrapper next) {
+    return new HibernateMapper(next);
+  }
+};
+xstream.registerConverter(new HibernateProxyConverter());
+xstream.registerConverter(new HibernatePersistentCollectionConverter(xstream.getMapper()));
+xstream.registerConverter(new HibernatePersistentMapConverter(xstream.getMapper()));
+xstream.registerConverter(new HibernatePersistentSortedMapConverter(xstream.getMapper()));
+xstream.registerConverter(new HibernatePersistentSortedSetConverter(xstream.getMapper()));
+</pre></div>
 
     <!-- ...................................................... -->
     <h2 id="Serialization_system_attributes">My attributes are interpreted by XStream itself and cause unexpected behavior</h2>
@@ -308,10 +368,10 @@ xstream = new XStream(new Sun14ReflectionProvider(new FieldDictionary(sorter)));
     <h2 id="XML_respect_encoding">Why does XStream not respect the encoding in the XML declaration?</h2>
 
     <p>XStream architecture is based on IO Readers and Writers, while the XML declaration is the responsibility of XML
-    parsers.  XStream all <a href="javadoc/com/thoughtworks/xstream/io/HierarchicalStreamDriver.html">HierarchicalStreamDriver</a>
-    implementation respect the encoding since version 1.3, but only if you provide an 
-    <a href="http://java.sun.com/j2se/1.4.2/docs/api/java/io/InputStream.html">InputStream</a>. If XStream consumes a 
-    <a href="http://java.sun.com/j2se/1.4.2/docs/api/java/io/Reader.html">Reader</a> you have to initialize the reader with 
+    parsers.  All <a href="javadoc/com/thoughtworks/xstream/io/HierarchicalStreamDriver.html">HierarchicalStreamDriver</a>
+    implementations respect the encoding since version 1.3, but only if you provide an 
+    <a href="http://java.sun.com/j2se/1.5.0/docs/api/java/io/InputStream.html">InputStream</a>. If XStream consumes a 
+    <a href="http://java.sun.com/j2se/1.5.0/docs/api/java/io/Reader.html">Reader</a> you have to initialize the reader with 
     the appropriate encoding yourself, since it is now the reader's task to perform the encoding and no XML parser can
     change the encoding of a Reader and any encoding definition in the XML header will be ignored.</p>
 
@@ -326,27 +386,31 @@ xstream = new XStream(new Sun14ReflectionProvider(new FieldDictionary(sorter)));
 
     <p>XStream does no character encoding by itself, it relies on the configuration of the underlying XML writer.
     By default it uses its own PrettyPrintWriter which writes into the default encoding of the current locale. To write
-    UTF-8 you have to provide a <a href="http://java.sun.com/j2se/1.4.2/docs/api/java/io/Writer.html">Writer</a>
+    UTF-8 you have to provide a <a href="http://java.sun.com/j2se/1.5.0/docs/api/java/io/Writer.html">Writer</a>
     with the appropriate encoding yourself.</p>
 
     <!-- ...................................................... -->
     <h2 id="XML_double_underscores">Why do field names suddenly have double underscores in the generated XML?</h2>
 
-    <p>XStream maps Java class names and field names to XML tags or attributes. Unfortunately this mapping cannot
-    be 1:1, since some identifiers of Java contain a dollar sign which is invalid in XML names. Therefore XStream uses an
-    <a href="javadoc/com/thoughtworks/xstream/io/xml/XmlFriendlyReplacer.html">XmlFriendlyReplacer</a> to replace
-    this character with a replacement. By default this replacement uses an underscore and therefore the replacer must
-    escape the underscore itself also. You may provide a different configured instance of the XmlFriendlyReplacer or a
-    complete own implementation, but you must ensure, that the resulting names are valid for XML.</p>
+    <p>XStream maps Java class names and field names to XML tags or attributes.  Unfortunately this mapping cannot
+    be 1:1, since some characters used for <a href="http://java.sun.com/docs/books/jls/third_edition/html/lexical.html#3.8">
+    identifiers in Java</a> are invalid in <a href="http://www.w3.org/TR/REC-xml/#dt-name">XML names</a>.  Therefore
+    XStream uses an <a href="javadoc/com/thoughtworks/xstream/io/xml/XmlFriendlyNameCoder.html">XmlFriendlyNameCoder</a>
+    to replace these characters with a replacement.  By default this
+    <a href="javadoc/com/thoughtworks/xstream/io/naming/NameCoder.html">NameCoder</a> uses an underscore as escape
+    character and has therefore to escape the underscore itself also.  You may provide a different configured instance
+    of the XmlFriendlyNameCoder or a complete different implementation like the 
+    <a href="javadoc/com/thoughtworks/xstream/io/xml/XmlFriendlyNameCoder.html">NoNameCoder</a> to prevent name coding
+    at all.  However it is your responsibility then to ensure, that the resulting names are valid for XML.</p>
 
     <!-- ...................................................... -->
     <h2 id="XML_unmarshalling_fails">XStream fails to unmarshal my given XML and I do not know why?</h2>
 
-    <p>By default XStream is written for persistence i.e. it will read the XML it can write. If you have to transform a given
-    XML into an object graph, you should go the other way round. Use XStream to transfer your objects into XML. If the 
-    written XML matches your schema, XStream is also able to read it. This way is much easier, since you can spot the 
-    differences in the XML much more easy than to interpret the exceptions XStream will throw if it cannot match the XML
-    into your objects.</p>
+    <p>By default XStream is written for persistence i.e. it will read the XML it can write.  If you have to transform
+    a given XML into an object graph, you should go the other way round. Use XStream to transfer your objects into XML.
+    If the written XML matches your schema, XStream is also able to read it.  This way is much easier, since you can
+    spot the differences in the XML much more easy than to interpret the exceptions XStream will throw if it cannot
+    match the XML into your objects.</p>
 
     <!-- ...................................................... -->
     <h2 id="XML_null_char">My parser claims the &amp;#x0; character to be invalid, but it was written with XStream!</h2>
@@ -374,12 +438,12 @@ xstream = new XStream(new Sun14ReflectionProvider(new FieldDictionary(sorter)));
     of XStream to write an attribute (using XStream.useAttributeFor() or @XStreamAsAttribute) is simply ignored.</p>
 
     <!-- ...................................................... -->
-    <h2 id="XML_attribute_normalization">Why are whitespace characters missing in my attribute values after deserialization?</h2>
+    <h2 id="XML_attribute_normalization">Why are whitespace characters wrong in my attribute values after deserialization?</h2>
 
     <p>This is part of the XML specification and a required functionality for any XML parser called
     <a href="http://www.w3.org/TR/2006/REC-xml-20060816/#AVNormalize">attribute value normalization</a>. It cannot
-    be influenced by XStream. Do not use attributes if your values contain leading or trailing whitespaces, other whitespaces
-    than blanks, or sequences of whitespaces.</p>
+    be influenced by XStream.  A compliant XML parser will replace by default real tab, carriage return and line feed
+    characters with normal spaces.  If you want to keep these characters you will have to encode them with entities.</p>
 
     <!-- ...................................................... -->
     <h2 id="XML_namespaces">Why does XStream not have any namespace support?</h2>
@@ -388,6 +452,27 @@ xstream = new XStream(new Sun14ReflectionProvider(new FieldDictionary(sorter)));
     within XStream to use those. Basically namespaces must be supported individually for the different XML parsers and the
     only support for namespaces that has currently been implemented in XStream is for the StAX paser. Therefore use and
     configure the StaxDriver of XStream to use namespaces.</p>
+
+    <!-- ...................................................... -->
+    <h2 id="XML_xpath_limits">My XML contains XPath expressions in the references, but they seem not to work?</h2>
+
+    <p>XStream generates only XPath compliant expressions. These have a very limited syntax and they are the only ones
+    that can be interpreted at deserialization again, since XStream does not use an XPath interpreter. Therefore there
+    is no support for attribute selectors, qualified element access with axis names or functions. For real XPath
+    support you will have to implement your own MarshallingStrategy.</p>
+
+    <!-- ...................................................... -->
+    <h2 id="XML_xpath_nodelist">The XPath expressions in the references do select a list, but not a single node!</h2>
+
+    <p>Yes, this is right. However, the result type of an 
+    <a href="http://java.sun.com/j2se/1.5.0/docs/api/javax/xml/xpath/XPathExpression.html">XPath expression</a>
+    evaluation can be defined. A node result from a node list is the lists first node, therefore the XPath of XStream
+    is compliant. Since XStream does not use a real XPath engine, you do not have to worry about memory consumption or
+    wasted evaluation time, XStream will always operate on a single node anyway. Since XStream 1.4 you can force
+    XStream to write XPath expressions that select explicit the single node by using the new modes
+    XStream.SINGLE_NODE_XPATH_ABSOLUTE_REFERENCES or SINGLE_NODE_XPATH_RELATIVE_REFERENCES. Instead of generating a
+    path like "/doc/list/elem/field" XStream will then generate "/doc[1]/list[1]/elem[1]/field[1]". The two notations
+    are transparent at deserialization time.</p>
 
 
     <!-- ****************************************************** -->
@@ -401,6 +486,11 @@ xstream = new XStream(new Sun14ReflectionProvider(new FieldDictionary(sorter)));
 	<a href="javadoc/com/thoughtworks/xstream/io/xml/StaxDriver.html">StaxDriver</a>, while the 
 	<a href="javadoc/com/thoughtworks/xstream/io/json/JsonHierarchicalStreamDriver.html">JsonHierarchicalStreamDriver</a>
 	uses an own more flexible implementation, but can only be used to generate JSON, deserialization is not implemented.</p>
+
+    <h2 id="JSON_Jettison_version">Which versions of Jettison are supported?</h2>
+
+	<p>Users of Java 5 or higher can use Jettison 1.2 or higher, users of Java 1.4.2 have to use Jettison 1.0.1.  Java
+	1.3 and Jettison 1.1 is not supported.</p>
 
     <h2 id="JSON_deserialize_top_level_array">Why is it not possible to deserialize a JSON string starting with an array?</h2>
 
@@ -429,11 +519,12 @@ System.out.println(writer.toString());
 
     <h2 id="JSON_limitations">What limitations has XStream's JSON support?</h2>
 
-	<p>JSON represents a very simple data model for easy data transfer. Especially it has no equivalent for XML
+	<p>JSON represents a very simple data model for easy data transfer.  Especially it has no equivalent for XML
 	attributes.  Those are written with a leading &quot;@&quot; character, but this is not always possible without
 	violating the syntax (e.g. for array types).  Those may silently dropped (and makes it therefore difficult to
-	implement deserialization). References are another issue in the serialized object graph, since JSON has no
-	possibility to express such a construct.  You should therefore always set the NO_REFERENCES mode of XStream.</p>
+	implement deserialization).  References are another issue in the serialized object graph, since JSON has no
+	possibility to express such a construct.  You should therefore always set the NO_REFERENCES mode of XStream.
+	Additionally you cannot use implicit collections, since the properties in a JSON object must have unique names.</p>
 
     <h2 id="JSON_encoding">Why are there invalid characters in my JSON representation?</h2>
 
@@ -476,7 +567,7 @@ XStream xstream = new XStream(driver);
     <h2 id="Other_Products_XMLBeanEncoder">How does XStream compare to java.beans.XMLEncoder?</h2>
 
     <p>XStream is designed for serializing <i>objects</i> using internal fields, whereas
-    <a href="http://java.sun.com/j2se/1.4.2/docs/api/java/beans/XMLEncoder.html">XMLEncoder</a> is designed for
+    <a href="http://java.sun.com/j2se/1.5.0/docs/api/java/beans/XMLEncoder.html">XMLEncoder</a> is designed for
     serializing <i>JavaBeans</i> using public API methods (typically in the form
     of <code>getXXX()</code>, <code>setXXX()</code>, <code>addXXX()</code> and <code>removeXXX()</code> methods.</p>
 
@@ -521,9 +612,10 @@ XStream xstream = new XStream(driver);
     <h2 id="Scalability_Thread_safety">Is XStream thread safe?</h2>
 
     <p>Yes. Once the XStream instance has been created and configured, it may be shared across multiple threads
-    allowing objects to be serialized/deserialized concurrently (unless you enable the auto.detection and processing of
-    annotations). Actually the creation and initialization of XStream is quite expensive, therefore it is recommended to
-    keep the XStream instance itself.</p>
+    allowing objects to be serialized/deserialized concurrently (unless you enable the
+    <a href="annotations-tutorial.html#AutoDetect">auto-detection</a> to process annotations on-the-fly).  Actually the
+    creation and initialization of XStream is quite expensive, therefore it is recommended to keep the XStream instance
+    itself.</p>
 
     <!-- ...................................................... -->
     <h2 id="Scalability_Memory">How much memory does XStream consume?</h2>
@@ -543,8 +635,8 @@ XStream xstream = new XStream(driver);
     <li>References: By default XStream supports references to the same object in an object graph. This implies that XStream
     keeps track of all serialized and deserialized objects internally. These references are kept with WeakReferences, so that the
     memory can be freed as soon as nobody references these objects anymore.</li>
-    <li>XML values: Any tag and attribute value that is converted into a Java String in the object graph will use the same String
-    instance.</li>
+    <li>XML values: Any tag and attribute value that is converted into a Java String in the object graph will use by default the
+    same String instance unless it exceeds 38 characters (length of a UUID string representation).</li>
     <li>XStream caches: To increase performance XStream caches quite a lot like classes, converters to use, aliasing, tag names.
     All those caches make usage of WeakReferences or will exist only while marshalling one object graph resp. unmarshalling one
     input stream.</li>

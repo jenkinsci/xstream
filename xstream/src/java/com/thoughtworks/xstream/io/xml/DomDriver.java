@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -11,6 +11,7 @@
  */
 package com.thoughtworks.xstream.io.xml;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -18,6 +19,7 @@ import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
+import java.net.URL;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -31,6 +33,7 @@ import org.xml.sax.SAXException;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.StreamException;
+import com.thoughtworks.xstream.io.naming.NameCoder;
 
 
 public class DomDriver extends AbstractXmlDriver {
@@ -50,24 +53,40 @@ public class DomDriver extends AbstractXmlDriver {
      * encoding attribute of the XML header though.
      */
     public DomDriver(String encoding) {
-        this(encoding, new XmlFriendlyReplacer());
+        this(encoding, new XmlFriendlyNameCoder());
     }
 
     /**
-     * @since 1.2
+     * @since 1.4
      */
-    public DomDriver(String encoding, XmlFriendlyReplacer replacer) {
-        super(replacer);
+    public DomDriver(String encoding, NameCoder nameCoder) {
+        super(nameCoder);
         documentBuilderFactory = DocumentBuilderFactory.newInstance();
         this.encoding = encoding;
     }
 
-    public HierarchicalStreamReader createReader(Reader xml) {
-        return createReader(new InputSource(xml));
+    /**
+     * @since 1.2
+     * @deprecated As of 1.4, use {@link #DomDriver(String, NameCoder)} instead.
+     */
+    public DomDriver(String encoding, XmlFriendlyReplacer replacer) {
+        this(encoding, (NameCoder)replacer);
     }
 
-    public HierarchicalStreamReader createReader(InputStream xml) {
-        return createReader(new InputSource(xml));
+    public HierarchicalStreamReader createReader(Reader in) {
+        return createReader(new InputSource(in));
+    }
+
+    public HierarchicalStreamReader createReader(InputStream in) {
+        return createReader(new InputSource(in));
+    }
+
+    public HierarchicalStreamReader createReader(URL in) {
+        return createReader(new InputSource(in.toExternalForm()));
+    }
+
+    public HierarchicalStreamReader createReader(File in) {
+        return createReader(new InputSource(in.toURI().toASCIIString()));
     }
 
     private HierarchicalStreamReader createReader(InputSource source) {
@@ -77,7 +96,7 @@ public class DomDriver extends AbstractXmlDriver {
                 source.setEncoding(encoding);
             }
             Document document = documentBuilder.parse(source);
-            return new DomReader(document, xmlFriendlyReplacer());
+            return new DomReader(document, getNameCoder());
         } catch (FactoryConfigurationError e) {
             throw new StreamException(e);
         } catch (ParserConfigurationException e) {
@@ -90,7 +109,7 @@ public class DomDriver extends AbstractXmlDriver {
     }
 
     public HierarchicalStreamWriter createWriter(Writer out) {
-        return new PrettyPrintWriter(out, xmlFriendlyReplacer());
+        return new PrettyPrintWriter(out, getNameCoder());
     }
 
     public HierarchicalStreamWriter createWriter(OutputStream out) {

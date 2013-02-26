@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -17,10 +17,9 @@ import java.util.Map;
 /**
  * Maintains the current {@link Path} as a stream is moved through.
  *
- * <p>Can be linked to a <a href="../HierarchicalStreamWriter.html">HierarchicalStreamWriter</a> or
- * <a href="../HierarchicalStreamReader.html">HierarchicalStreamReader</a> by wrapping them with a
- * <a href="PathTrackingWriter.html">PathTrackingWriter</a> or
- * <a href="PathTrackingReader.html">PathTrackingReader</a>.</p>
+ * <p>Can be linked to a {@link com.thoughtworks.xstream.io.HierarchicalStreamWriter} or
+ * {@link com.thoughtworks.xstream.io.HierarchicalStreamReader} by wrapping them with a
+ * {@link PathTrackingWriter} or {@link PathTrackingReader}.</p>
  *
  * <h3>Example</h3>
  *
@@ -97,15 +96,55 @@ public class PathTracker {
      */
     public void popElement() {
         indexMapStack[pointer] = null;
+        pathStack[pointer] = null;
         currentPath = null;
         pointer--;
     }
+    
+    /**
+     * Get the last path element from the stack.
+     * 
+     * @return the name of the path element
+     * @since 1.4.2
+     */
+    public String peekElement() {
+        return peekElement(0);
+    }
+    
+    /**
+     * Get a path element from the stack.
+     * 
+     * @param i path index
+     * @return the name of the path element
+     * @since 1.4.2
+     * @throws ArrayIndexOutOfBoundsException if the index is &gt;= 0 or &lt;= -depth() 
+     */
+    public String peekElement(int i) {
+        if (i < -pointer || i > 0) {
+            throw new ArrayIndexOutOfBoundsException(i);
+        }
+        int idx = pointer + i - 1;
+        final String name; 
+        Integer integer = ((Integer) indexMapStack[idx].get(pathStack[idx]));
+        int index = integer.intValue();
+        if (index > 1) {
+            StringBuffer chunk = new StringBuffer(pathStack[idx].length() + 6);
+            chunk.append(pathStack[idx]).append('[').append(index).append(']');
+            name = chunk.toString();
+        } else {
+            name = pathStack[idx];
+        }
+        return name;
+    }
 
     /**
-     * @deprecated Use {@link #getPath()} instead.
+     * Get the depth of the stack.
+     * 
+     * @return the stack depth
+     * @since 1.4.2
      */
-    public String getCurrentPath() {
-        return getPath().toString();
+    public int depth() {
+        return pointer; 
     }
 
     private void resizeStacks(int newCapacity) {
@@ -126,16 +165,9 @@ public class PathTracker {
         if (currentPath == null) {
             String[] chunks = new String[pointer + 1];
             chunks[0] = "";
-            for (int i = 0; i < pointer; i++) {
-                Integer integer = ((Integer) indexMapStack[i].get(pathStack[i]));
-                int index = integer.intValue();
-                if (index > 1) {
-                    StringBuffer chunk = new StringBuffer(pathStack[i].length() + 6);
-                    chunk.append(pathStack[i]).append('[').append(index).append(']');
-                    chunks[i + 1] = chunk.toString();
-                } else {
-                    chunks[i + 1] = pathStack[i];
-                }
+            for (int i = -pointer; ++i <= 0; ) {
+                final String name = peekElement(i);
+                chunks[i + pointer] = name;
             }
             currentPath = new Path(chunks);
         }

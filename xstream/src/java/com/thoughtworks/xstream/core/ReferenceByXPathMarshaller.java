@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -11,7 +11,6 @@
  */
 package com.thoughtworks.xstream.core;
 
-import com.thoughtworks.xstream.alias.ClassMapper;
 import com.thoughtworks.xstream.converters.ConverterLookup;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.path.Path;
@@ -26,15 +25,10 @@ public class ReferenceByXPathMarshaller extends AbstractReferenceMarshaller {
         this.mode = mode;
     }
 
-    /**
-     * @deprecated As of 1.2, use {@link #ReferenceByXPathMarshaller(HierarchicalStreamWriter, ConverterLookup, Mapper, int)}
-     */
-    public ReferenceByXPathMarshaller(HierarchicalStreamWriter writer, ConverterLookup converterLookup, ClassMapper classMapper) {
-        this(writer, converterLookup, classMapper, ReferenceByXPathMarshallingStrategy.RELATIVE);
-    }
-
     protected String createReference(Path currentPath, Object existingReferenceKey) {
-        return (mode == ReferenceByXPathMarshallingStrategy.RELATIVE ? currentPath.relativeTo((Path)existingReferenceKey) : existingReferenceKey).toString();
+        Path existingPath = (Path)existingReferenceKey;
+        Path referencePath = (mode & ReferenceByXPathMarshallingStrategy.ABSOLUTE) > 0 ? existingPath : currentPath.relativeTo(existingPath);
+        return (mode & ReferenceByXPathMarshallingStrategy.SINGLE_NODE) > 0 ? referencePath.explicit() : referencePath.toString();
     }
 
     protected Object createReferenceKey(Path currentPath, Object item) {

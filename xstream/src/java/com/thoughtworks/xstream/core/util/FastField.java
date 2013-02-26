@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 XStream Committers.
+ * Copyright (C) 2008, 2010 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -12,18 +12,22 @@ package com.thoughtworks.xstream.core.util;
 
 public final class FastField {
     private final String name;
-    private final Class declaringClass;
+    private final String declaringClass;
 
-    public FastField(Class definedIn, String name) {
+    public FastField(String definedIn, String name) {
         this.name = name;
         this.declaringClass = definedIn;
+    }
+
+    public FastField(Class definedIn, String name) {
+        this(definedIn == null ? null : definedIn.getName(), name);
     }
 
     public String getName() {
         return this.name;
     }
 
-    public Class getDeclaringClass() {
+    public String getDeclaringClass() {
         return this.declaringClass;
     }
 
@@ -31,22 +35,26 @@ public final class FastField {
         if (this == obj) {
             return true;
         }
-        if (this == null) {
+        if (obj == null) {
             return false;
         }
-        if (obj.getClass() == FastField.class) {
+        if (obj instanceof FastField) {
             final FastField field = (FastField)obj;
+            if ((declaringClass == null && field.declaringClass != null)
+                || (declaringClass != null && field.declaringClass == null)) {
+                return false;
+            }
             return name.equals(field.getName())
-                && declaringClass.equals(field.getDeclaringClass());
+                && (declaringClass == null || declaringClass.equals(field.getDeclaringClass()));
         }
         return false;
     }
 
     public int hashCode() {
-        return name.hashCode() ^ declaringClass.hashCode();
+        return name.hashCode() ^ (declaringClass == null ? 0 : declaringClass.hashCode());
     }
 
     public String toString() {
-        return declaringClass.getName() + "[" + name + "]";
+        return (declaringClass == null ? "" : declaringClass + ".") + name;
     }
 }

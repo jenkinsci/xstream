@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -11,17 +11,20 @@
  */
 package com.thoughtworks.xstream.io.json;
 
-import com.thoughtworks.xstream.io.HierarchicalStreamDriver;
+import com.thoughtworks.xstream.io.AbstractDriver;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.StreamException;
+import com.thoughtworks.xstream.io.naming.NameCoder;
 
+import java.io.File;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
+import java.net.URL;
 
 /**
  * A driver for JSON that writes optimized JSON format, but is not able to deserialize the result.
@@ -29,13 +32,38 @@ import java.io.Writer;
  * @author Paul Hammant
  * @since 1.2
  */
-public class JsonHierarchicalStreamDriver implements HierarchicalStreamDriver {
-    
+public class JsonHierarchicalStreamDriver extends AbstractDriver {
+
+    /**
+     * Construct a JsonHierarchicalStreamDriver.
+     */
+    public JsonHierarchicalStreamDriver() {
+        super();
+    }
+
+    /**
+     * Construct a JsonHierarchicalStreamDriver with name coding.
+     * 
+     * @param nameCoder the coder to encode and decode the JSON labels.
+     * @since 1.4.2
+     */
+    public JsonHierarchicalStreamDriver(NameCoder nameCoder) {
+        super(nameCoder);
+    }
+
     public HierarchicalStreamReader createReader(Reader in) {
         throw new UnsupportedOperationException("The JsonHierarchicalStreamDriver can only write JSON");
     }
 
     public HierarchicalStreamReader createReader(InputStream in) {
+        throw new UnsupportedOperationException("The JsonHierarchicalStreamDriver can only write JSON");
+    }
+
+    public HierarchicalStreamReader createReader(URL in) {
+        throw new UnsupportedOperationException("The JsonHierarchicalStreamDriver can only write JSON");
+    }
+
+    public HierarchicalStreamReader createReader(File in) {
         throw new UnsupportedOperationException("The JsonHierarchicalStreamDriver can only write JSON");
     }
 

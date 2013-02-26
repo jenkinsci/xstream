@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -11,11 +11,17 @@
  */
 package com.thoughtworks.acceptance;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedList;
+
 import com.thoughtworks.acceptance.objects.Software;
 import com.thoughtworks.acceptance.objects.StandardObject;
+import com.thoughtworks.acceptance.someobjects.WithList;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.converters.reflection.PureJavaReflectionProvider;
 import com.thoughtworks.xstream.io.xml.DomDriver;
+import com.thoughtworks.xstream.mapper.CannotResolveClassException;
 import com.thoughtworks.xstream.mapper.DefaultMapper;
 import com.thoughtworks.xstream.mapper.Mapper;
 import com.thoughtworks.xstream.mapper.MapperWrapper;
@@ -157,5 +163,41 @@ public class CustomMapperTest extends AbstractAcceptanceTest {
         Software out = (Software) xstream.fromXML(expectedXml);
         assertEquals("Joe", out.vendor);
         assertEquals("XStream", out.name);
+    }
+
+    public void testInjectingReplacements() {
+        XStream xstream = new XStream() {
+
+            protected MapperWrapper wrapMapper(MapperWrapper next) {
+                return new MapperWrapper(next) {
+                    public Class realClass(String elementName) {
+                        try {
+                            return super.realClass(elementName);
+
+                        } catch (CannotResolveClassException e) {
+                            if (elementName.endsWith("oo")) {
+                                return Integer.class;
+                            }
+                            if (elementName.equals("UnknownList")) {
+                                return LinkedList.class;
+                            }
+                            throw e;
+                        }
+                    }
+                    
+                };
+            }
+
+        };
+        xstream.alias("wl", WithList.class);
+        WithList wl = (WithList)xstream.fromXML("" 
+                + "<wl>\n" 
+                + "  <things class='UnknownList'>\n" 
+                + "    <foo>1</foo>\n" 
+                + "    <cocoo>2</cocoo>\n" 
+                + "  </things>\n" 
+                + "</wl>");
+        assertEquals(new ArrayList(Arrays.asList(new Integer[]{new Integer(1), new Integer(2)})), wl.things);
+        assertTrue(wl.things instanceof LinkedList);
     }
 }

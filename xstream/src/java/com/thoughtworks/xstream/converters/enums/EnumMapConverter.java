@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -29,7 +29,9 @@ import java.util.EnumMap;
 import java.lang.reflect.Field;
 
 /**
- * Serializes an Java 5 EnumMap, including the type of Enum it's for.
+ * Serializes an Java 5 EnumMap, including the type of Enum it's for. If a SecurityManager is set, the converter will only work with permissions
+ * for SecurityManager.checkPackageAccess, SecurityManager.checkMemberAccess(this, EnumSet.MEMBER)
+ * and ReflectPermission("suppressAccessChecks").
  *
  * @author Joe Walnes
  */
@@ -37,19 +39,24 @@ public class EnumMapConverter extends MapConverter {
 
     private final static Field typeField;
     static {
-        // field name is "keyType" in Sun JDK, but different in IKVM 
+        // field name is "keyType" in Sun JDK, but different in IKVM
         Field assumedTypeField = null;
-        Field[] fields = EnumMap.class.getDeclaredFields();
-        for (int i = 0; i < fields.length; i++) {
-            if (fields[i].getType() == Class.class) {
-                // take the fist member of type "Class"
-                assumedTypeField = fields[i];
-                assumedTypeField.setAccessible(true);
-                break;
+        try {
+            Field[] fields = EnumMap.class.getDeclaredFields();
+            for (int i = 0; i < fields.length; i++ ) {
+                if (fields[i].getType() == Class.class) {
+                    // take the fist member of type "Class"
+                    assumedTypeField = fields[i];
+                    assumedTypeField.setAccessible(true);
+                    break;
+                }
             }
-        }
-        if (assumedTypeField == null) {
-            throw new ExceptionInInitializerError("Cannot detect element type of EnumMap");
+            if (assumedTypeField == null) {
+                throw new ExceptionInInitializerError("Cannot detect key type of EnumMap");
+            }
+
+        } catch (SecurityException ex) {
+            // ignore, no access possible with current SecurityManager
         }
         typeField = assumedTypeField;
     }
@@ -59,7 +66,7 @@ public class EnumMapConverter extends MapConverter {
     }
 
     public boolean canConvert(Class type) {
-        return type == EnumMap.class;
+        return typeField != null && type == EnumMap.class;
     }
 
     public void marshal(Object source, HierarchicalStreamWriter writer, MarshallingContext context) {
@@ -71,6 +78,7 @@ public class EnumMapConverter extends MapConverter {
         super.marshal(source, writer, context);
     }
 
+    @SuppressWarnings("unchecked")
     public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
         String attributeName = mapper().aliasForSystemAttribute("enum-type");
         if (attributeName == null) {

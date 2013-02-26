@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2010, 2011 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -12,9 +12,6 @@
 package com.thoughtworks.xstream.core.util;
 
 import junit.framework.TestCase;
-
-import java.lang.reflect.Field;
-
 
 public class ObjectIdDictionaryTest extends TestCase {
 
@@ -41,56 +38,24 @@ public class ObjectIdDictionaryTest extends TestCase {
         assertEquals("id b", dict.lookupId(b));
     }
 
-    public void testEnforceSameSystemHashCodeForGCedObjects()
-        throws NoSuchFieldException, IllegalAccessException {
-        final Field actionCounter = ObjectIdDictionary.class.getDeclaredField("counter");
-        actionCounter.setAccessible(true);
+    public void testEntriesAreGarbageCollected() throws InterruptedException {
         final ObjectIdDictionary dict = new ObjectIdDictionary();
-        actionCounter.setInt(dict, 1);
-
-        final StringBuffer memInfo = new StringBuffer("JVM: ");
-        memInfo.append(System.getProperty("java.version"));
-        memInfo.append("\nOS: ");
-        memInfo.append(System.getProperty("os.name"));
-        memInfo.append(" / ");
-        memInfo.append(System.getProperty("os.arch"));
-        memInfo.append(" / ");
-        memInfo.append(System.getProperty("os.version"));
-        memInfo.append("\nMemoryInfo:\n");
-        memInfo.append(memoryInfo());
-        memInfo.append('\n');
 
         int counter = 0;
-        for (; actionCounter.getInt(dict) != 0; ++counter) {
-            final String s = new String("JUnit ") + counter; // enforce new object
+        for (; counter < 1000; ++counter) {
+            final String s = new String("JUnit " + counter); // enforce new object
             assertFalse("Failed in (" + counter + ")", dict.containsId(s));
             dict.associateId(s, "X");
-            if (counter % 4000 == 3999) {
+            if (counter % 50 == 49) {
                 System.gc();
-                memInfo.append("\nMemoryInfo:\n");
-                memInfo.append(memoryInfo());
+                Thread.sleep(10);
             }
         }
-        memInfo.append("\nMemoryInfo:\n");
-        memInfo.append(memoryInfo());
+        int size = dict.size();
         assertTrue("Dictionary did not shrink; "
             + counter
             + " distinct objects; "
-            + dict.size()
-            + " size; "
-            + memInfo, dict.size() < 1100);
-    }
-
-    private String memoryInfo() {
-        final Runtime runtime = Runtime.getRuntime();
-        final StringBuffer buffer = new StringBuffer("Memory: ");
-        // not available in JDK 1.3
-        // buffer.append(runtime.maxMemory());
-        // buffer.append(" max / ");
-        buffer.append(runtime.freeMemory());
-        buffer.append(" free / ");
-        buffer.append(runtime.totalMemory());
-        buffer.append(" total");
-        return buffer.toString();
+            + size
+            + " size", dict.size() < 250);
     }
 }

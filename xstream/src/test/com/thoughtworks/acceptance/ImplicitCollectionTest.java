@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2011, 2012 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -11,7 +11,6 @@
  */
 package com.thoughtworks.acceptance;
 
-import com.thoughtworks.acceptance.objects.SampleLists;
 import com.thoughtworks.acceptance.objects.StandardObject;
 import com.thoughtworks.xstream.InitializationException;
 
@@ -58,7 +57,6 @@ public class ImplicitCollectionTest extends AbstractAcceptanceTest {
         xstream.alias("room", Room.class);
         xstream.alias("house", House.class);
         xstream.alias("person", Person.class);
-        xstream.alias("sample", SampleLists.class);
     }
 
     public void testWithout() {
@@ -131,7 +129,7 @@ public class ImplicitCollectionTest extends AbstractAcceptanceTest {
         assertBothWays(farm, expected);
     }
 
-    public void testSupportsInheritedAndDirectDelcaredImplicitCollectionAtOnce() {
+    public void testSupportsInheritedAndDirectDeclaredImplicitCollectionAtOnce() {
         xstream.alias("MEGA-farm", MegaFarm.class);
 
         MegaFarm farm = new MegaFarm(100); // subclass
@@ -159,6 +157,34 @@ public class ImplicitCollectionTest extends AbstractAcceptanceTest {
         assertBothWays(farm, expected);
     }
 
+    public void testInheritedAndDirectDeclaredImplicitCollectionAtOnceIsNotDeclarationSequenceDependent() {
+        xstream.alias("MEGA-farm", MegaFarm.class);
+
+        MegaFarm farm = new MegaFarm(100); // subclass
+        farm.add(new Animal("Cow"));
+        farm.add(new Animal("Sheep"));
+        farm.names = new ArrayList();
+        farm.names.add("McDonald");
+        farm.names.add("Ponte Rosa");
+        
+        String expected = "" +
+                "<MEGA-farm>\n" +
+                "  <size>100</size>\n" +
+                "  <animal>\n" +
+                "    <name>Cow</name>\n" +
+                "  </animal>\n" +
+                "  <animal>\n" +
+                "    <name>Sheep</name>\n" +
+                "  </animal>\n" +
+                "  <name>McDonald</name>\n" +
+                "  <name>Ponte Rosa</name>\n" +
+                "</MEGA-farm>";
+
+        xstream.addImplicitCollection(MegaFarm.class, "names", "name", String.class);
+        xstream.addImplicitCollection(Farm.class, "animals");
+        assertBothWays(farm, expected);
+    }
+
     public void testAllowsSubclassToOverrideImplicitCollectionInSuperclass() {
         xstream.alias("MEGA-farm", MegaFarm.class);
 
@@ -179,6 +205,52 @@ public class ImplicitCollectionTest extends AbstractAcceptanceTest {
 
         xstream.addImplicitCollection(MegaFarm.class, "animals");
         assertBothWays(farm, expected);
+    }
+
+    public void testAllowDifferentImplicitCollectionDefinitionsInSubclass() {
+        xstream.alias("MEGA-farm", MegaFarm.class);
+
+        Farm farm = new Farm(10);
+        farm.add(new Animal("Cod"));
+        farm.add(new Animal("Salmon"));
+        MegaFarm megaFarm = new MegaFarm(100); // subclass
+        megaFarm.add(new Animal("Cow"));
+        megaFarm.add(new Animal("Sheep"));
+        megaFarm.names = new ArrayList();
+        megaFarm.names.add("McDonald");
+        megaFarm.names.add("Ponte Rosa");
+        
+        List list = new ArrayList();
+        list.add(farm);
+        list.add(megaFarm);
+        String expected = "" +
+                "<list>\n" +
+                "  <farm>\n" +
+                "    <size>10</size>\n" +
+                "    <fish>\n" +
+                "      <name>Cod</name>\n" +
+                "    </fish>\n" +
+                "    <fish>\n" +
+                "      <name>Salmon</name>\n" +
+                "    </fish>\n" +
+                "  </farm>\n" +
+                "  <MEGA-farm>\n" +
+                "    <size>100</size>\n" +
+                "    <animal>\n" +
+                "      <name>Cow</name>\n" +
+                "    </animal>\n" +
+                "    <animal>\n" +
+                "      <name>Sheep</name>\n" +
+                "    </animal>\n" +
+                "    <name>McDonald</name>\n" +
+                "    <name>Ponte Rosa</name>\n" +
+                "  </MEGA-farm>\n" +
+                "</list>";
+
+        xstream.addImplicitCollection(Farm.class, "animals", "fish", Animal.class);
+        xstream.addImplicitCollection(MegaFarm.class, "animals");
+        xstream.addImplicitCollection(MegaFarm.class, "names", "name", String.class);
+        assertBothWays(list, expected);
     }
 
     public static class House extends StandardObject {
@@ -266,9 +338,24 @@ public class ImplicitCollectionTest extends AbstractAcceptanceTest {
         assertEquals(house.getPeople(), serializedHouse.getPeople());
         assertEquals(house.getRooms(), serializedHouse.getRooms());
     }
+    
+    public void testWithEMPTY_LIST() {
+        House house = new House();
+        house.people = Collections.EMPTY_LIST;
+        house.rooms = Collections.EMPTY_LIST;
+        xstream.addImplicitCollection(House.class, "rooms", Room.class);
+        xstream.addImplicitCollection(House.class, "people", Person.class);
+        assertEquals("<house/>", xstream.toXML(house));
+    }
 
     public static class Zoo extends StandardObject {
-        private Set animals = new HashSet();
+        private Set animals;
+        public Zoo() {
+            this(new HashSet());
+        }
+        public Zoo(Set set) {
+            animals = set;
+        }
         public void add(Animal animal) {
             animals.add(animal);
         }
@@ -310,6 +397,26 @@ public class ImplicitCollectionTest extends AbstractAcceptanceTest {
         assertTrue("Collection was a " + zoo.animals.getClass().getName(), zoo.animals instanceof TreeSet);
     }
 
+    public void testWithSortedSet() {
+        Zoo zoo = new Zoo(new TreeSet());
+        zoo.add(new Animal("Lion"));
+        zoo.add(new Animal("Ape"));
+
+        String expected = "" +
+                "<zoo>\n" +
+                "  <animal>\n" +
+                "    <name>Ape</name>\n" +
+                "  </animal>\n" +
+                "  <animal>\n" +
+                "    <name>Lion</name>\n" +
+                "  </animal>\n" +
+                "</zoo>";
+
+        xstream.addImplicitCollection(Zoo.class, "animals");
+        xstream.addDefaultImplementation(TreeSet.class, Set.class);
+        assertBothWays(zoo, expected);
+    }
+
     public static class Aquarium extends StandardObject {
         private String name;
         private List fish = new ArrayList();
@@ -339,6 +446,27 @@ public class ImplicitCollectionTest extends AbstractAcceptanceTest {
 
         xstream.alias("aquarium", Aquarium.class);
         xstream.addImplicitCollection(Aquarium.class, "fish", "fish", String.class);
+
+        assertBothWays(aquarium, expected);
+    }
+    
+    public void testWithImplicitNameMatchingTheNameOfTheFieldWithTheCollection() {
+        Aquarium aquarium = new Aquarium("hatchery");
+        aquarium.addFish("salmon");
+        aquarium.addFish("halibut");
+        aquarium.addFish("snapper");
+
+        String expected = "" +
+                "<aquarium>\n" +
+                "  <name>hatchery</name>\n" +
+                "  <fish>salmon</fish>\n" +
+                "  <fish>halibut</fish>\n" +
+                "  <fish>snapper</fish>\n" +
+                "</aquarium>";
+
+        xstream.alias("aquarium", Aquarium.class);
+        xstream.alias("fish", String.class);
+        xstream.addImplicitCollection(Aquarium.class, "fish");
 
         assertBothWays(aquarium, expected);
     }

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -20,14 +20,8 @@ public class ReferenceByXPathMarshallingStrategy extends AbstractTreeMarshalling
 
     public static int RELATIVE = 0;
     public static int ABSOLUTE = 1;
+    public static int SINGLE_NODE = 2;
     private final int mode;
-
-    /**
-     * @deprecated As of 1.2, use {@link #ReferenceByXPathMarshallingStrategy(int)}
-     */
-    public ReferenceByXPathMarshallingStrategy() {
-        this(RELATIVE);
-    }
 
     public ReferenceByXPathMarshallingStrategy(int mode) {
         this.mode = mode;

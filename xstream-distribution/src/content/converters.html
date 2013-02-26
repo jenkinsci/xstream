@@ -1,7 +1,7 @@
 <html>
 <!--
  Copyright (C) 2005, 2006 Joe Walnes.
- Copyright (C) 2006, 2007, 2008 XStream committers.
+ Copyright (C) 2006, 2007, 2008, 2009, 2011 XStream committers.
  All rights reserved.
  
  The software in this package is published under the terms of the BSD
@@ -214,6 +214,29 @@
                 </td>
                 <td>Because the Properties class only accepts Strings for keys and values, the XML can be more concise. 
                 If the Properties instance includes a set of default Properties, these are serialized in a nested <code>&lt;defaults&gt;</code> element.</td>
+            </tr>
+            <tr>
+                <td><a href="javadoc/com/thoughtworks/xstream/converters/collections/SingletonCollectionConverter.html">SingletonCollectionConverter</a></td>
+                <td>java.util.Collections.singletonList().getClass()<br/>java.util.Collections.singleton().getClass()</td>
+                <td class="example">
+                    &lt;singleton-set&gt;<br/>
+                    &nbsp;&nbsp;&lt;string&gt;apple&lt;/string&gt;<br/>
+                    &lt;/singleton-set&gt;
+                </td>
+                <td>The objects inside the singleton collection can be any type of objects, including nested collections.</td>
+            </tr>
+            <tr>
+                <td><a href="javadoc/com/thoughtworks/xstream/converters/collections/SingletonMapConverter.html">SingletonMapConverter</a></td>
+                <td>java.util.Collections.singletonMap().getClass()</td>
+                <td class="example">
+                    &lt;singleton-map&gt;<br/>
+                    &nbsp;&nbsp;&lt;entry&gt;<br/>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&lt;string&gt;apple&lt;/string&gt;<br/>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&lt;float&gt;123.553&lt;/float&gt;<br/>
+                    &nbsp;&nbsp;&lt;/entry&gt;<br/>
+                    &lt;/singleton-map&gt;
+                </td>
+                <td>The objects inside the singleton collection can be any type of objects, including nested collections.</td>
             </tr>
             <tr>
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/collections/TreeMapConverter.html">TreeMapConverter</a></td>
@@ -459,9 +482,21 @@
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/extended/JavaClassConverter.html">JavaClassConverter</a></td>
                 <td>java.lang.Class</td>
                 <td class="example">&lt;class&gt;com.foo.MyThing&lt;/class&gt;</td>
-                <td>This converter will look for the class in the context ClassLoader for the current thread. It is possible
+                <td>This converter will look for the class in the ClassLoader of the current XStream instance. It is possible
                 to use another ClassLoader by re-registering a new instance of this converter that is wrapped around another
                 ClassLoader.</td>
+            </tr>
+            <tr>
+                <td><a href="javadoc/com/thoughtworks/xstream/converters/extended/JavaFieldConverter.html">JavaFieldConverter</a></td>
+                <td>java.lang.reflect.Field</td>
+                <td class="example">
+                    &lt;field&gt;<br/>
+                    &nbsp;&nbsp;&lt;name&gt;myField&lt;/name&gt;<br/>
+                    &nbsp;&nbsp;&lt;class&gt;com.foo.MyThing&lt;/class&gt;<br/>
+                    &lt;/field&gt;
+                </td>
+                <td>As with the JavaClassConverter, the converter will use the ClassLoader of the XStream instance to resolve classes
+                by default. This can be changed by specifying another ClassLoader when constructing this Converter.</td>
             </tr>
             <tr>
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/extended/JavaMethodConverter.html">JavaMethodConverter</a></td>
@@ -476,8 +511,9 @@
                     &nbsp;&nbsp;&lt;/parameter-types&gt;<br/>
                     &lt;/method&gt;
                 </td>
-                <td>The enclosing element for this tag will either by &lt;method&gt; or &lt;constructor&gt;.As with the JavaClassConverter, the converter will use the current thread's context ClassLoader to resolve classes
-                by default. This can be changed by specifying another ClassLoader when constructing this Converter.</td>
+                <td>The enclosing element for this tag will either by &lt;method&gt; or &lt;constructor&gt;. As with the JavaClassConverter, the converter
+                will use the ClassLoader of the XStream instance to resolve classes by default. This can be changed by specifying another ClassLoader when
+                constructing this Converter.</td>
             </tr>
             <tr>
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/extended/DynamicProxyConverter.html">DynamicProxyConverter</a></td>
@@ -659,6 +695,12 @@
                 <td>&nbsp;</td>
             </tr>
             <tr>
+                <td><a href="javadoc/com/thoughtworks/xstream/converters/extended/ToAttributedValueConverter.html">ToAttributedValueConverter</a></td>
+                <td>Any type with all but one fields to be represented by a single string</td>
+                <td>The Converter is used to write all but one fields of the type as attributes. The left over field is then used as current value.</td>
+                <td>Must be registered explicitly for the appropriate type</td>
+            </tr>
+            <tr>
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/extended/ToStringConverter.html">ToStringConverter</a></td>
                 <td>Any type with natural String representation</td>
                 <td>The Converter must be initialized with a type, that provides a complete String representation with its toString() method
@@ -696,6 +738,36 @@
                 <td>The Converter handles proxies generated by the CGLIB Enhancer, if there were not multiple callbacks registered.
                 A proxy with multiple callbacks can currently not be handled at all.</td>
                 <td>Must be registered explicitly in combination with the CGLIBMapper. See <a href="faq.html#Serialization_CGLIB">FAQ</a>.</td>
+            </tr>
+            <tr>
+                <td><a href="hibernate-javadoc/com/thoughtworks/xstream/hibernate/converter/HibernatePersistentCollectionConverter.html">HibernatePersistentCollectionConverter</a></td>
+                <td>org.hibernate.collection.PersistentBag org.hibernate.collection.PersistentList org.hibernate.collection.PersistentSet</td>
+                <td>The Converter handles Hibernate collections that are not handled by the other Hibernate converters. It will handle any element of the collection.</td>
+                <td>Must be registered explicitly in combination with the HibernateMapper and all the other Hibernate converters. See <a href="hibernate-javadoc/com/thoughtworks/xstream/hibernate/package-summary.html">package description</a>.</td>
+            </tr>
+            <tr>
+                <td><a href="hibernate-javadoc/com/thoughtworks/xstream/hibernate/converter/HibernatePersistentMapConverter.html">HibernatePersistentMapConverter</a></td>
+                <td>org.hibernate.collection.PersistentMap</td>
+                <td>The Converter handles unsorted Hibernate maps. It will handle any key and value of the map.</td>
+                <td>Must be registered explicitly in combination with the HibernateMapper and all the other Hibernate converters. See <a href="hibernate-javadoc/com/thoughtworks/xstream/hibernate/package-summary.html">package description</a>.</td>
+            </tr>
+            <tr>
+                <td><a href="hibernate-javadoc/com/thoughtworks/xstream/hibernate/converter/HibernatePersistentSortedMapConverter.html">HibernatePersistentSortedMapConverter</a></td>
+                <td>org.hibernate.collection.PersistentSortedMap</td>
+                <td>The Converter handles sorted Hibernate maps. It will handle any key and value of the map.</td>
+                <td>Must be registered explicitly in combination with the HibernateMapper and all the other Hibernate converters. See <a href="hibernate-javadoc/com/thoughtworks/xstream/hibernate/package-summary.html">package description</a>.</td>
+            </tr>
+            <tr>
+                <td><a href="hibernate-javadoc/com/thoughtworks/xstream/hibernate/converter/HibernatePersistentSortedSetConverter.html">HibernatePersistentSortedSetConverter</a></td>
+                <td>org.hibernate.collection.PersistentSortedSet</td>
+                <td>The Converter handles sorted Hibernate sets. It will handle any element of the set.</td>
+                <td>Must be registered explicitly in combination with the HibernateMapper and all the other Hibernate converters. See <a href="hibernate-javadoc/com/thoughtworks/xstream/hibernate/package-summary.html">package description</a>.</td>
+            </tr>
+            <tr>
+                <td><a href="hibernate-javadoc/com/thoughtworks/xstream/hibernate/converter/HibernateProxyConverter.html">HibernateProxyConverter</a></td>
+                <td>org.hibernate.proxy.HibernateProxy</td>
+                <td>The Converter handle any element that is wrapped by a Hibernate proxy.</td>
+                <td>Must be registered explicitly in combination with the HibernateMapper and all the other Hibernate converters. See <a href="hibernate-javadoc/com/thoughtworks/xstream/hibernate/package-summary.html">package description</a>.</td>
             </tr>
 
         </table>
