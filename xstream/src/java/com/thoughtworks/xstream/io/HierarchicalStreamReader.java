@@ -103,4 +103,11 @@ public interface HierarchicalStreamReader extends ErrorReporter {
      */
     HierarchicalStreamReader underlyingReader();
 
+    /**
+     * Peek the name of the next child. In situation where {@link #hasMoreChildren()} returns
+     * true, peek the tag name of the child.
+     */
+    // NOTE: this method was originally defined in our fork at HierarchicalStreamReader,
+    // but XStream subsequently defined this in ExtendedHierarchicalStreamReader
+    String peekNextChild();
 }
