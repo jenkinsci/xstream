@@ -159,10 +159,17 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
             return;
         }
         if (processedTypes.contains(initialType))   return;
-        synchronized (annotatedTypes) {
-            final Set<Class<?>> types = new UnprocessedTypesSet();
-            types.add(initialType);
-            processTypes(types);
+        Thread t = Thread.currentThread();
+        final String oldName = t.getName();
+        t.setName(oldName + " / processAnnotation=" + initialType);
+        try {
+            synchronized (annotatedTypes) {
+                final Set<Class<?>> types = new UnprocessedTypesSet();
+                types.add(initialType);
+                processTypes(types);
+            }
+        } finally {
+            t.setName(oldName);
         }
     }
 
