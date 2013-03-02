@@ -160,10 +160,19 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
             return;
         }
         if (processedTypes.containsKey(initialType))   return;
-        synchronized (annotatedTypes) {
-            final Set<Class<?>> types = new UnprocessedTypesSet();
-            types.add(initialType);
-            processTypes(types);
+
+        // probe to monitor the lock contention on "annotatedTypes"
+        Thread t = Thread.currentThread();
+        final String oldName = t.getName();
+        t.setName(oldName+" / processAnnotation="+initialType);
+        try {
+            synchronized (annotatedTypes) {
+                final Set<Class<?>> types = new UnprocessedTypesSet();
+                types.add(initialType);
+                processTypes(types);
+            }
+        } finally {
+            t.setName(oldName);
         }
     }
 
@@ -215,7 +224,7 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
                         processLocalConverterAnnotation(field);
                     }
                 } finally {
-                    processedTypes.put(type,type);
+                    processedTypes.put(type, type);
                 }
             }
         }
