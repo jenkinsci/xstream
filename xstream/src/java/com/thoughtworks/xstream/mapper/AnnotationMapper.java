@@ -19,7 +19,6 @@ import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -70,7 +69,7 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
     private final Map<Class<?>, Map<List<Object>, Converter>> converterCache =
             new HashMap<Class<?>, Map<List<Object>, Converter>>();
     private final Set<Class<?>> annotatedTypes = new HashSet<Class<?>>();
-    private final Map<Class<?>,Object> processedTypes = new ConcurrentHashMap<Class<?>,Object>(); // used like a set since there's no ConcurrentHashSet
+    private final Map<Class<?>,Boolean> processedTypes = new ConcurrentHashMap<Class<?>,Boolean>(); // used like a set since there's no ConcurrentHashSet
 
     private final Map<Class,String> serializedClass = new ConcurrentHashMap<Class, String>();
 
@@ -160,19 +159,13 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
             return;
         }
         if (processedTypes.containsKey(initialType))   return;
-
-        // probe to monitor the lock contention on "annotatedTypes"
-        Thread t = Thread.currentThread();
-        final String oldName = t.getName();
-        t.setName(oldName+" / processAnnotation="+initialType);
-        try {
-            synchronized (annotatedTypes) {
-                final Set<Class<?>> types = new UnprocessedTypesSet();
-                types.add(initialType);
+        synchronized (annotatedTypes) {
+            final Set<Class<?>> types = new UnprocessedTypesSet();
+            if (types.add(initialType)) {
                 processTypes(types);
+            } else {
+                processedTypes.put(initialType, true);
             }
-        } finally {
-            t.setName(oldName);
         }
     }
 
@@ -224,7 +217,7 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
                         processLocalConverterAnnotation(field);
                     }
                 } finally {
-                    processedTypes.put(type, type);
+                    processedTypes.put(type, true);
                 }
             }
         }
