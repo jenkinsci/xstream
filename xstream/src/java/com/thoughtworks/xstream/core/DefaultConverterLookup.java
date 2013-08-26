@@ -18,8 +18,6 @@ import com.thoughtworks.xstream.converters.ConverterRegistry;
 import com.thoughtworks.xstream.core.util.PrioritizedList;
 import com.thoughtworks.xstream.mapper.Mapper;
 
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.WeakHashMap;
@@ -34,7 +32,7 @@ import java.util.WeakHashMap;
 public class DefaultConverterLookup implements ConverterLookup, ConverterRegistry, Caching {
 
     private final PrioritizedList converters = new PrioritizedList();
-    private transient Map typeToConverterMap = Collections.synchronizedMap(new WeakHashMap());
+    private transient Map typeToConverterMap;
 
     public DefaultConverterLookup() {
     }
@@ -45,7 +43,10 @@ public class DefaultConverterLookup implements ConverterLookup, ConverterRegistr
     public DefaultConverterLookup(Mapper mapper) {
     }
 
-    public Converter lookupConverterForType(Class type) {
+    public synchronized Converter lookupConverterForType(Class type) {
+        if (typeToConverterMap == null) {
+            typeToConverterMap = new WeakHashMap();
+        }
         Converter cachedConverter = (Converter) typeToConverterMap.get(type);
         if (cachedConverter != null) {
             return cachedConverter;
@@ -61,7 +62,10 @@ public class DefaultConverterLookup implements ConverterLookup, ConverterRegistr
         throw new ConversionException("No converter specified for " + type);
     }
     
-    public void registerConverter(Converter converter, int priority) {
+    public synchronized void registerConverter(Converter converter, int priority) {
+        if (typeToConverterMap == null) {
+            typeToConverterMap = new WeakHashMap();
+        }
         converters.add(converter, priority);
         for (Iterator iter = typeToConverterMap.keySet().iterator(); iter.hasNext();) {
             Class type = (Class) iter.next();
@@ -71,7 +75,10 @@ public class DefaultConverterLookup implements ConverterLookup, ConverterRegistr
         }
     }
     
-    public void flushCache() {
+    public synchronized void flushCache() {
+        if (typeToConverterMap == null) {
+            typeToConverterMap = new WeakHashMap();
+        }
         typeToConverterMap.clear();
         Iterator iterator = converters.iterator();
         while (iterator.hasNext()) {
@@ -82,8 +89,4 @@ public class DefaultConverterLookup implements ConverterLookup, ConverterRegistr
         }
     }
 
-    private Object readResolve() {
-        typeToConverterMap = Collections.synchronizedMap(new HashMap());
-        return this;
-    }
 }
