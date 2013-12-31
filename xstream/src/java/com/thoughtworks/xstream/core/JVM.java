@@ -44,7 +44,7 @@ public class JVM implements Caching {
     private static final boolean canParseUTCDateFormat;
 
     private static final String vendor = System.getProperty("java.vm.vendor");
-    private static final String runtime = System.getProperty("java.runtime.name");
+    private static final String runtime = System.getProperty("java.runtime.name", "unknown");
     private static final float majorJavaVersion = getMajorJavaVersion();
     private static final boolean reverseFieldOrder = isIBM() && !is15();
 
