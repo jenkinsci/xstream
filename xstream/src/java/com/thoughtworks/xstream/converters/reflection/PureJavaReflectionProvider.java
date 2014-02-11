@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2009, 2011 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2011, 2013 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -32,9 +32,11 @@ import java.util.WeakHashMap;
 /**
  * Pure Java ObjectFactory that instantiates objects using standard Java reflection, however the types of objects
  * that can be constructed are limited.
- * <p/>
+ * <p>
  * Can newInstance: classes with public visibility, outer classes, static inner classes, classes with default constructors
  * and any class that implements java.io.Serializable.
+ * </p>
+ * <p>
  * Cannot newInstance: classes without public visibility, non-static inner classes, classes without default constructors.
  * Note that any code in the constructor of a class will be executed when the ObjectFactory instantiates the object.
  * </p>
@@ -42,18 +44,19 @@ import java.util.WeakHashMap;
  */
 public class PureJavaReflectionProvider implements ReflectionProvider {
 
-    private transient Map serializedDataCache = new WeakHashMap();
+    private transient Map serializedDataCache;
     protected FieldDictionary fieldDictionary;
 
-	public PureJavaReflectionProvider() {
-		this(new FieldDictionary(new ImmutableFieldKeySorter()));
-	}
+    public PureJavaReflectionProvider() {
+        this(new FieldDictionary(new ImmutableFieldKeySorter()));
+    }
 
-	public PureJavaReflectionProvider(FieldDictionary fieldDictionary) {
-		this.fieldDictionary = fieldDictionary;
-	}
+    public PureJavaReflectionProvider(FieldDictionary fieldDictionary) {
+        this.fieldDictionary = fieldDictionary;
+        init();
+    }
 
-	public Object newInstance(Class type) {
+    public Object newInstance(Class type) {
         try {
             Constructor[] constructors = type.getDeclaredConstructors();
             for (int i = 0; i < constructors.length; i++) {
@@ -156,9 +159,12 @@ public class PureJavaReflectionProvider implements ReflectionProvider {
         return fieldDictionary.field(object.getClass(), fieldName, definedIn).getType();
     }
 
+    /**
+     * @deprecated As of 1.4.5, use {@link #getFieldOrNull(Class, String)} instead
+     */
     public boolean fieldDefinedInClass(String fieldName, Class type) {
         Field field = fieldDictionary.fieldOrNull(type, fieldName, null);
-        return field != null && (fieldModifiersSupported(field) || Modifier.isTransient(field.getModifiers()));
+        return field != null && fieldModifiersSupported(field);
     }
 
     protected boolean fieldModifiersSupported(Field field) {
@@ -169,7 +175,9 @@ public class PureJavaReflectionProvider implements ReflectionProvider {
     protected void validateFieldAccess(Field field) {
         if (Modifier.isFinal(field.getModifiers())) {
             if (JVM.is15()) {
-                field.setAccessible(true);
+                if (!field.isAccessible()) {
+                    field.setAccessible(true);
+                }
             } else {
                 throw new ObjectAccessException("Invalid final field "
                         + field.getDeclaringClass().getName() + "." + field.getName());
@@ -181,13 +189,20 @@ public class PureJavaReflectionProvider implements ReflectionProvider {
         return fieldDictionary.field(definedIn, fieldName, null);
     }
 
+    public Field getFieldOrNull(Class definedIn, String fieldName) {
+        return fieldDictionary.fieldOrNull(definedIn, fieldName,  null);
+    }
+
     public void setFieldDictionary(FieldDictionary dictionary) {
         this.fieldDictionary = dictionary;
     }
 
-    protected Object readResolve() {
-        serializedDataCache = new WeakHashMap();
+    private Object readResolve() {
+        init();
         return this;
     }
 
+    protected void init() {
+        serializedDataCache = new WeakHashMap();
+    }
 }

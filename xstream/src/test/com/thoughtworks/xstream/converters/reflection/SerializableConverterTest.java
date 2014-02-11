@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007 XStream Committers.
+ * Copyright (C) 2007, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -318,5 +318,28 @@ public class SerializableConverterTest extends TestCase {
         assertEquals(expected, xml);
         SimpleNamedFieldsType serialized = (SimpleNamedFieldsType)xstream.fromXML(xml);
         assertEquals(simple, serialized);
+    }
+    
+    public static class SerializableType implements Serializable {
+        public Serializable serializable;
+    }
+    
+    public void testCanHandleFieldsDeclaredWithSerializableInterface() {
+        XStream xstream = new XStream();
+        xstream.alias("sertype", SerializableType.class);
+        xstream.useAttributeFor(SerializableType.class, "serializable");
+        
+        String expected = ""
+            + "<sertype>\n"
+            + "  <serializable class=\"string\">String</serializable>\n"
+            + "</sertype>";
+        
+        SerializableType s = new SerializableType();
+        s.serializable = "String";
+        
+        String xml = xstream.toXML(s);
+        assertEquals(expected, xml);
+        SerializableType serialized = (SerializableType)xstream.fromXML(xml);
+        assertEquals(s.serializable, serialized.serializable);
     }
 }

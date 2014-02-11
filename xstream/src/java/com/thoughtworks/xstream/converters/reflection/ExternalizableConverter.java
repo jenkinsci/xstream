@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2010, 2011 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2010, 2011, 2013 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -15,6 +15,8 @@ import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
+import com.thoughtworks.xstream.core.ClassLoaderReference;
+import com.thoughtworks.xstream.core.JVM;
 import com.thoughtworks.xstream.core.util.CustomObjectInputStream;
 import com.thoughtworks.xstream.core.util.CustomObjectOutputStream;
 import com.thoughtworks.xstream.core.util.HierarchicalStreams;
@@ -40,22 +42,35 @@ import java.util.Map;
 public class ExternalizableConverter implements Converter {
 
     private Mapper mapper;
-    private final ClassLoader classLoader;
+    private final ClassLoaderReference classLoaderReference;
 
-    public ExternalizableConverter(Mapper mapper, ClassLoader classLoader) {
+    /**
+     * Construct an ExternalizableConverter.
+     * @param mapper the Mapper chain
+     * @param classLoaderReference the reference to XStream's {@link ClassLoader} instance
+     * @since 1.4.5
+     */
+    public ExternalizableConverter(Mapper mapper, ClassLoaderReference classLoaderReference) {
         this.mapper = mapper;
-        this.classLoader = classLoader;
+        this.classLoaderReference = classLoaderReference;
+    }
+
+    /**
+     * @deprecated As of 1.4.5 use {@link #ExternalizableConverter(Mapper, ClassLoaderReference)}
+     */
+    public ExternalizableConverter(Mapper mapper, ClassLoader classLoader) {
+        this(mapper, new ClassLoaderReference(classLoader));
     }
 
     /**
      * @deprecated As of 1.4 use {@link #ExternalizableConverter(Mapper, ClassLoader)}
      */
     public ExternalizableConverter(Mapper mapper) {
-        this(mapper, null);
+        this(mapper, ExternalizableConverter.class.getClassLoader());
     }
 
     public boolean canConvert(Class type) {
-        return Externalizable.class.isAssignableFrom(type);
+        return JVM.canCreateDerivedObjectOutputStream() && Externalizable.class.isAssignableFrom(type);
     }
 
     public void marshal(Object source, final HierarchicalStreamWriter writer, final MarshallingContext context) {
@@ -131,7 +146,7 @@ public class ExternalizableConverter implements Converter {
                     throw new UnsupportedOperationException("Objects are not allowed to call ObjectInput.close() from readExternal()");
                 }
             };
-            CustomObjectInputStream objectInput = CustomObjectInputStream.getInstance(context, callback, classLoader);
+            CustomObjectInputStream objectInput = CustomObjectInputStream.getInstance(context, callback, classLoaderReference);
             externalizable.readExternal(objectInput);
             objectInput.popCallback();
             return externalizable;

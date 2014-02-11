@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2011 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2011, 2013 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -12,6 +12,7 @@
 package com.thoughtworks.xstream.core.util;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 
 import com.thoughtworks.xstream.converters.reflection.ObjectAccessException;
 
@@ -20,8 +21,31 @@ import com.thoughtworks.xstream.converters.reflection.ObjectAccessException;
  * wraps exception in XStreamExceptions.
  *
  * @author Joe Walnes
+ * @author J&ouml;rg Schaible
  */
 public class Fields {
+    public static Field locate(Class definedIn, Class fieldType, boolean isStatic) {
+        Field field = null;
+        try {
+            Field[] fields = definedIn.getDeclaredFields();
+            for(int i = 0; i < fields.length; ++i) {
+                if (Modifier.isStatic(fields[i].getModifiers()) == isStatic) {
+                    if (fieldType.isAssignableFrom(fields[i].getType())) {
+                        field = fields[i];
+                    }
+                }
+            }
+            if (field != null && !field.isAccessible()) {
+                field.setAccessible(true);
+            }
+        } catch (SecurityException e) {
+            // active SecurityManager
+        } catch (NoClassDefFoundError e) {
+            // restricted type in GAE
+        }
+        return field;
+    }
+
     public static Field find(Class type, String name) {
         try {
             Field result = type.getDeclaredField(name);
@@ -30,12 +54,9 @@ public class Fields {
             }
             return result;
         } catch (NoSuchFieldException e) {
-            throw new IllegalArgumentException("Could not access "
-                + type.getName()
-                + "."
-                + name
-                + " field: "
-                + e.getMessage());
+            throw new IllegalArgumentException("Could not access " + type.getName() + "." + name + " field: " + e.getMessage());
+        } catch (NoClassDefFoundError e) {
+            throw new ObjectAccessException("Could not access " + type.getName() + "." + name + " field: " + e.getMessage());
         }
     }
 
@@ -44,6 +65,8 @@ public class Fields {
             field.set(instance, value);
         } catch (IllegalAccessException e) {
             throw new ObjectAccessException("Could not write " + field.getType().getName() + "." + field.getName() + " field", e);
+        } catch (NoClassDefFoundError e) {
+            throw new ObjectAccessException("Could not write " + field.getType().getName() + "." + field.getName() + " field", e);
         }
     }
 
@@ -51,6 +74,8 @@ public class Fields {
         try {
             return field.get(instance);
         } catch (IllegalAccessException e) {
+            throw new ObjectAccessException("Could not read " + field.getType().getName() + "." + field.getName() + " field", e);
+        } catch (NoClassDefFoundError e) {
             throw new ObjectAccessException("Could not read " + field.getType().getName() + "." + field.getName() + " field", e);
         }
     }

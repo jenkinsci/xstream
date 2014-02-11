@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2010 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2010, 2013 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -15,6 +15,7 @@ import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
+import com.thoughtworks.xstream.core.ClassLoaderReference;
 import com.thoughtworks.xstream.core.util.Fields;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
@@ -36,33 +37,38 @@ import java.util.List;
  */
 public class DynamicProxyConverter implements Converter {
 
-    private ClassLoader classLoader;
+    private ClassLoaderReference classLoaderReference;
     private Mapper mapper;
-    private static final Field HANDLER;
+    private static final Field HANDLER = Fields.locate(Proxy.class, InvocationHandler.class, false);
     private static final InvocationHandler DUMMY = new InvocationHandler() {
         public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
             return null;
         }
     };
-    
-    static {
-        Field field = null; 
-        try {
-            field = Proxy.class.getDeclaredField("h");
-            field.setAccessible(true);
-        } catch (NoSuchFieldException e) {
-            throw new ExceptionInInitializerError(e);
-        }
-        HANDLER = field;
-    }
 
+    /**
+     * @deprecated As of 1.4.5 use {@link #DynamicProxyConverter(Mapper, ClassLoaderReference)}
+     */
     public DynamicProxyConverter(Mapper mapper) {
         this(mapper, DynamicProxyConverter.class.getClassLoader());
     }
 
-    public DynamicProxyConverter(Mapper mapper, ClassLoader classLoader) {
-        this.classLoader = classLoader;
+    /**
+     * Construct a DynamicProxyConverter.
+     * @param mapper the Mapper chain
+     * @param classLoaderReference the reference to the {@link ClassLoader} of the XStream instance
+     * @since 1.4.5
+     */
+    public DynamicProxyConverter(Mapper mapper, ClassLoaderReference classLoaderReference) {
+        this.classLoaderReference = classLoaderReference;
         this.mapper = mapper;
+    }
+
+    /**
+     * @deprecated As of 1.4.5 use {@link #DynamicProxyConverter(Mapper, ClassLoaderReference)}
+     */
+    public DynamicProxyConverter(Mapper mapper, ClassLoader classLoader) {
+        this(mapper,new ClassLoaderReference(classLoader));
     }
 
     public boolean canConvert(Class type) {
@@ -114,10 +120,17 @@ public class DynamicProxyConverter implements Converter {
         }
         Class[] interfacesAsArray = new Class[interfaces.size()];
         interfaces.toArray(interfacesAsArray);
-        Object proxy = Proxy.newProxyInstance(classLoader, interfacesAsArray, DUMMY);
+        Object proxy = null;
+        if (HANDLER != null) { // we will not be able to resolve references to the proxy
+            proxy = Proxy.newProxyInstance(classLoaderReference.getReference(), interfacesAsArray, DUMMY);
+        }
         handler = (InvocationHandler) context.convertAnother(proxy, handlerType);
         reader.moveUp();
-        Fields.write(HANDLER, proxy, handler);
+        if (HANDLER != null) {
+            Fields.write(HANDLER, proxy, handler);
+        } else {
+            proxy = Proxy.newProxyInstance(classLoaderReference.getReference(), interfacesAsArray, handler);
+        }
         return proxy;
     }
 }

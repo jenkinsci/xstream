@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006, 2007, 2008, 2010, 2011 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2010, 2011, 2013 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -13,6 +13,7 @@ package com.thoughtworks.xstream.converters.reflection;
 import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
+import com.thoughtworks.xstream.core.ClassLoaderReference;
 import com.thoughtworks.xstream.io.ExtendedHierarchicalStreamWriterHelper;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
@@ -60,16 +61,31 @@ public class CGLIBEnhancedConverter extends SerializableConverter {
     private static String CALLBACK_MARKER = "CGLIB$CALLBACK_";
     private transient Map fieldCache;
 
+    /**
+     * Construct a CGLIBEnhancedConverter.
+     * @param mapper the mapper chain instance
+     * @param reflectionProvider the reflection provider
+     * @param classLoaderReference the reference to the {@link ClassLoader} of the XStream instance
+     * @since 1.4.5
+     */
+    public CGLIBEnhancedConverter(Mapper mapper, ReflectionProvider reflectionProvider, ClassLoaderReference classLoaderReference) {
+        super(mapper, new CGLIBFilteringReflectionProvider(reflectionProvider), classLoaderReference);
+        this.fieldCache = new HashMap();
+    }
+
+    /**
+     * @deprecated As of 1.4.5 use {@link #CGLIBEnhancedConverter(Mapper, ReflectionProvider, ClassLoaderReference)}
+     */
     public CGLIBEnhancedConverter(Mapper mapper, ReflectionProvider reflectionProvider, ClassLoader classLoader) {
         super(mapper, new CGLIBFilteringReflectionProvider(reflectionProvider), classLoader);
         this.fieldCache = new HashMap();
     }
 
     /**
-     * @deprecated As of 1.4 use {@link #CGLIBEnhancedConverter(Mapper, ReflectionProvider, ClassLoader)}
+     * @deprecated As of 1.4 use {@link #CGLIBEnhancedConverter(Mapper, ReflectionProvider, ClassLoaderReference)}
      */
     public CGLIBEnhancedConverter(Mapper mapper, ReflectionProvider reflectionProvider) {
-        this(mapper, new CGLIBFilteringReflectionProvider(reflectionProvider), null);
+        this(mapper, new CGLIBFilteringReflectionProvider(reflectionProvider), CGLIBEnhancedConverter.class.getClassLoader());
     }
 
     public boolean canConvert(Class type) {
@@ -139,7 +155,9 @@ public class CGLIBEnhancedConverter extends SerializableConverter {
         }
         try {
             final Field field = type.getDeclaredField("serialVersionUID");
-            field.setAccessible(true);
+            if (!field.isAccessible()) {
+                field.setAccessible(true);
+            }
             long serialVersionUID = field.getLong(null);
             ExtendedHierarchicalStreamWriterHelper.startNode(
                 writer, "serialVersionUID", String.class);
@@ -168,7 +186,9 @@ public class CGLIBEnhancedConverter extends SerializableConverter {
             for (int i = 0; true; ++i) {
                 try {
                     Field field = type.getDeclaredField(CALLBACK_MARKER + i);
-                    field.setAccessible(true);
+                    if (!field.isAccessible()) {
+                        field.setAccessible(true);
+                    }
                     fields.add(field);
                 } catch (NoSuchFieldException e) {
                     break;
@@ -229,7 +249,9 @@ public class CGLIBEnhancedConverter extends SerializableConverter {
             }
             for (final Iterator iter = methods.iterator(); iter.hasNext();) {
                 final Method method = (Method)iter.next();
-                method.setAccessible(true);
+                if (!method.isAccessible()) {
+                    method.setAccessible(true);
+                }
                 if (Factory.class.isAssignableFrom(method.getDeclaringClass())
                     || (method.getModifiers() & (Modifier.FINAL | Modifier.STATIC)) > 0) {
                     iter.remove();

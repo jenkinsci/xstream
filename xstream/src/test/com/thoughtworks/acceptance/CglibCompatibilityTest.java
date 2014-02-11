@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006, 2007, 2008, 2010 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2010, 2013, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -16,6 +16,7 @@ import com.thoughtworks.xstream.converters.reflection.CGLIBEnhancedConverter;
 import com.thoughtworks.xstream.core.JVM;
 import com.thoughtworks.xstream.mapper.CGLIBMapper;
 import com.thoughtworks.xstream.mapper.MapperWrapper;
+import com.thoughtworks.xstream.security.CGLIBProxyTypePermission;
 
 import net.sf.cglib.proxy.Callback;
 import net.sf.cglib.proxy.CallbackFilter;
@@ -47,8 +48,10 @@ public class CglibCompatibilityTest extends AbstractAcceptanceTest {
                 return new CGLIBMapper(next);
             }
         };
+        setupSecurity(xstream);
+        xstream.addPermission(CGLIBProxyTypePermission.PROXIES);
         xstream.registerConverter(new CGLIBEnhancedConverter(xstream.getMapper(), xstream
-            .getReflectionProvider(), xstream.getClassLoader()));
+            .getReflectionProvider(), xstream.getClassLoaderReference()));
         return xstream;
     }
 

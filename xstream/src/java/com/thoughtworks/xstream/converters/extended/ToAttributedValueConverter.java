@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 XStream Committers.
+ * Copyright (C) 2011, 2013 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -22,11 +22,13 @@ import java.util.Set;
 import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.ConverterLookup;
+import com.thoughtworks.xstream.converters.ConverterMatcher;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.SingleValueConverter;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.converters.reflection.AbstractReflectionConverter.DuplicateFieldException;
 import com.thoughtworks.xstream.converters.reflection.ReflectionProvider;
+import com.thoughtworks.xstream.core.JVM;
 import com.thoughtworks.xstream.core.util.FastField;
 import com.thoughtworks.xstream.core.util.HierarchicalStreams;
 import com.thoughtworks.xstream.core.util.Primitives;
@@ -47,8 +49,10 @@ import com.thoughtworks.xstream.mapper.Mapper;
  * @since 1.4
  */
 public class ToAttributedValueConverter implements Converter {
+    private static final String STRUCTURE_MARKER = "";
     private final Class type;
     private final Mapper mapper;
+    private final Mapper enumMapper;
     private final ReflectionProvider reflectionProvider;
     private final ConverterLookup lookup;
     private final Field valueField;
@@ -56,6 +60,7 @@ public class ToAttributedValueConverter implements Converter {
     /**
      * Creates a new ToAttributedValueConverter instance.
      * 
+     * @param type the type that is handled by this converter instance
      * @param mapper the mapper in use
      * @param reflectionProvider the reflection provider in use
      * @param lookup the converter lookup in use
@@ -70,6 +75,7 @@ public class ToAttributedValueConverter implements Converter {
     /**
      * Creates a new ToAttributedValueConverter instance.
      * 
+     * @param type the type that is handled by this converter instance
      * @param mapper the mapper in use
      * @param reflectionProvider the reflection provider in use
      * @param lookup the converter lookup in use
@@ -99,6 +105,7 @@ public class ToAttributedValueConverter implements Converter {
             }
             this.valueField = field;
         }
+        enumMapper = JVM.is15() ? UseAttributeForEnumMapper.createEnumMapper(mapper) : null;
     }
 
     public boolean canConvert(final Class type) {
@@ -134,19 +141,25 @@ public class ToAttributedValueConverter implements Converter {
                     throw exception;
                 }
 
-                Converter converter = mapper.getLocalConverter(definedIn, fieldName);
+                ConverterMatcher converter = UseAttributeForEnumMapper.isEnum(type)
+                    ? (ConverterMatcher)enumMapper.getConverterFromItemType(null, type, null)
+                    : (ConverterMatcher)mapper.getLocalConverter(definedIn, fieldName);
                 if (converter == null) {
                     converter = lookup.lookupConverterForType(type);
                 }
 
                 if (value != null) {
+                    boolean isValueField = valueField != null && fieldIsEqual(field);
+                    if (isValueField) {
+                        definingType[0] = definedIn;
+                        fieldType[0] = type;
+                        realValue[0] = value;
+                        tagValue[0] = STRUCTURE_MARKER;
+                    }
                     if (converter instanceof SingleValueConverter) {
                         final String str = ((SingleValueConverter)converter).toString(value);
 
-                        if (valueField != null && fieldIsEqual(field)) {
-                            definingType[0] = definedIn;
-                            fieldType[0] = type;
-                            realValue[0] = value;
+                        if (isValueField) {
                             tagValue[0] = str;
                         } else {
                             if (str != null) {
@@ -154,7 +167,13 @@ public class ToAttributedValueConverter implements Converter {
                             }
                         }
                     } else {
-                        context.convertAnother(value);
+                        if (!isValueField) {
+                            final ConversionException exception = new ConversionException(
+                                    "Cannot write element as attribute");
+                                exception.add("alias", alias);
+                                exception.add("type", sourceType.getName());
+                                throw exception;
+                        }
                     }
                 }
             }
@@ -173,7 +192,11 @@ public class ToAttributedValueConverter implements Converter {
                 }
             }
 
-            writer.setValue(tagValue[0]);
+            if (tagValue[0] == STRUCTURE_MARKER) {
+                context.convertAnother(realValue[0]);
+            } else { 
+                writer.setValue(tagValue[0]);
+            }
         }
     }
 
@@ -196,17 +219,17 @@ public class ToAttributedValueConverter implements Converter {
             }
 
             final String fieldName = mapper.realMember(resultType, attrName);
-            final boolean fieldExistsInClass = reflectionProvider.fieldDefinedInClass(
-                fieldName, resultType);
-            if (fieldExistsInClass) {
-                final Field field = reflectionProvider.getField(resultType, fieldName);
+            final Field field = reflectionProvider.getFieldOrNull(resultType, fieldName);
+            if (field != null) {
                 if (Modifier.isTransient(field.getModifiers())) {
                     continue;
                 }
 
                 Class type = field.getType();
                 final Class declaringClass = field.getDeclaringClass();
-                Converter converter = mapper.getLocalConverter(declaringClass, fieldName);
+                ConverterMatcher converter = UseAttributeForEnumMapper.isEnum(type)
+                    ? (ConverterMatcher)enumMapper.getConverterFromItemType(null, type, null)
+                    : (ConverterMatcher)mapper.getLocalConverter(declaringClass, fieldName);
                 if (converter == null) {
                     converter = lookup.lookupConverterForType(type);
                 }
@@ -248,8 +271,9 @@ public class ToAttributedValueConverter implements Converter {
         if (valueField != null) {
             final Class classDefiningField = valueField.getDeclaringClass();
             final String fieldName = valueField.getName();
-            if (fieldName == null
-                || !reflectionProvider.fieldDefinedInClass(fieldName, resultType)) {
+            final Field field = fieldName == null ? null : reflectionProvider.getField(
+                classDefiningField, fieldName);
+            if (fieldName == null || field == null) {
                 final ConversionException exception = new ConversionException(
                     "Cannot assign value to field of type");
                 exception.add("element", reader.getNodeName());
@@ -268,7 +292,6 @@ public class ToAttributedValueConverter implements Converter {
                     result, fieldName, classDefiningField));
             }
 
-            final Field field = reflectionProvider.getField(classDefiningField, fieldName);
             final Object value = context.convertAnother(
                 result, type,
                 mapper.getLocalConverter(field.getDeclaringClass(), field.getName()));

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2009, 2011 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2011, 2013 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -13,7 +13,10 @@ package com.thoughtworks.xstream.converters.extended;
 
 import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.basic.AbstractSingleValueConverter;
-import com.thoughtworks.xstream.core.util.Primitives;
+import com.thoughtworks.xstream.core.ClassLoaderReference;
+import com.thoughtworks.xstream.mapper.CannotResolveClassException;
+import com.thoughtworks.xstream.mapper.DefaultMapper;
+import com.thoughtworks.xstream.mapper.Mapper;
 
 /**
  * Converts a java.lang.Class to XML.
@@ -25,10 +28,32 @@ import com.thoughtworks.xstream.core.util.Primitives;
  */
 public class JavaClassConverter extends AbstractSingleValueConverter {
 
-    private ClassLoader classLoader;
+    private Mapper mapper;
 
+    /**
+     * Construct a JavaClassConverter.
+     * @param classLoaderReference the reference to the {@link ClassLoader} of the XStream instance
+     * @since 1.4.5
+     */
+    public JavaClassConverter(ClassLoaderReference classLoaderReference) {
+        this(new DefaultMapper(classLoaderReference));
+    }
+
+    /**
+     * @deprecated As of 1.4.5 use {@link #JavaClassConverter(ClassLoaderReference)}
+     */
     public JavaClassConverter(ClassLoader classLoader) {
-        this.classLoader = classLoader;
+        this(new ClassLoaderReference(classLoader));
+    }
+
+    /**
+     * Construct a JavaClassConverter that uses a provided mapper. Depending on the mapper
+     * chain it will not only be used to load classes, but also to support type aliases.
+     * @param mapper to use
+     * @since 1.4.5
+     */
+    protected JavaClassConverter(Mapper mapper) {
+        this.mapper = mapper;
     }
 
     public boolean canConvert(Class clazz) {
@@ -36,34 +61,14 @@ public class JavaClassConverter extends AbstractSingleValueConverter {
     }
 
     public String toString(Object obj) {
-        return ((Class) obj).getName();
+        return mapper.serializedClass(((Class) obj));
     }
 
     public Object fromString(String str) {
         try {
-            return loadClass(str);
-        } catch (ClassNotFoundException e) {
-            throw new ConversionException("Cannot load java class " + str, e);
+            return mapper.realClass(str);
+        } catch (CannotResolveClassException e) {
+            throw new ConversionException("Cannot load java class " + str, e.getCause());
         }
-    }
-
-    private Class loadClass(String className) throws ClassNotFoundException {
-        Class resultingClass = Primitives.primitiveType(className);
-        if( resultingClass != null ){
-            return resultingClass;
-        }
-        int dimension;
-        for(dimension = 0; className.charAt(dimension) == '['; ++dimension);
-        if (dimension > 0) {
-            final ClassLoader classLoaderToUse;
-            if (className.charAt(dimension) == 'L') {
-                String componentTypeName = className.substring(dimension + 1, className.length() - 1);
-                classLoaderToUse = classLoader.loadClass(componentTypeName).getClassLoader();
-            } else {
-                classLoaderToUse = null;
-            }
-            return Class.forName(className, false, classLoaderToUse);
-        }
-        return classLoader.loadClass(className);
     }
 }

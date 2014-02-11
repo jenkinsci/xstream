@@ -1,7 +1,7 @@
 <html>
 <!--
  Copyright (C) 2006 Joe Walnes.
- Copyright (C) 2006, 2007, 2008 XStream committers.
+ Copyright (C) 2006, 2007, 2008, 2013 XStream committers.
  All rights reserved.
  
  The software in this package is published under the terms of the BSD
@@ -231,6 +231,9 @@ public class PersonConverter extends AbstractSingleValueConverter {
 Person class). Since the String representation is complete, a nested element is not
 necessary anymore:</p>
 <div class="Source Java"><pre>&lt;person&gt;Guilherme&lt;/person&gt;</pre></div>
+
+<p class=highlight>Note, that in implementation of a SingleValueConverter is required for
+attributes, since these objects have to be represented by a single string only.</p>
 
 <h1 id="CustomConverter">Date Converter</h1>
 <p>Now that we know how the <i>Converter</i> interface works, let's create a
@@ -563,8 +566,8 @@ public class BirthdayConverter implements Converter {
 
         public void marshal(Object value, HierarchicalStreamWriter writer,
                         MarshallingContext context) {
-                writer.addAttribute("gender", Character.toString(birthday.getGender()));
                 Birthday birthday = (Birthday)value;
+                writer.addAttribute("gender", Character.toString(birthday.getGender()));
                 writer.startNode("person");
                 context.convertAnother(birthday.getPerson());
                 writer.endNode();

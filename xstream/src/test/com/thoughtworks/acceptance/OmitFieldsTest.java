@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2010, 2012 XStream Committers.
+ * Copyright (C) 2006, 2007, 2010, 2012, 2013, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -13,6 +13,7 @@ package com.thoughtworks.acceptance;
 
 import com.thoughtworks.acceptance.objects.StandardObject;
 import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.mapper.Mapper;
 import com.thoughtworks.xstream.mapper.MapperWrapper;
 
@@ -163,6 +164,7 @@ public class OmitFieldsTest extends AbstractAcceptanceTest {
             }
         };
 
+        xstream.allowTypes(new Class[]{AnotherThing.class});
         xstream.alias("thing", AnotherThing.class);
 
         String actualXml = xstream.toXML(in);
@@ -308,16 +310,73 @@ public class OmitFieldsTest extends AbstractAcceptanceTest {
         assertEquals("d", out.derived);
     }
 
+    public void testIgnoreUnknownElementsMatchingPattern() {
+        String actualXml = ""
+            + "<thing>\n"
+            + "  <sometimesIgnore>foo</sometimesIgnore>\n" 
+            + "  <neverIgnore>c</neverIgnore>\n" 
+            + "  <foobar>f</foobar>\n" 
+            + "  <derived>d</derived>\n" 
+            + "</thing>";
+
+        xstream.alias("thing", DerivedThing.class);
+        xstream.omitField(Thing.class, "sometimesIgnore");
+        xstream.ignoreUnknownElements("foo.*");
+
+        DerivedThing out = (DerivedThing)xstream.fromXML(actualXml);
+        assertEquals(null, out.alwaysIgnore);
+        assertEquals(null, out.sometimesIgnore);
+        assertEquals("c", out.neverIgnore);
+        assertEquals("d", out.derived);
+        
+        try {
+            xstream.fromXML(actualXml.replaceAll("foobar", "unknown"));
+            fail("Thrown " + ConversionException.class.getName() + " expected");
+        } catch (final ConversionException e) {
+            String message = e.getMessage();
+            assertTrue(message,
+                e.getMessage().substring(0, message.indexOf('\n')).endsWith(
+                    DerivedThing.class.getName() + ".unknown"));
+        }
+    }
+    
+    public void testIgnoreNonExistingElementsMatchingTypeAlias() {
+        xstream.alias("thing", Thing.class);
+        xstream.ignoreUnknownElements("string");
+        Thing thing = new Thing();
+        String provided = "" 
+            + "<thing>\n" 
+            + "  <string>string 1</string>\n" 
+            + "</thing>";
+        String expected = "<thing/>";
+        assertWithAsymmetricalXml(thing, provided, expected);
+    }
+    
+    public void testIgnoredElementIsNotInstantiated() {
+        xstream.alias("thing", Thing.class);
+        xstream.ignoreUnknownElements("int");
+        Thing thing = new Thing();
+        String provided = "" 
+            + "<thing>\n" 
+            + "  <int>invalid</int>\n" 
+            + "</thing>";
+        String expected = "<thing/>";
+        assertWithAsymmetricalXml(thing, provided, expected);
+    }
+
     static class ThingAgain extends Thing {
         String sometimesIgnore;
 
         void setHidden(String s) {
             super.sometimesIgnore = s;
         }
+        
+        String getHidden() {
+            return super.sometimesIgnore;
+        }
     }
 
-    // TODO: XSTR-457
-    public void todoTestAnOmittedFieldMakesADefinedInAttributeSuperfluous() {
+    public void testAnOmittedFieldMakesADefinedInAttributeSuperfluous() {
         ThingAgain in = new ThingAgain();
         in.alwaysIgnore = "a";
         in.setHidden("b");
@@ -337,9 +396,9 @@ public class OmitFieldsTest extends AbstractAcceptanceTest {
         assertEquals(expectedXml, actualXml);
 
         ThingAgain out = (ThingAgain)xstream.fromXML(expectedXml);
+        assertNull(out.alwaysIgnore);
+        assertEquals("b", out.getHidden());
+        assertEquals("c", out.neverIgnore);
         assertNull(out.sometimesIgnore);
-        out.alwaysIgnore = "a";
-        out.sometimesIgnore = "d";
-        assertEquals(in, out);
     }
 }

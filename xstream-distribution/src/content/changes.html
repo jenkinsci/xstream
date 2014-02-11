@@ -1,7 +1,7 @@
 <html>
 <!--
  Copyright (C) 2005, 2006 Joe Walnes.
- Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013 XStream committers.
+ Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014 XStream committers.
  All rights reserved.
  
  The software in this package is published under the terms of the BSD
@@ -28,26 +28,216 @@
 	<a href="http://jira.codehaus.org/browse/XSTR?report=com.atlassian.jira.plugin.system.project:changelog-panel">Change Log</a>.
 	</p>
 
-<!--  
-    <h1 id="upcoming">Upcoming</h1>
+    <h1 id="1.4.7">1.4.7</h1>
 
-    <p>Not yet released.</p>
+    <p>Released February 8, 2013.</p>
+
+    <p class="highlight">This maintenance release addresses mainly the security vulnerability CVE-2013-7285, an
+    arbitrary execution of commands when unmarshalling.</p>
 
     <h2>Major changes</h2>
     
     <ul>
+   		<li>Add <a href="security.html#framework">security framework</a> to limit handled types while unmarshalling.</li>
+   		<li>java.bean.EventHandler no longer handled automatically because of severe security vulnerability.</li>
+    	<li>JIRA:XSTR-751: New SunLimitedUnsafeReflectionProvider that uses undocumented features only to allocate new
+    	instances as required on Dalvik.</li>
+   		<li>Fix instantiation of AnnotationMapper that requires ConverterLookup and ConverterRegistry to be the same
+   		instance.</li>
     </ul>
--->
+
+    <h2>Minor changes</h2>
+
+    <ul>
+   		<li>XSTR-749: NPE if ReflectionConverter.canConvert(type) is called with null as argument.</li>
+   		<li>XSTR-753: NPE if SerializationConverter.canConvert(type) is called with an interface type as argument that
+   		extends Serializable.</li>
+   		<li>Add constructor to ReflectionConverter taking an additional type to create an instance that is
+   		dedicated to a specific type only.</li>
+   		<li>The ConverterLookup used by default cannot be casted to a ConverterRegistry anymore.</li>
+    </ul>
+
+    <h2>API changes</h2>
+
+    <ul>
+    	<li>Added package c.t.x.security with interface TypePermission, all its implementations and
+    	ForbiddenClassException.</li>
+    	<li>Added c.t.x.mapper.SecurityMapper handling the new type permissions.</li>
+    	<li>Added methods addPermission, denyPermission, allowTypesXXX and denyTypesXXX to c.t.x.XStream to setup
+    	security at unmarshalling time.</li>
+    	<li>Added c.t.x.converters.reflection.SunLimitedUnsafeReflectionProvider.</li>
+    	<li>Deprecated c.t.x.converters.reflection.Sun14ReflectionProvider in favor of new
+    	c.t.x.converters.reflection.SunUnsafeReflectionProvider.</li>
+    	<li>Added c.t.x.converters.reflection.ReflectionConverter(Mapper,ReflectionProvider,Class).</li>
+    </ul>
+
+    <h1 id="1.4.6">1.4.6</h1>
+
+    <p>Released December 12, 2013.</p>
+
+    <h2>Major changes</h2>
+    
+    <ul>
+    	<li>JIRA:XSTR-566 and JIRA:XSTR-200: Better compatibility with GAE and environments with active SecurityManager (i.e. in an
+    	Applet). XStream converters try now to ensure already in the canConvert methods that they can handle the requested type in
+    	practice and not only theoretically. Additionally the implementations even better take care, that the initialization of a
+    	converter will not break the setup of XStream itself. Following modifications have been done for these topics:
+    	<ul>
+    		<li>ReflectionConverter, SerializationConverter and LookAndFieldConverter will check if they can access the fields by
+    		reflection for a requested type.</li>
+    		<li>SerializationConverter and ExternalizableConverter will check if they can create an instance of a derived
+    		OutputObjectStream first.</li>
+    		<li>BeanProvider does no longer use reflection to locate default constructor.</li>
+    		<li>AbstractAttributedCharacterIteratorAttributeConverter (and therefore TextAttributeConverter) will check first if it
+    		can access the possible constants of the type by reflection.</li>
+    		<li>NoClassDefFoundError raised in GAE accessing the fields of restricted types by reflection will be handled.</li>
+    		<li>StackTraceElementConverter uses constructor for StackTraceElement instances in Java 5 and GEA.</li>
+    	</ul>
+    	</li>
+    	<li>JIRA:XSTR-739 and JIRA:XSTR-746: OrderRetainingMap fails if HashMap.putAll(Map) of Java Runtime is not
+    	implemented calling put for every element within the map.</li>
+    	<li>New NamedArrayConverter to define names of inner elements.</li>
+    </ul>
+
+    <h2>Minor changes</h2>
+    
+    <ul>
+    	<li>JIRA:XSTR-747: All constructors of StaxDriver derived classes take erroneously a XmlFriendlyNameCoder
+    	instead of a plain NameCoder.</li>
+    </ul>
+
+    <h2>API changes</h2>
+
+    <ul>
+    	<li>Added c.t.x.converters.extended.NamedArrayConverter for free element names in arrays.</li>
+    	<li>Added constructors to c.t.x.io.xml.StandardStaxDriver taking NameCoder instead of XmlFriendlyNameCoder.</li>
+    	<li>Deprecated constructors of c.t.x.io.xml.StandardStaxDriver taking a XmlFriendlyNameCoder.</li>
+    	<li>Added constructors to c.t.x.io.xml.BEAStaxDriver taking NameCoder instead of XmlFriendlyNameCoder.</li>
+    	<li>Deprecated constructors of c.t.x.io.xml.BEAStaxDriver taking a XmlFriendlyNameCoder.</li>
+    	<li>Added constructors to c.t.x.io.xml.WstxDriver taking NameCoder instead of XmlFriendlyNameCoder.</li>
+    	<li>Deprecated constructors of c.t.x.io.xml.WstxDriver taking a XmlFriendlyNameCoder.</li>
+    	<li>Added method canAccess to c.t.x.converter.reflection.AbstractReflectionConverter.</li>
+    	<li>Added static method canCreateDerivedObjectOutputStream to c.t.x.core.JVM.</li>
+    	<li>Deprecated unused member c.t.x.converter.javabean.BeanProvider.NO_PARAMS.</li>
+    	<li>Deprecated unused method c.t.x.converter.javabean.BeanProvider.getDefaultConstrutor(Class).</li>
+    </ul>
+
+
+    <h1 id="1.4.5">1.4.5</h1>
+
+    <p>Released September 18, 2013.</p>
+
+    <h2>Major changes</h2>
+    
+    <ul>
+    	<li>JIRA:XSTR-732: Use a referencing implementation for the ClassLoader to support environments where no new
+    	ClassLoader can be instantiated due to security restrictions.</li>
+    	<li>JIRA:XSTR-691: Allow unknown XML elements to be ignored using new method XStream.ignoreUnknownElements.</li>
+    	<li>JIRA:XSTR-728: XStream creates invalid JSON with JsonHierarchicalStreamDriver for custom converters since
+    	XStream 1.4.</li>
+    	<li>JIRA:XSTR-300: New EnumToStringConverter to support custom string representations of Enum values.</li>
+    	<li>JIRA:XSTR-292 and JIRA:XSTR-405: New NamedMapConverter and NamedCollectionConverter to define names of
+    	inner elements.</li>
+    	<li>JIRA:XSTR-726: New annotation XStreamAliasType to support declarative definition of XStream.aliasType().</li>
+    	<li>JIRA:XSTR-735: Support for JDOM2 with JDom2Driver, JDom2Reader and JDom2Writer.</li>
+    	<li>Optimized XML structure for java.awt.Font.</li>
+    	<li>Fix: ToAttributedValueConverter silently appends fields without attribute support to the value producing mixed-mode XML.</li>
+    	<li>JIRA:XSTR-566 and JIRA:XSTR-249: Better compatibility with Google AppEngine and J2ME, setup no longer fails for unavailable converters.</li>
+    </ul>
+
+    <h2>Minor changes</h2>
+    
+    <ul>
+    	<li>Fix missing manifest information.</li>
+    	<li>JIRA:XSTR-729: Add OSGi information to manifests.</li>
+    	<li>JIRA:XSTR-723: XStream will now detect a working enhanced mode dynamically instead using lists of known
+    	vendors. This allows enhanced support for JamVM if it is bundled with OpenJDK. It will currently fail on a 
+    	runtime based on GNU	Classpath (at least up to version 0.98).</li>
+    	<li>JIRA:XSTR-541: JavaScript compatibility problem with 64-bit integers in JSON.</li>
+    	<li>JIRA:XSTR-719: Support replacement of default converter in any case.</li>
+    	<li>JIRA:XSTR-725: processAnnotation performance improvement in concurrent situation.</li>
+    	<li>JIRA:XSTR-721: EnumConverter is more lenient while parsing constants.</li>
+    	<li>New constructors for CollectionConverter and MapConverter to allow registration for an individual type.</li>
+    	<li>JIRA:XSTR-724: Cache class name lookup failures.</li>
+    	<li>Current IBM JDK for Java 1.4.2 no longer has a reverse field ordering.</li>
+    	<li>LongConverter supports now positive hex and octal numbers over Long.MAX_VALUE within 64 bit.</li>
+    	<li>Fix: Sun14RefectionProvider ignores a provided FieldDictionary.</li>
+    	<li>JIRA:XSTR-457: Do not write 'defined-in' attribute it not needed.</li>
+    	<li>JettisonMappedXmlDriver provides better support to overwrite its create methods.</li>
+    	<li>JIRA:XSTR-685: StAX based drivers (StaxDriver and JettisonMappedXmlDriver) are not closing internal input
+    	stream reading from file or URL.</li>
+    	<li>JIRA:XSTR-736: XStream.unmarshal may throw NPE if version info of manifest is missing.</li>
+    	<li>JIRA:XSTR-733: Implicit elements that match multiple defined implicit collections will be assigned to the
+    	map with the nearest matching element type.</li>
+    	<li>JIRA:XSTR-740: ISO8601GregorianCalendarConverter creates Calendar instance with wrong Locale in Java 7 if
+    	the Locale for the LocaleCategory.FORMAT is different to the global default Locale.</li>
+    	<li>JIRA:XSTR-578: Implement support for aliasing in JavaClasConverter, JavaFieldConverter and
+    	JavaMethodConverter. While it is not possible to enable this in general, new constructors have been added to
+    	these converters and an example in the acceptance tests (AliasTest).</li>
+    	<li>JIRA:XSTR-742: Register CompositeClassLoader in Java 7 as parallel capable.</li>
+    	<li>JIRA:XSTR-743: Support proxy collections of Hibernate Envers.</li>
+    	<li>Fix NPE in AttributeMapper.shouldLookForSingleValueConverter if parameters fieldName and definedIn are null.</li>
+    	<li>Implicit type argument can be omitted when registering converters with @XStreamConverter annotation.</li>
+    </ul>
+
+    <h2>API changes</h2>
+
+    <ul>
+    	<li>Added c.t.x.converters.extended.NamedCollectionConverter for free element names in collections.</li>
+    	<li>Added c.t.x.converters.extended.NamedMapConverter for free element names in maps.</li>
+    	<li>Added c.t.x.io.xml.StandardStaxDriver to use the StAX implementation delivered with the Java 6 runtime.</li>
+    	<li>Deprecated c.t.x.io.xml.SjsxpStaxDriver to select the internal StAX implementation of Oracle.</li>
+    	<li>Added static methods getStaxInputFactory and getStaxOutputFactory to 	c.t.x.core.JVM as returning the
+    	implementations of javax.xml.stream.XMLInputFactory (resp. javax.xml.stream.XMLOutputFactory) delivered with
+    	the Java Runtime since Java 6.</li>
+    	<li>Added c.t.x.core.ClassLoaderReference.</li>
+    	<li>Added constructors taking an additional Class argument for c.t.x.converters.collections.CollectionConverter
+    	and c.t.x.converters.collections.MapConverter.</li>
+    	<li>Added constructors taking a ClassLoaderReference instead of a ClassLoader and deprecated the ones taking the ClassLoader:
+    		<ul>
+    		<li>c.t.x.XStream</li>
+    		<li>c.t.x.converters.extended.DynamicProxyConverter</li>
+    		<li>c.t.x.converters.extended.JavaClassConverter</li>
+    		<li>c.t.x.converters.extended.JavaFieldConverter</li>
+    		<li>c.t.x.converters.extended.JavaMethodConverter</li>
+    		<li>c.t.x.converters.reflection.CGLIBEnhancedConverter</li>
+    		<li>c.t.x.converters.reflection.ExternalizableConverter</li>
+    		<li>c.t.x.converters.reflection.SerializableConverter</li>
+    		<li>c.t.x.mapper.AnnotationMapper</li>
+    		<li>c.t.x.mapper.DefaultMapper</li>
+    		</ul>
+    	</li>
+    	<li>Added static methods newReflectionProvider, isAWTAvailable, isSQLAvailable and isSwingAvailable to
+    	c.t.x.core.JVM as replacement for the deprecated non-static methods.</li>
+    	<li>Deprecated c.t.x.core.JVM() and all non-static methods.</li>
+    	<li>Added method useImplicitType to c.t.x.annotations.XStreamConverter.</li>
+    	<li>JIRA:XSTR-722: Added 
+    	c.t.x.converters.reflection.ReflectionProvider.getFieldOrNull(Class, String).</li>
+    	<li>Deprecated 
+    	c.t.x.converters.reflection.ReflectionProvider.fieldDefinedInClass(Class, String) in
+    	favor of new c.t.x.converters.reflection.ReflectionProvider.getFieldOrNull(Class,
+    	String).</li>
+    	<li>Deprecated constructor c.t.x.converters.extended.RegexPatternConverter(Converter)
+    	in favor of c.t.x.converters.extended.RegexPatternConverter().</li>
+    	<li>Deprecated default constructor of c.t.x.converters.extended.FontConverter in favor of
+    	c.t.x.converters.extended.FontConverter(Mapper).</li>
+    	<li>Deprecated constructor c.t.x.converters.extended.ThrowableConverter(Converter)
+    	in favor of c.t.x.converters.extended.ThrowableConverter(ConverterLookup).</li>
+    	<li>Deprecated class c.t.x.converters.reflection.SelfStreamingInstanceChecker and moved
+    	original implementation into c.t.x.core.util, since it is internal.</li>
+    	<li>Deprecated interface c.t.x.mapper.AnnotationConfiguration.</li>
+    </ul>
 
     <h1 id="1.4.4">1.4.4</h1>
 
-    <p>Released 19. January 2013.</p>
+    <p>Released January 19, 2013.</p>
 
     <h2>Minor changes</h2>
     
     <ul>
     	<li>JIRA:XSTR-709: Locks up on Mac with Apple JVM due to unwanted initialization of AWT.</li>
     	<li>JIRA:XSTR-711: DateConverter cannot handle dates in different era.</li>
+    	<li>JIRA:XSTR-741: ToAttributedValueConverter fails to write enums as attributes.</li>
     	<li>JIRA:XSTR-712: HibernateMapper throws NPE if a collection contains null.</li>
     	<li>DateConverter supports now localized formats.</li>
     	<li>JIRA:XSTR-710: JsonWriter does not write BigInteger and BigDecimal as number values.</li>
@@ -65,7 +255,7 @@
 
     <h1 id="1.4.3">1.4.3</h1>
 
-    <p>Released 17. July 2012.</p>
+    <p>Released July 17, 2012.</p>
 
     <h2>Major changes</h2>
     
@@ -100,7 +290,7 @@
 
     <h1 id="1.4.2">1.4.2</h1>
 
-    <p>Released 3. November 2011.</p>
+    <p>Released November 3, 2011.</p>
 
     <h2>Major changes</h2>
 
@@ -162,7 +352,7 @@
 
     <h1 id="1.4.1">1.4.1</h1>
 
-    <p>Released 11. August 2011.</p>
+    <p>Released August 11, 2011.</p>
 
     <h2>Major changes</h2>
 
@@ -180,7 +370,7 @@
 
     <h1 id="1.4">1.4</h1>
 
-    <p>Released 6. August 2011.</p>
+    <p>Released August 6, 2011.</p>
 
     <h2>Major changes</h2>
 
@@ -308,7 +498,7 @@
 
     <h1 id="1.3.1">1.3.1</h1>
 
-    <p>Released 6 December 2008.</p>
+    <p>Released December 6, 2008.</p>
     
     <p class="highlight">CGLIB support must be explicitly activated now. The decision has been made due to possible problems using an own
     classloader and because of ongoing complaints about occurring exceptions in the CGLIBEnhancedConverter at XStream initialization although
@@ -379,7 +569,7 @@
 
     <h1 id="1.3">1.3</h1>
 
-    <p>Released 27 February 2008.</p>
+    <p>Released February 27, 2008.</p>
 
     <h2>Major changes</h2>
 
@@ -497,7 +687,7 @@
 
     <h1 id="1.2.2">Version 1.2.2</h1>
 
-    <p>Released 24 May 2007.</p>
+    <p>Released May 24, 2007.</p>
 
     <p class="hightlight">Note, that next version of XStream will behave slightly different by default.  XStream emits
     all fields in declaration order like Java serialization.  But in contrast to Java it will omit the fields of parent
@@ -547,7 +737,7 @@
 
     <h1 id="1.2.1">Version 1.2.1</h1>
 
-    <p>Released 11 November 2006.</p>
+    <p>Released November 11, 2006.</p>
 
     <h2>Major changes</h2>
 
@@ -587,7 +777,7 @@
 
     <h1 id="1.2">Version 1.2</h1>
 
-    <p>Released 18 August 2006.</p>
+    <p>Released August 18, 2006.</p>
 
     <h2>Major changes</h2>
 
@@ -654,7 +844,7 @@
 
     <h1 id="1.1.3">Version 1.1.3</h1>
 
-    <p>Released 13 January 2006.</p>
+    <p>Released January 13, 2006.</p>
 
     <h2>Major changes</h2>
 
@@ -690,8 +880,8 @@
 
     <h1 id="1.1.2">Version 1.1.2</h1>
 
-    <p>Released Apr 30, 2005. Most popular feature requests implemented. Java 5 Enum support. Serialization of JavaBeans using
-    accessors. Aliasing of fields. StAX integration, with namespaces. Improved support on JDK 1.3 and IBM JDK. </p>
+    <p>Released April 30, 2005. Most popular feature requests implemented. Java 5 Enum support. Serialization of JavaBeans
+    using accessors. Aliasing of fields. StAX integration, with namespaces. Improved support on JDK 1.3 and IBM JDK. </p>
 
     <h2>Major changes</h2>
 
@@ -726,7 +916,7 @@
 
     <h1 id="1.1.1">Version 1.1.1</h1>
 
-    <p>Released Mar 7, 2005. Mostly bugfixes and minor feature enhancements.</p>
+    <p>Released March 7, 2005. Mostly bugfixes and minor feature enhancements.</p>
 
     <h2>Major changes</h2>
 
@@ -767,7 +957,7 @@
 
     <h1 id="1.1">Version 1.1</h1>
 
-    <p>Released Jan 15, 2005. Focus on support for objects defining custom serialization using the standard
+    <p>Released January 15, 2005. Focus on support for objects defining custom serialization using the standard
     <a href="http://java.sun.com/j2se/1.4.2/docs/guide/serialization/spec/serialTOC.html">Java serialization</a> mechanism.</p>
 
     <h2>Major changes</h2>
@@ -818,7 +1008,7 @@
 
     <h1 id="1.0.2">Version 1.0.2</h1>
 
-    <p>Released Aug 7, 2004. Focus on improving the converters bundled with XStream to support a wider range of types.</p>
+    <p>Released August 7, 2004. Focus on improving the converters bundled with XStream to support a wider range of types.</p>
 
     <h2>Major changes</h2>
 

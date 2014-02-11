@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2011 XStream Committers.
+ * Copyright (C) 2006, 2007, 2011, 2013 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -54,12 +54,21 @@ public class DriverEndToEndTestSuite extends TestSuite {
         addDriverTest(new Dom4JDriver());
         addDriverTest(new DomDriver());
         addDriverTest(new JDomDriver());
+        if (JVM.is15()) {
+            Class driverType = JVM.loadClassForName("com.thoughtworks.xstream.io.xml.JDom2Driver");
+            try {
+                addDriverTest((HierarchicalStreamDriver)driverType.newInstance());
+            } catch (InstantiationException e) {
+                throw new AssertionFailedError("Cannot instantiate " + driverType.getName());
+            } catch (IllegalAccessException e) {
+                throw new AssertionFailedError("Cannot access default constructor of " + driverType.getName());
+            }
+        }
         addDriverTest(new KXml2DomDriver());
         addDriverTest(new KXml2Driver());
         addDriverTest(new StaxDriver());
         if (JVM.is16()) {
-            JVM jvm = new JVM();
-            Class driverType = jvm.loadClass("com.thoughtworks.xstream.io.xml.SjsxpDriver");
+            Class driverType = JVM.loadClassForName("com.thoughtworks.xstream.io.xml.StandardStaxDriver");
             try {
                 addDriverTest((HierarchicalStreamDriver)driverType.newInstance());
             } catch (InstantiationException e) {
@@ -75,8 +84,7 @@ public class DriverEndToEndTestSuite extends TestSuite {
         addDriverTest(new XppDomDriver());
         addDriverTest(new XppDriver());
         if (JVM.is14()) {
-            JVM jvm = new JVM();
-            Class driverType = jvm.loadClass("com.thoughtworks.xstream.io.json.JettisonMappedXmlDriver");
+            Class driverType = JVM.loadClassForName("com.thoughtworks.xstream.io.json.JettisonMappedXmlDriver");
             try {
                 addDriverTest((HierarchicalStreamDriver)driverType.newInstance());
             } catch (InstantiationException e) {

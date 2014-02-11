@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009, 2010, 2011, 2012 XStream Committers.
+ * Copyright (C) 2009, 2010, 2011, 2012, 2013 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -39,7 +39,7 @@ public abstract class AbstractJsonWriter extends AbstractWriter {
     /**
      * DROP_ROOT_MODE drops the JSON root node.
      * <p>
-     * The root node is the first level of the JSON object i.e.
+     * The root node is the first level of the JSON object i.e.</p>
      * 
      * <pre>
      * { &quot;person&quot;: {
@@ -47,7 +47,7 @@ public abstract class AbstractJsonWriter extends AbstractWriter {
      * }}
      * </pre>
      * 
-     * will be written without root simply as
+     * <p>will be written without root simply as</p>
      * 
      * <pre>
      * {
@@ -55,9 +55,9 @@ public abstract class AbstractJsonWriter extends AbstractWriter {
      * }
      * </pre>
      * 
+     * <p>
      * Without a root node, the top level element might now also be an array. However, it is
-     * possible to generate invalid JSON unless {@link #STRICT_MODE} is also set.
-     * </p>
+     * possible to generate invalid JSON unless {@link #STRICT_MODE} is also set.</p>
      * 
      * @since 1.3.1
      */
@@ -66,21 +66,21 @@ public abstract class AbstractJsonWriter extends AbstractWriter {
      * STRICT_MODE prevents invalid JSON for single value objects when dropping the root.
      * <p>
      * The mode is only useful in combination with the {@link #DROP_ROOT_MODE}. An object with a
-     * single value as first node i.e.
+     * single value as first node i.e.</p>
      * 
      * <pre>
      * { &quot;name&quot;: &quot;Joe&quot; }
      * </pre>
      * 
-     * is simply written as
+     * <p>is simply written as</p>
      * 
      * <pre>
      * &quot;Joe&quot;
      * </pre>
      * 
+     * <p>
      * However, this is no longer valid JSON. Therefore you can activate {@link #STRICT_MODE}
-     * and a {@link ConversionException} is thrown instead.
-     * </p>
+     * and a {@link ConversionException} is thrown instead.</p>
      * 
      * @since 1.3.1
      */
@@ -102,21 +102,39 @@ public abstract class AbstractJsonWriter extends AbstractWriter {
      * a JSON object with all attributes, the second one the value of the Java object which can
      * be null, a string or integer value or again a new JSON object representing a Java object.
      * Here an example of an string array with one member, where the array and the string has an
-     * additional attribute 'id':
+     * additional attribute 'id':</p>
      * 
      * <pre>
      * {&quot;string-array&quot;:[[{&quot;id&quot;:&quot;1&quot;}],[{&quot;string&quot;:[[{&quot;id&quot;:&quot;2&quot;}],[&quot;Joe&quot;]]}]]}
      * </pre>
      * 
+     * <p>
      * This format can be used to always deserialize into Java again.
      * </p>
      * <p>
-     * This mode cannot be combined with one of the other modes.
+     * This mode cannot combined with {@link #STRICT_MODE} or {@link #DROP_ROOT_MODE}.
      * </p>
      * 
      * @since 1.4
      */
     public static final int EXPLICIT_MODE = 4;
+    /**
+     * IEEE_754_MODE keeps precision of 64-bit integer values.
+     * <p>
+     * In JavaScript every number is expressed as 64-bit double value with a precision of 53
+     * bits following IEEE 754.  Therefore it is not possible to represent the complete value
+     * range of 64-bit integer values.  Any integer value &gt; 2<sup>53</sup>
+     * (9007199254740992) or &lt; -2<sup>53</sup> (-9007199254740992) will therefore be
+     * written as string value.
+     * </p>
+     * <p>
+     * CAUTION: A client must be aware that the element may contain a number or a string value.
+     * </p>
+     * 
+     * @since 1.4.5
+     * @see <a href="http://ecma262-5.com/ELS5_HTML.htm#Section_8.5">ECMA Specification: The Number Type</a>
+     */
+    public static final int IEEE_754_MODE = 8;
 
     public static class Type {
         public static Type NULL = new Type();
@@ -408,7 +426,18 @@ public abstract class AbstractJsonWriter extends AbstractWriter {
                         endObject();
                     }
                 } else {
-                    addValue(valueToAdd, getType(currentType));
+                    if (((mode & IEEE_754_MODE) != 0)
+                        && (currentType == long.class || currentType == Long.class)) {
+                        long longValue = Long.parseLong(valueToAdd);
+                        // JavaScript supports a maximum of 2^53
+                        if (longValue > 9007199254740992L || longValue < -9007199254740992L) {
+                            addValue(valueToAdd, Type.STRING);
+                        } else {
+                            addValue(valueToAdd, getType(currentType));
+                        }
+                    } else {
+                        addValue(valueToAdd, getType(currentType));
+                    }
                 }
                 return requiredState;
             case STATE_END_ELEMENTS:
@@ -554,7 +583,7 @@ public abstract class AbstractJsonWriter extends AbstractWriter {
      * @since 1.4.4
      */
     protected Type getType(Class clazz) {
-        return (clazz == Mapper.Null.class || clazz == null)
+        return clazz == Mapper.Null.class
             ? Type.NULL
             : (clazz == Boolean.class || clazz == Boolean.TYPE) 
                 ? Type.BOOLEAN 

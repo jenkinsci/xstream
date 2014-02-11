@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2010, 2011, 2012 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2010, 2011, 2012, 2013, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -28,6 +28,8 @@ import java.util.Map;
 import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
+import com.thoughtworks.xstream.core.ClassLoaderReference;
+import com.thoughtworks.xstream.core.JVM;
 import com.thoughtworks.xstream.core.util.CustomObjectInputStream;
 import com.thoughtworks.xstream.core.util.CustomObjectOutputStream;
 import com.thoughtworks.xstream.core.util.HierarchicalStreams;
@@ -68,28 +70,53 @@ public class SerializableConverter extends AbstractReflectionConverter {
     private static final String ELEMENT_FIELDS = "fields";
     private static final String ELEMENT_FIELD = "field";
     private static final String ATTRIBUTE_NAME = "name";
-    private final ClassLoader classLoader;
+    
+    private final ClassLoaderReference classLoaderReference;
 
-    public SerializableConverter(Mapper mapper, ReflectionProvider reflectionProvider, ClassLoader classLoader) {
+    /**
+     * Construct a SerializableConverter.
+     * @param mapper the mapper chain instance
+     * @param reflectionProvider the reflection provider
+     * @param classLoaderReference the reference to the {@link ClassLoader} of the XStream instance
+     * @since 1.4.5
+     */
+    public SerializableConverter(Mapper mapper, ReflectionProvider reflectionProvider, ClassLoaderReference classLoaderReference) {
         super(mapper, new UnserializableParentsReflectionProvider(reflectionProvider));
-        this.classLoader = classLoader;
+        this.classLoaderReference = classLoaderReference;
     }
 
     /**
-     * @deprecated As of 1.4 use {@link #SerializableConverter(Mapper, ReflectionProvider, ClassLoader)}
+     * @deprecated As of 1.4.5 use {@link #SerializableConverter(Mapper, ReflectionProvider, ClassLoaderReference)}
+     */
+    public SerializableConverter(Mapper mapper, ReflectionProvider reflectionProvider, ClassLoader classLoader) {
+        this(mapper, reflectionProvider, new ClassLoaderReference(classLoader));
+    }
+
+    /**
+     * @deprecated As of 1.4 use {@link #SerializableConverter(Mapper, ReflectionProvider, ClassLoaderReference)}
      */
     public SerializableConverter(Mapper mapper, ReflectionProvider reflectionProvider) {
-        this(mapper, new UnserializableParentsReflectionProvider(reflectionProvider), null);
+        this(mapper, new UnserializableParentsReflectionProvider(reflectionProvider), new ClassLoaderReference(null));
     }
 
     public boolean canConvert(Class type) {
-        return isSerializable(type);
+        return JVM.canCreateDerivedObjectOutputStream() && isSerializable(type);
     }
 
     private boolean isSerializable(Class type) {
-        return Serializable.class.isAssignableFrom(type)
-          && ( serializationMethodInvoker.supportsReadObject(type, true)
-            || serializationMethodInvoker.supportsWriteObject(type, true) );
+        if (type != null
+            && Serializable.class.isAssignableFrom(type)
+            && !type.isInterface()
+            && (serializationMethodInvoker.supportsReadObject(type, true) || serializationMethodInvoker
+                .supportsWriteObject(type, true))) {
+            for (Iterator iter = hierarchyFor(type).iterator(); iter.hasNext();) {
+                if (!Serializable.class.isAssignableFrom((Class)iter.next())) {
+                    return canAccess(type);
+                }
+            }
+            return true;
+        }
+        return false;
     }
 
     public void doMarshal(final Object source, final HierarchicalStreamWriter writer, final MarshallingContext context) {
@@ -269,7 +296,9 @@ public class SerializableConverter extends AbstractReflectionConverter {
     private Object readField(ObjectStreamField field, Class type, Object instance) {
         try {
             Field javaField = type.getDeclaredField(field.getName());
-            javaField.setAccessible(true);
+            if (!javaField.isAccessible()) {
+                javaField.setAccessible(true);
+            }
             return javaField.get(instance);
         } catch (IllegalArgumentException e) {
             throw new ObjectAccessException("Could not get field " + field.getClass() + "." + field.getName(), e);
@@ -284,7 +313,7 @@ public class SerializableConverter extends AbstractReflectionConverter {
 
     protected List hierarchyFor(Class type) {
         List result = new ArrayList();
-        while(type != Object.class) {
+        while(type != Object.class && type != null) {
             result.add(type);
             type = type.getSuperclass();
         }
@@ -421,7 +450,7 @@ public class SerializableConverter extends AbstractReflectionConverter {
                 }
                 if (serializationMethodInvoker.supportsReadObject(currentType[0], false)) {
                     CustomObjectInputStream objectInputStream = 
-                        CustomObjectInputStream.getInstance(context, callback, classLoader);
+                        CustomObjectInputStream.getInstance(context, callback, classLoaderReference);
                     serializationMethodInvoker.callReadObject(currentType[0], result, objectInputStream);
                     objectInputStream.popCallback();
                 } else {

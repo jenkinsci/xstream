@@ -1,7 +1,7 @@
 <html>
 <!--
  Copyright (C) 2005, 2006 Joe Walnes.
- Copyright (C) 2006, 2007, 2008, 2009, 2011, 2012, 2013 XStream committers.
+ Copyright (C) 2006, 2007, 2008, 2009, 2011, 2012, 2013, 2014 XStream committers.
  All rights reserved.
  
  The software in this package is published under the terms of the BSD
@@ -16,7 +16,44 @@
 
   <body>
 
-    <h2 id="1.4.4"><b>Jan 19, 2013</b> XStream 1.4.4 released</h2>
+    <h2 id="1.4.7"><b>February 8, 2014</b> XStream 1.4.7 released</h2>
+
+      <p class="highlight">This maintenance release addresses mainly the security vulnerability CVE-2013-7285, an
+      arbitrary execution of commands when unmarshalling.  All previous versions are affected running at least Java 5.</p>
+
+      <p>XStream contains now a security framework to fine-control the unmarshalled types.</p>
+
+      <p>View the complete <a href="changes.html">change log</a> and <a href="download.html">download</a>.</p>
+
+      <p>Note, the next major release 1.5 will require Java 6.</p>
+
+    <h2 id="1.4.6"><b>December 12, 2013</b> XStream 1.4.6 released</h2>
+
+      <p>Maintenance release 1.4.6 of XStream with bug fixes and improvements running with Java 8, in a GAE runtime
+      environment and under an active SecurityManager.</p>
+
+      <p>View the complete <a href="changes.html#1.4.6">change log</a> and <a href="download.html">download</a>.</p>
+
+    <h2 id="1.4.5"><b>September 28, 2013</b> XStream 1.4.5 released</h2>
+
+      <p>Maintenance release 1.4.5 of XStream with bug fixes and small improvements.</p>
+
+      <ul>
+    	<li>Allow unknown XML elements to be ignored using new method XStream.ignoreUnknownElements.</li>
+    	<li>Support for JDOM2 with JDom2Driver, JDom2Reader and JDom2Writer.</li>
+    	<li>Optimized XML structure for java.awt.Font.</li>
+    	<li>Referencing implementation for the ClassLoader to support environments where no new	ClassLoader can be
+    	instantiated due to security restrictions.</li>
+      </ul>
+
+      <p>View the complete <a href="changes.html#1.4.5">change log</a> and <a href="download.html">download</a>.</p>
+
+    <h2 id="decade"><b>September 26, 2013</b> A Decade of XStream</h2>
+
+      <p>Joe Walnes made his initial commit to the XStream project at Codehaus in 26th September 2003.
+      10 years passed by and XStream celebrates its 10th birthday!</p>
+
+    <h2 id="1.4.4"><b>January 19, 2013</b> XStream 1.4.4 released</h2>
 
       <p>Maintenance release 1.4.4 of XStream with bug fixes and small improvements.</p>
 
@@ -24,11 +61,9 @@
     	<li>DateConverter supports now localized formats.</li>
       </ul>
 
-      <p>View the complete <a href="changes.html">change log</a> and <a href="download.html">download</a>.</p>
+      <p>View the complete <a href="changes.html#1.4.4">change log</a> and <a href="download.html">download</a>.</p>
 
-      <p>Note, the next major release 1.5 will require Java 6.</p>
-
-    <h2 id="1.4.3"><b>Jul 17, 2012</b> XStream 1.4.3 released</h2>
+    <h2 id="1.4.3"><b>July 17, 2012</b> XStream 1.4.3 released</h2>
 
       <p>Maintenance release 1.4.3 of XStream with bug fixes and small improvements. Main changes:</p>
 
@@ -40,7 +75,7 @@
       <p>View the complete <a href="changes.html#1.4.3">change log</a> and <a href="download.html">download</a>.</p>
 
 
-    <h2 id="1.4.2"><b>Nov 3, 2011</b> XStream 1.4.2 released</h2>
+    <h2 id="1.4.2"><b>November 3, 2011</b> XStream 1.4.2 released</h2>
 
       <p>Maintenance release 1.4.2 of XStream with bug fixes and small improvements. Main changes:</p>
 
@@ -56,7 +91,7 @@
 
       <p>View the complete <a href="changes.html#1.4.2">change log</a> and <a href="download.html">download</a>.</p>
 
-    <h2 id="1.4.1"><b>Aug 11, 2011</b> XStream 1.4.1 released</h2>
+    <h2 id="1.4.1"><b>August 11, 2011</b> XStream 1.4.1 released</h2>
 
       <p>Maintenance release 1.4.1 of XStream after turning out that it did not work in 1.4 with the new default
       dependencies.  Therefore XStream is back with Xpp3 as default parser and refers additionally the XmlPullParser
@@ -64,7 +99,7 @@
 
       <p>View the complete <a href="changes.html#1.4.1">change log</a> and <a href="download.html">download</a>.</p>
 
-    <h2 id="1.4"><b>Aug 6, 2011</b> XStream 1.4 released</h2>
+    <h2 id="1.4"><b>August 6, 2011</b> XStream 1.4 released</h2>
 
       <p>Finally - XStream 1.4 is ready for delivery.  A lot of things have changed and improved, new features added.
       Nevertheless we have maintain compatibility to the old versions:</p>
@@ -94,7 +129,7 @@
     value in its marshalling methods.  If you have implemented your own custom converters, try to handle such a case also to prevent incompatibilities
     in case XStream will provide such values with its next major version.</p>
 
-    <h2 id="1.3.1"><b>Dec 6, 2008</b> XStream 1.3.1 released</h2>
+    <h2 id="1.3.1"><b>December 6, 2008</b> XStream 1.3.1 released</h2>
 
       <p>A new XStream maintenance version has been released.  The release contains some
       bug fixes, some minor enhancements and support of new JDKs:</p>
@@ -119,7 +154,7 @@
     value in its marshalling methods.  If you have implemented your own custom converters, try to handle such a case also to prevent incompatibilities
     in case XStream will provide such values with its next major version.</p>
 
-    <h2 id="1.3"><b>Feb 27, 2008</b> XStream 1.3 released</h2>
+    <h2 id="1.3"><b>February 27, 2008</b> XStream 1.3 released</h2>
     
       <p>The XStream committers proudly present XStream 1.3.  This release contains some major
       refactorings concerning Java annotations, improved XML support regarding encoding and 
@@ -168,7 +203,7 @@
     fine.  Anyway we will provide with XStream 1.3 a FieldKeySorter implementation that mimics the old behaviour.  In
     the meanwhile you can enforce the new field sorting by installing the NaturalFieldKeySorter.</p>
 
-    <h2 id="1.2.1"><b>Nov 11, 2006</b> XStream 1.2.1 released</h2>
+    <h2 id="1.2.1"><b>November 11, 2006</b> XStream 1.2.1 released</h2>
 	  <ul>
     	<li>Introduced DocumentWriter interface and generalized functionality for all writer implementations
     	creating a DOM structure (DOM4J, DOM, JDom, Xom, Xpp3Dom).</li>
@@ -208,7 +243,7 @@
 	<p>I'd also like to thank the 45(!) other <a href="team.html">contributers</a> to the XStream project, who have all helped 
 	make it what it is today. Finally, thanks to Graham Glass, who's Electric XML library formed a lot of the inspiration for XStream.</p>
 
-    <h2 id="1.2"><b>Aug 18, 2006</b> XStream 1.2 released</h2>
+    <h2 id="1.2"><b>August 18, 2006</b> XStream 1.2 released</h2>
 	  <ul>
         <li>Using attributes for fields (contributed by Paul Hammant and Ian Cartwright).</li>
         <li>Aliasing of arbitrary attributes.</li>
@@ -228,7 +263,7 @@
    	  </ul>
       <p>View the complete <a href="changes.html#1.2">change log</a> and <a href="download.html">download</a>.</p>
 
-    <h2 id="1.1.3"><b>Jan 13, 2006</b> XStream 1.1.3 released</h2>
+    <h2 id="1.1.3"><b>January 13, 2006</b> XStream 1.1.3 released</h2>
 	  <ul>
         <li>Added XStream.toXML(OutputStream) and XStream.fromXML(InputStream).</li>
         <li>Ability to prevent fields from being serialized by calling XStream.omitField() or by implementing Mapper.shouldSerializeMember().</li>
@@ -239,7 +274,7 @@
    	  </ul>
       <p>View the complete <a href="changes.html#1.1.3">change log</a> and <a href="download.html">download</a>.</p>
 
-    <h2 id="1.1.2"><b>Apr 30, 2005</b> XStream 1.1.2 released</h2>
+    <h2 id="1.1.2"><b>April 30, 2005</b> XStream 1.1.2 released</h2>
       <p>Most popular feature requests implemented.</p>
       <ul>
         <li>Java 5 Enum support.</li>
@@ -250,7 +285,7 @@
       </ul>
       <p>View the complete <a href="changes.html#1.1.2">change log</a> and <a href="download.html">download</a>.</p>
 
-    <h2 id="1.1.1"><b>Mar 7, 2005</b> XStream 1.1.1 released</h2>
+    <h2 id="1.1.1"><b>March 7, 2005</b> XStream 1.1.1 released</h2>
       <ul>
 		<li>Converters can be registered with a priority, allowing more <i>generic</i> filters to handle classes that don't have more specific converters.</li>
 		<li>Converters can now access underlying HierarchicalStreamReader/Writer implementations to make implementation specific calls.</li>
@@ -260,7 +295,7 @@
       </ul>
       <p>View the complete <a href="changes.html#1.1.1">change log</a> and <a href="download.html">download</a>.</p>
 
-    <h2 id="1.1"><b>Jan 15, 2005</b> XStream 1.1 released</h2>
+    <h2 id="1.1"><b>January 15, 2005</b> XStream 1.1 released</h2>
       <ul>
         <li>Improved support for serializing objects as per the <a href="http://java.sun.com/j2se/1.4.2/docs/guide/serialization/spec/serialTOC.html">Java Serialization</a> Specification:
         <ul>

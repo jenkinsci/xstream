@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011, 2012 XStream Committers.
+ * Copyright (C) 2011, 2012, 2013 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -63,6 +63,7 @@ public class ImplicitMapTest extends AbstractAcceptanceTest {
         xstream.alias("software", Software.class);
         xstream.alias("hardware", Hardware.class);
         xstream.alias("product", Product.class);
+        xstream.ignoreUnknownElements();
     }
 
     public void testWithout() {
@@ -119,6 +120,7 @@ public class ImplicitMapTest extends AbstractAcceptanceTest {
     }
 
     public static class MegaSampleMaps extends SampleMaps {
+        String separator = "---";
         Map other = new OrderRetainingMap();
         {
             good = new OrderRetainingMap();
@@ -144,6 +146,7 @@ public class ImplicitMapTest extends AbstractAcceptanceTest {
                 "    <name>Linux</name>\n" +
                 "  </software>\n" +
                 "  <bad/>\n" +
+                "  <separator>---</separator>\n" +
                 "  <other/>\n" +
                 "</MEGA-sample>";
 
@@ -170,6 +173,7 @@ public class ImplicitMapTest extends AbstractAcceptanceTest {
                 "    <name>Linux</name>\n" +
                 "  </software>\n" +
                 "  <bad/>\n" +
+                "  <separator>---</separator>\n" +
                 "  <hardware>\n" +
                 "    <arch>i386</arch>\n" +
                 "    <name>Intel</name>\n" +
@@ -200,6 +204,7 @@ public class ImplicitMapTest extends AbstractAcceptanceTest {
                 "    <name>Linux</name>\n" +
                 "  </software>\n" +
                 "  <bad/>\n" +
+                "  <separator>---</separator>\n" +
                 "  <hardware>\n" +
                 "    <arch>i386</arch>\n" +
                 "    <name>Intel</name>\n" +
@@ -229,6 +234,7 @@ public class ImplicitMapTest extends AbstractAcceptanceTest {
                 "    <name>Linux</name>\n" +
                 "  </software>\n" +
                 "  <bad/>\n" +
+                "  <separator>---</separator>\n" +
                 "  <other/>\n" +
                 "</MEGA-sample>";
 
@@ -268,6 +274,7 @@ public class ImplicitMapTest extends AbstractAcceptanceTest {
                 "      <name>Linux</name>\n" +
                 "    </software>\n" +
                 "    <bad/>\n" +
+                "    <separator>---</separator>\n" +
                 "    <hardware>\n" +
                 "      <arch>i386</arch>\n" +
                 "      <name>Intel</name>\n" +
@@ -311,6 +318,7 @@ public class ImplicitMapTest extends AbstractAcceptanceTest {
                 "    <id>i</id>\n" +
                 "    <price>399.99</price>\n" +
                 "  </product>\n" +
+                "  <separator>---</separator>\n" +
                 "  <hardware>\n" +
                 "    <arch>i386</arch>\n" +
                 "    <name>Intel</name>\n" +
