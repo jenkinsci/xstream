@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2011 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2011, 2013 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -13,6 +13,8 @@ package com.thoughtworks.xstream.mapper;
 
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.SingleValueConverter;
+import com.thoughtworks.xstream.core.ClassLoaderReference;
+import com.thoughtworks.xstream.core.util.Primitives;
 
 
 /**
@@ -28,13 +30,30 @@ public class DefaultMapper implements Mapper {
     static {
         String packageName = DefaultMapper.class.getName();
         int idx = packageName.indexOf(".xstream.");
-        XSTREAM_PACKAGE_ROOT = idx > 0 ? packageName.substring(0, idx+9) : null;
+        XSTREAM_PACKAGE_ROOT = idx > 0 ? packageName.substring(0, idx+9) : ".N/A";
     }
     
-    private final ClassLoader classLoader;
+    private final ClassLoaderReference classLoaderReference;
 
+    
+    /**
+     * Construct a DefaultMapper.
+     * 
+     * @param classLoaderReference the reference to the classloader used by the XStream instance.
+     * @since 1.4.5
+     */
+    public DefaultMapper(ClassLoaderReference classLoaderReference) {
+        this.classLoaderReference = classLoaderReference;
+    }
+
+    /**
+     * Construct a DefaultMapper.
+     * 
+     * @param classLoader the ClassLoader used by the XStream instance.
+     * @deprecated As of 1.4.5 use {@link #DefaultMapper(ClassLoaderReference)}
+     */
     public DefaultMapper(ClassLoader classLoader) {
-        this.classLoader = classLoader;
+        this(new ClassLoaderReference(classLoader));
     }
 
     public String serializedClass(Class type) {
@@ -42,16 +61,20 @@ public class DefaultMapper implements Mapper {
     }
 
     public Class realClass(String elementName) {
+        Class resultingClass = Primitives.primitiveType(elementName);
+        if( resultingClass != null ){
+            return resultingClass;
+        }
         try {
+            boolean initialize = true;
+            final ClassLoader classLoader;
             if (elementName.startsWith(XSTREAM_PACKAGE_ROOT)) {
-                return DefaultMapper.class.getClassLoader().loadClass(elementName);
-            } else if (elementName.charAt(0) != '[') {
-                return classLoader.loadClass(elementName);
-            } else if (elementName.endsWith(";")) {
-                return Class.forName(elementName.toString(), false, classLoader);
-            } else { 
-                return Class.forName(elementName.toString());
+                classLoader = DefaultMapper.class.getClassLoader();
+            } else {
+                classLoader = classLoaderReference.getReference();
+                initialize = elementName.charAt(0) == '[';
             }
+            return Class.forName(elementName, initialize, classLoader);
         } catch (ClassNotFoundException e) {
             throw new CannotResolveClassException(elementName);
         }

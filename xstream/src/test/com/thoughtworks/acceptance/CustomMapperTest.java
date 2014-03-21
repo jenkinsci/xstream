@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2013, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -20,6 +20,7 @@ import com.thoughtworks.acceptance.objects.StandardObject;
 import com.thoughtworks.acceptance.someobjects.WithList;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.converters.reflection.PureJavaReflectionProvider;
+import com.thoughtworks.xstream.core.ClassLoaderReference;
 import com.thoughtworks.xstream.io.xml.DomDriver;
 import com.thoughtworks.xstream.mapper.CannotResolveClassException;
 import com.thoughtworks.xstream.mapper.DefaultMapper;
@@ -84,6 +85,7 @@ public class CustomMapperTest extends AbstractAcceptanceTest {
                 return new FieldPrefixStrippingMapper(next);
             }
         };
+        setupSecurity(xstream);
         xstream.alias("thing", ThingWithStupidNamingConventions.class);
 
         ThingWithStupidNamingConventions in = new ThingWithStupidNamingConventions("Joe", "Walnes", 10);
@@ -126,7 +128,8 @@ public class CustomMapperTest extends AbstractAcceptanceTest {
     }
     
     public void testOwnMapperChainCanBeRegistered() {
-        Mapper mapper = new DefaultMapper(getClass().getClassLoader());
+        ClassLoaderReference classLoaderReference = new ClassLoaderReference(getClass().getClassLoader());
+        Mapper mapper = new DefaultMapper(classLoaderReference);
         xstream = new XStream(new PureJavaReflectionProvider(), new DomDriver(), getClass().getClassLoader(), mapper);
         
         String expected = "" +
@@ -158,6 +161,7 @@ public class CustomMapperTest extends AbstractAcceptanceTest {
             }
             
         };
+        setupSecurity(xstream);
         xstream.alias("software", Software.class);
 
         Software out = (Software) xstream.fromXML(expectedXml);
@@ -189,6 +193,7 @@ public class CustomMapperTest extends AbstractAcceptanceTest {
             }
 
         };
+        setupSecurity(xstream);
         xstream.alias("wl", WithList.class);
         WithList wl = (WithList)xstream.fromXML("" 
                 + "<wl>\n" 

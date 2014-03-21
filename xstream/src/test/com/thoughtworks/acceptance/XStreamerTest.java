@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -15,6 +15,7 @@ import com.thoughtworks.acceptance.objects.OpenSourceSoftware;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.XStreamer;
 import com.thoughtworks.xstream.converters.ConversionException;
+import com.thoughtworks.xstream.security.TypePermission;
 
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
@@ -54,19 +55,27 @@ public class XStreamerTest extends AbstractAcceptanceTest {
             xstream.toXML(c);
             fail("Thrown " + ConversionException.class.getName() + " expected");
         } catch (final ConversionException e) {
+            assertTrue(e.getMessage().indexOf("XStream instance")>=0);
         }
     }
     
     public void testCanConvertAnotherInstance() throws TransformerException { 
         XStream x = createXStream();
         final String xml = normalizedXStreamXML(xstream.toXML(x));
+        final TypePermission[] permissions = XStreamer.getDefaultPermissions();
+        for(int i = 0; i < permissions.length; ++i)
+            xstream.addPermission(permissions[i]);
         final XStream serialized = (XStream)xstream.fromXML(xml);
         final String xmlSerialized = normalizedXStreamXML(xstream.toXML(serialized));
         assertEquals(xml, xmlSerialized);
     }
     
     public void testCanBeUsedAfterSerialization() throws TransformerException {
-        xstream = (XStream)xstream.fromXML(xstream.toXML(createXStream()));
+        final String xml = xstream.toXML(createXStream());
+        final TypePermission[] permissions = XStreamer.getDefaultPermissions();
+        for(int i = 0; i < permissions.length; ++i)
+            xstream.addPermission(permissions[i]);
+        xstream = (XStream)xstream.fromXML(xml);
         testCanConvertAnotherInstance();
     }
     

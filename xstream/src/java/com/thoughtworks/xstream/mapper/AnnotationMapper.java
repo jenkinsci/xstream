@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007, 2008, 2009, 2011, 2012 XStream Committers.
+ * Copyright (C) 2007, 2008, 2009, 2011, 2012, 2013 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -10,6 +10,9 @@
  */
 package com.thoughtworks.xstream.mapper;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.GenericArrayType;
@@ -19,6 +22,7 @@ import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -26,10 +30,11 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.WeakHashMap;
 
 import com.thoughtworks.xstream.InitializationException;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
+import com.thoughtworks.xstream.annotations.XStreamAliasType;
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 import com.thoughtworks.xstream.annotations.XStreamConverter;
 import com.thoughtworks.xstream.annotations.XStreamConverters;
@@ -45,8 +50,10 @@ import com.thoughtworks.xstream.converters.ConverterRegistry;
 import com.thoughtworks.xstream.converters.SingleValueConverter;
 import com.thoughtworks.xstream.converters.SingleValueConverterWrapper;
 import com.thoughtworks.xstream.converters.reflection.ReflectionProvider;
+import com.thoughtworks.xstream.core.ClassLoaderReference;
 import com.thoughtworks.xstream.core.JVM;
 import com.thoughtworks.xstream.core.util.DependencyInjectionFactory;
+import com.thoughtworks.xstream.core.util.TypedNull;
 
 
 /**
@@ -58,42 +65,54 @@ import com.thoughtworks.xstream.core.util.DependencyInjectionFactory;
 public class AnnotationMapper extends MapperWrapper implements AnnotationConfiguration {
 
     private boolean locked;
-    private final Object[] arguments;
+    private transient Object[] arguments;
     private final ConverterRegistry converterRegistry;
-    private final ClassAliasingMapper classAliasingMapper;
-    private final DefaultImplementationsMapper defaultImplementationsMapper;
-    private final ImplicitCollectionMapper implicitCollectionMapper;
-    private final FieldAliasingMapper fieldAliasingMapper;
-    private final AttributeMapper attributeMapper;
-    private final LocalConversionMapper localConversionMapper;
-    private final Map<Class<?>, Map<List<Object>, Converter>> converterCache =
+    private transient ClassAliasingMapper classAliasingMapper;
+    private transient DefaultImplementationsMapper defaultImplementationsMapper;
+    private transient ImplicitCollectionMapper implicitCollectionMapper;
+    private transient FieldAliasingMapper fieldAliasingMapper;
+    private transient AttributeMapper attributeMapper;
+    private transient LocalConversionMapper localConversionMapper;
+    private final Map<Class<?>, Map<List<Object>, Converter>> converterCache = 
             new HashMap<Class<?>, Map<List<Object>, Converter>>();
-    private final Set<Class<?>> annotatedTypes = new HashSet<Class<?>>();
-    private final Map<Class<?>,Boolean> processedTypes = new ConcurrentHashMap<Class<?>,Boolean>(); // used like a set since there's no ConcurrentHashSet
+    private final Set<Class<?>> annotatedTypes = 
+            Collections.synchronizedSet(new HashSet<Class<?>>());
 
-    private final Map<Class,String> serializedClass = new ConcurrentHashMap<Class, String>();
+    private final Map<Class,String> serializedClass = new WeakHashMap<Class, String>();
+
+    /**
+     * Construct an AnnotationMapper.
+     * 
+     * @param wrapped the next {@link Mapper} in the chain
+     * @since 1.4.5
+     */
+    public AnnotationMapper(
+        final Mapper wrapped, final ConverterRegistry converterRegistry, final ConverterLookup converterLookup,
+        final ClassLoaderReference classLoaderReference, final ReflectionProvider reflectionProvider) {
+        super(wrapped);
+        this.converterRegistry = converterRegistry;
+        annotatedTypes.add(Object.class);
+        setupMappers();
+        locked = true;
+        
+        final ClassLoader classLoader = classLoaderReference.getReference();
+        arguments = new Object[]{
+            this, classLoaderReference, reflectionProvider, converterLookup, new JVM(),
+            classLoader != null ? classLoader : new TypedNull(ClassLoader.class)};
+    }
 
     /**
      * Construct an AnnotationMapper.
      * 
      * @param wrapped the next {@link Mapper} in the chain
      * @since 1.3
+     * @deprecated As of 1.4.5 use {@link #AnnotationMapper(Mapper, ConverterRegistry, ConverterLookup, ClassLoaderReference, ReflectionProvider)}
      */
     public AnnotationMapper(
         final Mapper wrapped, final ConverterRegistry converterRegistry, final ConverterLookup converterLookup,
         final ClassLoader classLoader, final ReflectionProvider reflectionProvider,
         final JVM jvm) {
-        super(wrapped);
-        this.converterRegistry = converterRegistry;
-        annotatedTypes.add(Object.class);
-        classAliasingMapper = (ClassAliasingMapper)lookupMapperOfType(ClassAliasingMapper.class);
-        defaultImplementationsMapper = (DefaultImplementationsMapper)lookupMapperOfType(DefaultImplementationsMapper.class);
-        implicitCollectionMapper = (ImplicitCollectionMapper)lookupMapperOfType(ImplicitCollectionMapper.class);
-        fieldAliasingMapper = (FieldAliasingMapper)lookupMapperOfType(FieldAliasingMapper.class);
-        attributeMapper = (AttributeMapper)lookupMapperOfType(AttributeMapper.class);
-        localConversionMapper = (LocalConversionMapper)lookupMapperOfType(LocalConversionMapper.class);
-        locked = true;
-        arguments = new Object[]{this, classLoader, reflectionProvider, jvm, converterLookup};
+        this(wrapped, converterRegistry, converterLookup, new ClassLoaderReference(classLoader), reflectionProvider);
     }
 
     @Override
@@ -145,28 +164,22 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
             return;
         }
         locked = true;
-        synchronized (annotatedTypes) {
-            final Set<Class<?>> types = new UnprocessedTypesSet();
-            for (final Class initialType : initialTypes) {
-                types.add(initialType);
-            }
-            processTypes(types);
+        
+        final Set<Class<?>> types = new UnprocessedTypesSet();
+        for (final Class initialType : initialTypes) {
+            types.add(initialType);
         }
+        processTypes(types);
     }
 
     private void processAnnotations(final Class initialType) {
         if (initialType == null) {
             return;
         }
-        if (processedTypes.containsKey(initialType))   return;
-        synchronized (annotatedTypes) {
-            final Set<Class<?>> types = new UnprocessedTypesSet();
-            if (types.add(initialType)) {
-                processTypes(types);
-            } else {
-                processedTypes.put(initialType, true);
-            }
-        }
+        
+        final Set<Class<?>> types = new UnprocessedTypesSet();
+        types.add(initialType);
+        processTypes(types);
     }
 
     private void processTypes(final Set<Class<?>> types) {
@@ -175,7 +188,10 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
             final Class<?> type = iter.next();
             iter.remove();
 
-            if (annotatedTypes.add(type)) {
+            synchronized(type) {
+                if (annotatedTypes.contains(type)) {
+                    continue;
+                }
                 try {
                     if (type.isPrimitive()) {
                         continue;
@@ -186,16 +202,17 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
                         serializedClass.put(type,a.value().getName());
 
                     addParametrizedTypes(type, types);
-
+    
                     processConverterAnnotations(type);
                     processAliasAnnotation(type, types);
-
+                    processAliasTypeAnnotation(type);
+    
                     if (type.isInterface()) {
                         continue;
                     }
-
+    
                     processImplicitCollectionAnnotation(type);
-
+    
                     final Field[] fields = type.getDeclaredFields();
                     for (int i = 0; i < fields.length; i++ ) {
                         final Field field = fields[i];
@@ -203,13 +220,13 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
                             || (field.getModifiers() & (Modifier.STATIC | Modifier.TRANSIENT)) > 0) {
                             continue;
                         }
-
+    
                         addParametrizedTypes(field.getGenericType(), types);
-
+    
                         if (field.isSynthetic()) {
                             continue;
                         }
-
+    
                         processFieldAliasAnnotation(field);
                         processAsAttributeAnnotation(field);
                         processImplicitAnnotation(field);
@@ -217,7 +234,7 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
                         processLocalConverterAnnotation(field);
                     }
                 } finally {
-                    processedTypes.put(type, true);
+                    annotatedTypes.add(type);
                 }
             }
         }
@@ -316,17 +333,27 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
                     + ClassAliasingMapper.class.getName()
                     + " available");
             }
+            classAliasingMapper.addClassAlias(aliasAnnotation.value(), type);
             if (aliasAnnotation.impl() != Void.class) {
                 // Alias for Interface/Class with an impl
-                classAliasingMapper.addClassAlias(aliasAnnotation.value(), type);
                 defaultImplementationsMapper.addDefaultImplementation(
                     aliasAnnotation.impl(), type);
                 if (type.isInterface()) {
                     types.add(aliasAnnotation.impl()); // alias Interface's impl
                 }
-            } else {
-                classAliasingMapper.addClassAlias(aliasAnnotation.value(), type);
             }
+        }
+    }
+
+    private void processAliasTypeAnnotation(final Class<?> type) {
+        final XStreamAliasType aliasAnnotation = type.getAnnotation(XStreamAliasType.class);
+        if (aliasAnnotation != null) {
+            if (classAliasingMapper == null) {
+                throw new InitializationException("No "
+                    + ClassAliasingMapper.class.getName()
+                    + " available");
+            }
+            classAliasingMapper.addTypeAlias(aliasAnnotation.value(), type);
         }
     }
 
@@ -472,7 +499,7 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
         Converter result = null;
         final Object[] args;
         final List<Object> parameter = new ArrayList<Object>();
-        if (targetType != null) {
+        if (targetType != null && annotation.useImplicitType()) {
             parameter.add(targetType);
         }
         final List<Object> arrays = new ArrayList<Object>();
@@ -547,7 +574,39 @@ public class AnnotationMapper extends MapperWrapper implements AnnotationConfigu
         }
         return type;
     }
+        
+    private void setupMappers() {
+        classAliasingMapper = (ClassAliasingMapper)lookupMapperOfType(ClassAliasingMapper.class);
+        defaultImplementationsMapper = (DefaultImplementationsMapper)lookupMapperOfType(DefaultImplementationsMapper.class);
+        implicitCollectionMapper = (ImplicitCollectionMapper)lookupMapperOfType(ImplicitCollectionMapper.class);
+        fieldAliasingMapper = (FieldAliasingMapper)lookupMapperOfType(FieldAliasingMapper.class);
+        attributeMapper = (AttributeMapper)lookupMapperOfType(AttributeMapper.class);
+        localConversionMapper = (LocalConversionMapper)lookupMapperOfType(LocalConversionMapper.class);
+    }
 
+    private void writeObject(final ObjectOutputStream out) throws IOException {
+        out.defaultWriteObject();
+        int max = arguments.length - 2;
+        out.writeInt(max);
+        for (int i = 0; i < max; i++ ) {
+            out.writeObject(arguments[i]);
+        }
+    }
+    
+    private void readObject(final ObjectInputStream in) throws IOException, ClassNotFoundException {
+        in.defaultReadObject();
+        setupMappers();
+        int max = in.readInt();
+        arguments = new Object[max+2];
+        for (int i = 0; i < max; i++ ) {
+            arguments[i] = in.readObject();
+            if (arguments[i] instanceof ClassLoaderReference) {
+                arguments[max+1] = ((ClassLoaderReference)arguments[i]).getReference();
+            }
+        }
+        arguments[max] = new JVM();
+    }
+    
     private final class UnprocessedTypesSet extends LinkedHashSet<Class<?>> {
         @Override
         public boolean add(Class<?> type) {

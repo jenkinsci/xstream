@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2013 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -16,12 +16,16 @@ package com.thoughtworks.acceptance.someobjects;
  * 
  * @author <a href="mailto:jason@maven.org">Jason van Zyl</a>
  *
- * @version $Id: Protocol.java 1345 2007-12-11 01:50:12Z joehni $
+ * @version $Id: Protocol.java 2034 2013-03-12 22:15:00Z joehni $
  */
 public class Protocol
 {
     private String id;
 
+    public Protocol(String id) {
+        this.id = id;
+    }
+    
     public String getId()
     {
         return id;

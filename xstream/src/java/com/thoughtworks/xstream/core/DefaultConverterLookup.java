@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2011 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2011, 2013 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -18,6 +18,7 @@ import com.thoughtworks.xstream.converters.ConverterRegistry;
 import com.thoughtworks.xstream.core.util.PrioritizedList;
 import com.thoughtworks.xstream.mapper.Mapper;
 
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.WeakHashMap;
@@ -35,6 +36,7 @@ public class DefaultConverterLookup implements ConverterLookup, ConverterRegistr
     private transient Map typeToConverterMap;
 
     public DefaultConverterLookup() {
+    	readResolve();
     }
 
     /**
@@ -89,4 +91,8 @@ public class DefaultConverterLookup implements ConverterLookup, ConverterRegistr
         }
     }
 
+    private Object readResolve() {
+        typeToConverterMap = Collections.synchronizedMap(new WeakHashMap());
+        return this;
+    }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2007, 2008, 2009, 2010, 2011 XStream Committers.
+ * Copyright (c) 2007, 2008, 2009, 2010, 2011, 2013 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -43,10 +43,10 @@ import java.net.URL;
  */
 public class JettisonMappedXmlDriver extends AbstractDriver {
 
-    private final MappedXMLOutputFactory mof;
-    private final MappedXMLInputFactory mif;
-    private final MappedNamespaceConvention convention;
-    private boolean useSerializeAsArray = true;
+    protected final MappedXMLOutputFactory mof;
+    protected final MappedXMLInputFactory mif;
+    protected final MappedNamespaceConvention convention;
+    protected final boolean useSerializeAsArray;
 
     /**
      * Construct a JettisonMappedXmlDriver.
@@ -97,25 +97,45 @@ public class JettisonMappedXmlDriver extends AbstractDriver {
     }
 
     public HierarchicalStreamReader createReader(URL in) {
+        InputStream instream = null;
         try {
+            instream = in.openStream();
             return new StaxReader(new QNameMap(), mif.createXMLStreamReader(
-                in.toExternalForm(), in.openStream()), getNameCoder());
+                in.toExternalForm(), instream), getNameCoder());
         } catch (final XMLStreamException e) {
             throw new StreamException(e);
         } catch (IOException e) {
             throw new StreamException(e);
+        } finally {
+            if (instream != null) {
+                try {
+                    instream.close();
+                } catch (IOException e) {
+                    // ignore
+                }
+            }
         }
     }
 
     public HierarchicalStreamReader createReader(File in) {
+        InputStream instream = null;
         try {
+            instream = new FileInputStream(in);
             return new StaxReader(new QNameMap(), mif.createXMLStreamReader(in
                 .toURI()
-                .toASCIIString(), new FileInputStream(in)), getNameCoder());
+                .toASCIIString(), instream), getNameCoder());
         } catch (final XMLStreamException e) {
             throw new StreamException(e);
         } catch (IOException e) {
             throw new StreamException(e);
+        } finally {
+            if (instream != null) {
+                try {
+                    instream.close();
+                } catch (IOException e) {
+                    // ignore
+                }
+            }
         }
     }
 
