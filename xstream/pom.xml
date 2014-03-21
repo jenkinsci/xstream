@@ -21,7 +21,7 @@
   <name>XStream Core</name>
 
   <groupId>org.jvnet.hudson</groupId>
-  <version>1.4.4-jenkins-5</version>
+  <version>1.4.7-jenkins-1</version>
 
   <dependencies>
     <dependency>
