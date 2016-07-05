@@ -33,5 +33,5 @@ The complete source for XStream is bundled. This includes:
 
 -XStream Ccommitters
 
- http://xstream.codehaus.org/
+ http://x-stream.github.io
 
