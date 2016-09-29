@@ -15,6 +15,7 @@ import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.ConverterLookup;
 import com.thoughtworks.xstream.converters.ConverterRegistry;
+import com.thoughtworks.xstream.converters.basic.NullConverter;
 import com.thoughtworks.xstream.core.util.PrioritizedList;
 import com.thoughtworks.xstream.mapper.Mapper;
 
@@ -56,7 +57,8 @@ public class DefaultConverterLookup implements ConverterLookup, ConverterRegistr
         Iterator iterator = converters.iterator();
         while (iterator.hasNext()) {
             Converter converter = (Converter) iterator.next();
-            if (converter.canConvert(type)) {
+            if ((converter instanceof NullConverter && converter.canConvert(type)) 
+                    || (type != null && converter.canConvert(type))) {
                 typeToConverterMap.put(type, converter);
                 return converter;
             }
@@ -71,7 +73,8 @@ public class DefaultConverterLookup implements ConverterLookup, ConverterRegistr
         converters.add(converter, priority);
         for (Iterator iter = typeToConverterMap.keySet().iterator(); iter.hasNext();) {
             Class type = (Class) iter.next();
-            if (converter.canConvert(type)) {
+            if ((converter instanceof NullConverter && converter.canConvert(type)) 
+                    || (type != null && converter.canConvert(type))) {
                 iter.remove();
             }
         }
