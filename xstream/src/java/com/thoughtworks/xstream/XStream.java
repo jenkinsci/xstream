@@ -1,12 +1,12 @@
 /*
  * Copyright (C) 2003, 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
+ *
  * Created on 26. September 2003 by Joe Walnes
  */
 package com.thoughtworks.xstream;
@@ -343,7 +343,7 @@ public class XStream {
      * The instance will use the {@link XppDriver} as default and tries to determine the best
      * match for the {@link ReflectionProvider} on its own.
      * </p>
-     * 
+     *
      * @throws InitializationException in case of an initialization problem
      */
     public XStream() {
@@ -370,7 +370,7 @@ public class XStream {
      * The instance will tries to determine the best match for the {@link ReflectionProvider} on
      * its own.
      * </p>
-     * 
+     *
      * @param hierarchicalStreamDriver the driver instance
      * @throws InitializationException in case of an initialization problem
      */
@@ -599,6 +599,11 @@ public class XStream {
         }
         mapper = new LocalConversionMapper(mapper);
         mapper = new ImmutableTypesMapper(mapper);
+        if (JVM.is18()) {
+            mapper =
+                    buildMapperDynamically("com.thoughtworks.xstream.mapper.LambdaMapper", new Class[]{Mapper.class},
+                        new Object[]{mapper});
+        }
         mapper = new SecurityMapper(mapper);
         if (JVM.is15()) {
             mapper = buildMapperDynamically(ANNOTATION_MAPPER_TYPE, new Class[]{
@@ -621,6 +626,9 @@ public class XStream {
         } catch (Exception e) {
             throw new com.thoughtworks.xstream.InitializationException(
                 "Could not instantiate mapper : " + className, e);
+        } catch (LinkageError e) {
+            throw new com.thoughtworks.xstream.InitializationException(
+                "Could not instantiate mapper : " + className, e);
         }
     }
 
@@ -628,6 +636,9 @@ public class XStream {
         return next;
     }
 
+    /**
+     * @deprecated As of 1.4.8
+     */
     protected boolean useXStream11XmlFriendlyMapper() {
         return false;
     }
@@ -724,6 +735,12 @@ public class XStream {
             alias("awt-color", JVM.loadClassForName("java.awt.Color", false));
             alias("awt-font", JVM.loadClassForName("java.awt.Font", false));
             alias("awt-text-attribute", JVM.loadClassForName("java.awt.font.TextAttribute"));
+            
+            // only available in Java 5 when javax.activation:activation is available on CP
+            Class type = JVM.loadClassForName("javax.activation.ActivationDataFlavor");
+            if (type != null) {
+                alias("activation-data-flavor", type);
+            }
         }
 
         if (JVM.isSQLAvailable()) {
@@ -752,6 +769,14 @@ public class XStream {
             alias("enum-map", JVM.loadClassForName("java.util.EnumMap"));
             alias("string-builder", JVM.loadClassForName("java.lang.StringBuilder"));
             alias("uuid", JVM.loadClassForName("java.util.UUID"));
+        }
+        
+        if (JVM.is17()) {
+            aliasType("path", JVM.loadClassForName("java.nio.file.Path"));
+        }
+        
+        if (JVM.loadClassForName("java.lang.invoke.SerializedLambda") != null) {
+            aliasDynamically("serialized-lambda", "java.lang.invoke.SerializedLambda");
         }
     }
 
@@ -880,6 +905,19 @@ public class XStream {
                 "com.thoughtworks.xstream.converters.basic.UUIDConverter", PRIORITY_NORMAL,
                 null, null);
         }
+        if (JVM.loadClassForName("javax.activation.ActivationDataFlavor") != null) {
+            registerConverterDynamically("com.thoughtworks.xstream.converters.extended.ActivationDataFlavorConverter",
+                PRIORITY_NORMAL, null, null);
+        }
+        if (JVM.is17()) {
+            registerConverterDynamically("com.thoughtworks.xstream.converters.extended.PathConverter",
+                    PRIORITY_NORMAL, null, null);
+        }
+        if (JVM.is18()) {
+            registerConverterDynamically("com.thoughtworks.xstream.converters.reflection.LambdaConverter",
+                PRIORITY_NORMAL, new Class[]{Mapper.class, ReflectionProvider.class, ClassLoaderReference.class},
+                new Object[]{mapper, reflectionProvider, classLoaderReference});
+        }
 
         registerConverter(
             new SelfStreamingInstanceChecker(converterLookup, this), PRIORITY_NORMAL);
@@ -899,6 +937,9 @@ public class XStream {
         } catch (Exception e) {
             throw new com.thoughtworks.xstream.InitializationException(
                 "Could not instantiate converter : " + className, e);
+        } catch (LinkageError e) {
+            throw new com.thoughtworks.xstream.InitializationException(
+                "Could not instantiate converter : " + className, e);
         }
     }
 
@@ -908,52 +949,56 @@ public class XStream {
         }
 
         // primitives are always immutable
-        addImmutableType(boolean.class);
-        addImmutableType(Boolean.class);
-        addImmutableType(byte.class);
-        addImmutableType(Byte.class);
-        addImmutableType(char.class);
-        addImmutableType(Character.class);
-        addImmutableType(double.class);
-        addImmutableType(Double.class);
-        addImmutableType(float.class);
-        addImmutableType(Float.class);
-        addImmutableType(int.class);
-        addImmutableType(Integer.class);
-        addImmutableType(long.class);
-        addImmutableType(Long.class);
-        addImmutableType(short.class);
-        addImmutableType(Short.class);
+        addImmutableType(boolean.class, false);
+        addImmutableType(Boolean.class, false);
+        addImmutableType(byte.class, false);
+        addImmutableType(Byte.class, false);
+        addImmutableType(char.class, false);
+        addImmutableType(Character.class, false);
+        addImmutableType(double.class, false);
+        addImmutableType(Double.class, false);
+        addImmutableType(float.class, false);
+        addImmutableType(Float.class, false);
+        addImmutableType(int.class, false);
+        addImmutableType(Integer.class, false);
+        addImmutableType(long.class, false);
+        addImmutableType(Long.class, false);
+        addImmutableType(short.class, false);
+        addImmutableType(Short.class, false);
 
         // additional types
-        addImmutableType(Mapper.Null.class);
-        addImmutableType(BigDecimal.class);
-        addImmutableType(BigInteger.class);
-        addImmutableType(String.class);
-        addImmutableType(URI.class);
-        addImmutableType(URL.class);
-        addImmutableType(File.class);
-        addImmutableType(Class.class);
-
-        addImmutableType(Collections.EMPTY_LIST.getClass());
-        addImmutableType(Collections.EMPTY_SET.getClass());
-        addImmutableType(Collections.EMPTY_MAP.getClass());
+        addImmutableType(Mapper.Null.class, false);
+        addImmutableType(BigDecimal.class, false);
+        addImmutableType(BigInteger.class, false);
+        addImmutableType(String.class, false);
+        addImmutableType(URL.class, false);
+        addImmutableType(File.class, false);
+        addImmutableType(Class.class, false);
 
         if (JVM.isAWTAvailable()) {
-            addImmutableTypeDynamically("java.awt.font.TextAttribute");
+            addImmutableTypeDynamically("java.awt.font.TextAttribute", false);
         }
 
         if (JVM.is14()) {
             // late bound types - allows XStream to be compiled on earlier JDKs
-            addImmutableTypeDynamically("java.nio.charset.Charset");
-            addImmutableTypeDynamically("java.util.Currency");
+            addImmutableTypeDynamically("java.nio.charset.Charset", true);
+            addImmutableTypeDynamically("java.util.Currency", true);
         }
+        
+        if (JVM.is15()) {
+            addImmutableTypeDynamically("java.util.UUID", true);
+        }
+
+        addImmutableType(URI.class, true);
+        addImmutableType(Collections.EMPTY_LIST.getClass(), true);
+        addImmutableType(Collections.EMPTY_SET.getClass(), true);
+        addImmutableType(Collections.EMPTY_MAP.getClass(), true);
     }
 
-    private void addImmutableTypeDynamically(String className) {
+    private void addImmutableTypeDynamically(String className, boolean isReferenceable) {
         Class type = JVM.loadClassForName(className);
         if (type != null) {
-            addImmutableType(type);
+            addImmutableType(type, isReferenceable);
         }
     }
 
@@ -963,7 +1008,7 @@ public class XStream {
 
     /**
      * Serialize an object to a pretty-printed XML String.
-     * 
+     *
      * @throws XStreamException if the object cannot be serialized
      */
     public String toXML(Object obj) {
@@ -1004,7 +1049,7 @@ public class XStream {
 
     /**
      * Serialize and object to a hierarchical data structure (such as XML).
-     * 
+     *
      * @throws XStreamException if the object cannot be serialized
      */
     public void marshal(Object obj, HierarchicalStreamWriter writer) {
@@ -1024,7 +1069,7 @@ public class XStream {
 
     /**
      * Deserialize an object from an XML String.
-     * 
+     *
      * @throws XStreamException if the object cannot be deserialized
      */
     public Object fromXML(String xml) {
@@ -1033,7 +1078,7 @@ public class XStream {
 
     /**
      * Deserialize an object from an XML Reader.
-     * 
+     *
      * @throws XStreamException if the object cannot be deserialized
      */
     public Object fromXML(Reader reader) {
@@ -1042,7 +1087,7 @@ public class XStream {
 
     /**
      * Deserialize an object from an XML InputStream.
-     * 
+     *
      * @throws XStreamException if the object cannot be deserialized
      */
     public Object fromXML(InputStream input) {
@@ -1150,7 +1195,7 @@ public class XStream {
 
     /**
      * Deserialize an object from a hierarchical data structure (such as XML).
-     * 
+     *
      * @throws XStreamException if the object cannot be deserialized
      */
     public Object unmarshal(HierarchicalStreamReader reader) {
@@ -1195,7 +1240,7 @@ public class XStream {
 
     /**
      * Alias a Class to a shorter name to be used in XML elements.
-     * 
+     *
      * @param name Short name
      * @param type Type to be aliased
      * @throws InitializationException if no {@link ClassAliasingMapper} is available
@@ -1229,7 +1274,7 @@ public class XStream {
 
     /**
      * Alias a Class to a shorter name to be used in XML elements.
-     * 
+     *
      * @param name Short name
      * @param type Type to be aliased
      * @param defaultImplementation Default implementation of type to use if no other specified.
@@ -1243,7 +1288,7 @@ public class XStream {
 
     /**
      * Alias a package to a shorter name to be used in XML elements.
-     * 
+     *
      * @param name Short name
      * @param pkgName package to be aliased
      * @throws InitializationException if no {@link DefaultImplementationsMapper} or no
@@ -1261,7 +1306,7 @@ public class XStream {
 
     /**
      * Create an alias for a field name.
-     * 
+     *
      * @param alias the alias itself
      * @param definedIn the type that declares the field
      * @param fieldName the name of the field
@@ -1278,7 +1323,7 @@ public class XStream {
 
     /**
      * Create an alias for an attribute
-     * 
+     *
      * @param alias the alias itself
      * @param attributeName the name of the attribute
      * @throws InitializationException if no {@link AttributeAliasingMapper} is available
@@ -1314,7 +1359,7 @@ public class XStream {
 
     /**
      * Create an alias for an attribute.
-     * 
+     *
      * @param definedIn the type where the attribute is defined
      * @param attributeName the name of the attribute
      * @param alias the alias itself
@@ -1328,7 +1373,7 @@ public class XStream {
 
     /**
      * Use an attribute for a field or a specific type.
-     * 
+     *
      * @param fieldName the name of the field
      * @param type the Class of the type to be rendered as XML attribute
      * @throws InitializationException if no {@link AttributeMapper} is available
@@ -1345,7 +1390,7 @@ public class XStream {
 
     /**
      * Use an attribute for a field declared in a specific type.
-     * 
+     *
      * @param fieldName the name of the field
      * @param definedIn the Class containing such field
      * @throws InitializationException if no {@link AttributeMapper} is available
@@ -1362,7 +1407,7 @@ public class XStream {
 
     /**
      * Use an attribute for an arbitrary type.
-     * 
+     *
      * @param type the Class of the type to be rendered as XML attribute
      * @throws InitializationException if no {@link AttributeMapper} is available
      * @since 1.2
@@ -1395,18 +1440,38 @@ public class XStream {
     }
 
     /**
-     * Add immutable types. The value of the instances of these types will always be written
-     * into the stream even if they appear multiple times.
-     * 
+     * Add immutable types. The value of the instances of these types will always be written into the stream even if
+     * they appear multiple times. However, references are still supported at deserialization time.
+     *
      * @throws InitializationException if no {@link ImmutableTypesMapper} is available
+     * @deprecated As of 1.4.9 use {@link #addImmutableType(Class, boolean)}
      */
     public void addImmutableType(Class type) {
+        addImmutableType(type, true);
+    }
+
+    /**
+     * Add immutable types. The value of the instances of these types will always be written into the stream even if
+     * they appear multiple times.
+     * <p>
+     * Note, while a reference-keeping marshaller will not write references for immutable types into the stream, a
+     * reference-keeping unmarshaller can still support such references in the stream for compatibility reasons at the
+     * expense of memory consumption. Therefore declare these types only as referenceable if your already persisted
+     * streams do contain such references. Otherwise you may waste a lot of memory during deserialization.
+     * </p>
+     *
+     * @param isReferenceable <code>true</code> if support at deserialization time is required for compatibility at the
+     *            cost of a higher memory footprint, <code>false</code> otherwise
+     * @throws InitializationException if no {@link ImmutableTypesMapper} is available
+     * @since 1.4.9
+     */
+    public void addImmutableType(final Class type, final boolean isReferenceable) {
         if (immutableTypesMapper == null) {
             throw new com.thoughtworks.xstream.InitializationException("No "
                 + ImmutableTypesMapper.class.getName()
                 + " available");
         }
-        immutableTypesMapper.addImmutableType(type);
+        immutableTypesMapper.addImmutableType(type, isReferenceable);
     }
 
     public void registerConverter(Converter converter) {
@@ -1432,7 +1497,7 @@ public class XStream {
 
     /**
      * Register a local {@link Converter} for a field.
-     * 
+     *
      * @param definedIn the class type the field is defined in
      * @param fieldName the field name
      * @param converter the converter to use
@@ -1449,7 +1514,7 @@ public class XStream {
 
     /**
      * Register a local {@link SingleValueConverter} for a field.
-     * 
+     *
      * @param definedIn the class type the field is defined in
      * @param fieldName the field name
      * @param converter the converter to use
@@ -1474,7 +1539,7 @@ public class XStream {
 
     /**
      * Retrieve the {@link ReflectionProvider} in use.
-     * 
+     *
      * @return the mapper
      * @since 1.2.1
      */
@@ -1530,7 +1595,7 @@ public class XStream {
 
     /**
      * Adds a default implicit collection which is used for any unmapped XML tag.
-     * 
+     *
      * @param ownerType class owning the implicit collection
      * @param fieldName name of the field in the ownerType. This field must be a concrete
      *            collection type or matching the default implementation type of the collection
@@ -1542,7 +1607,7 @@ public class XStream {
 
     /**
      * Adds implicit collection which is used for all items of the given itemType.
-     * 
+     *
      * @param ownerType class owning the implicit collection
      * @param fieldName name of the field in the ownerType. This field must be a concrete
      *            collection type or matching the default implementation type of the collection
@@ -1573,7 +1638,7 @@ public class XStream {
 
     /**
      * Adds an implicit array.
-     * 
+     *
      * @param ownerType class owning the implicit array
      * @param fieldName name of the array field
      * @since 1.4 
@@ -1613,7 +1678,7 @@ public class XStream {
 
     /**
      * Adds an implicit map.
-     * 
+     *
      * @param ownerType class owning the implicit map
      * @param fieldName name of the field in the ownerType. This field must be a concrete
      *            map type or matching the default implementation type of the map
@@ -1628,7 +1693,7 @@ public class XStream {
 
     /**
      * Adds an implicit map.
-     * 
+     *
      * @param ownerType class owning the implicit map
      * @param fieldName name of the field in the ownerType. This field must be a concrete
      *            map type or matching the default implementation type of the map
@@ -1652,7 +1717,7 @@ public class XStream {
      * Create a DataHolder that can be used to pass data to the converters. The DataHolder is
      * provided with a call to {@link #marshal(Object, HierarchicalStreamWriter, DataHolder)} or
      * {@link #unmarshal(HierarchicalStreamReader, Object, DataHolder)}.
-     * 
+     *
      * @return a new {@link DataHolder}
      */
     public DataHolder newDataHolder() {
@@ -1755,7 +1820,7 @@ public class XStream {
      * be incomplete.
      * </p>
      * <h3>Example</h3>
-     * 
+     *
      * <pre>
      *  ObjectOutputStream out = xstream.createObjectOutputStream(aWriter, &quot;things&quot;);
      *   out.writeInt(123);
@@ -1763,7 +1828,7 @@ public class XStream {
      *   out.writeObject(someObject)
      *   out.close();
      * </pre>
-     * 
+     *
      * @param writer The writer to serialize the objects to.
      * @param rootNodeName The name of the root node enclosing the stream of objects.
      * @see #createObjectInputStream(com.thoughtworks.xstream.io.HierarchicalStreamReader)
@@ -1887,7 +1952,7 @@ public class XStream {
 
     /**
      * Retrieve the ClassLoader XStream uses to load classes.
-     * 
+     *
      * @since 1.1.1
      */
     public ClassLoader getClassLoader() {
@@ -1924,7 +1989,7 @@ public class XStream {
     
     /**
      * Ignore all unknown elements.
-     * 
+     *
      * @since 1.4.5
      */
     public void ignoreUnknownElements() {
@@ -1933,7 +1998,7 @@ public class XStream {
 
     /**
      * Add pattern for unknown element names to ignore.
-     * 
+     *
      * @param pattern the name pattern as regular expression
      * @since 1.4.5
      */
@@ -1943,11 +2008,11 @@ public class XStream {
 
     /**
      * Add pattern for unknown element names to ignore.
-     * 
+     *
      * @param pattern the name pattern as regular expression
      * @since 1.4.5
      */
-    private void ignoreUnknownElements(Pattern pattern) {
+    public void ignoreUnknownElements(final Pattern pattern) {
         if (fieldAliasingMapper == null) {
             throw new com.thoughtworks.xstream.InitializationException("No "
                 + FieldAliasingMapper.class.getName()
@@ -1958,7 +2023,7 @@ public class XStream {
 
     /**
      * Process the annotations of the given types and configure the XStream.
-     * 
+     *
      * @param types the types with XStream annotations
      * @since 1.3
      */
@@ -2004,7 +2069,7 @@ public class XStream {
      * Permissions are evaluated in the added sequence. An instance of {@link NoTypePermission} or
      * {@link AnyTypePermission} will implicitly wipe any existing permission.
      * </p>
-     * 
+     *
      * @param permission the permission to add
      * @since 1.4.7
      */
@@ -2016,7 +2081,7 @@ public class XStream {
     
     /**
      * Add security permission for explicit types by name.
-     * 
+     *
      * @param names the type names to allow
      * @since 1.4.7
      */
@@ -2026,7 +2091,7 @@ public class XStream {
     
     /**
      * Add security permission for explicit types.
-     * 
+     *
      * @param types the types to allow
      * @since 1.4.7
      */
@@ -2036,7 +2101,7 @@ public class XStream {
     
     /**
      * Add security permission for a type hierarchy.
-     * 
+     *
      * @param type the base type to allow
      * @since 1.4.7
      */
@@ -2046,7 +2111,7 @@ public class XStream {
     
     /**
      * Add security permission for types matching one of the specified regular expressions.
-     * 
+     *
      * @param regexps the regular expressions to allow type names
      * @since 1.4.7
      */
@@ -2056,7 +2121,7 @@ public class XStream {
     
     /**
      * Add security permission for types matching one of the specified regular expressions.
-     * 
+     *
      * @param regexps the regular expressions to allow type names
      * @since 1.4.7
      */
@@ -2074,7 +2139,7 @@ public class XStream {
      * <li>*: arbitrary number of non-control characters except separator, e.g. for types in a package like 'java.lang.*'</li>
      * <li>**: arbitrary number of non-control characters including separator, e.g. for types in a package and subpackages like 'java.lang.**'</li>
      * </ul>
-     * 
+     *
      * @param patterns the patterns to allow type names
      * @since 1.4.7
      */
@@ -2084,7 +2149,7 @@ public class XStream {
     
     /**
      * Add security permission denying another one.
-     * 
+     *
      * @param permission the permission to deny
      * @since 1.4.7
      */
@@ -2094,7 +2159,7 @@ public class XStream {
     
     /**
      * Add security permission forbidding explicit types by name.
-     * 
+     *
      * @param names the type names to forbid
      * @since 1.4.7
      */
@@ -2104,7 +2169,7 @@ public class XStream {
     
     /**
      * Add security permission forbidding explicit types.
-     * 
+     *
      * @param types the types to forbid
      * @since 1.4.7
      */
@@ -2114,7 +2179,7 @@ public class XStream {
     
     /**
      * Add security permission forbidding a type hierarchy.
-     * 
+     *
      * @param type the base type to forbid
      * @since 1.4.7
      */
@@ -2124,7 +2189,7 @@ public class XStream {
     
     /**
      * Add security permission forbidding types matching one of the specified regular expressions.
-     * 
+     *
      * @param regexps the regular expressions to forbid type names
      * @since 1.4.7
      */
@@ -2134,7 +2199,7 @@ public class XStream {
     
     /**
      * Add security permission forbidding types matching one of the specified regular expressions.
-     * 
+     *
      * @param regexps the regular expressions to forbid type names
      * @since 1.4.7
      */
@@ -2152,7 +2217,7 @@ public class XStream {
      * <li>*: arbitrary number of non-control characters except separator, e.g. for types in a package like 'java.lang.*'</li>
      * <li>**: arbitrary number of non-control characters including separator, e.g. for types in a package and subpackages like 'java.lang.**'</li>
      * </ul>
-     * 
+     *
      * @param patterns the patterns to forbid names
      * @since 1.4.7
      */

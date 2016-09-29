@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2015, 2016 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -11,6 +11,8 @@
  */
 package com.thoughtworks.xstream.io.xml;
 
+import com.thoughtworks.xstream.XStreamException;
+import com.thoughtworks.xstream.core.JVM;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 
 import org.w3c.dom.Document;
@@ -20,6 +22,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import java.io.ByteArrayInputStream;
+import java.io.StringReader;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,7 +30,7 @@ public class DomReaderTest extends AbstractXMLReaderTest {
 
     // factory method
     protected HierarchicalStreamReader createReader(String xml) throws Exception {
-        return new DomReader(buildDocument(xml));
+        return new DomDriver().createReader(new StringReader(xml));
     }
 
     private Document buildDocument(String xml) throws Exception {
@@ -82,4 +85,44 @@ public class DomReaderTest extends AbstractXMLReaderTest {
         assertEquals(0, xmlReader.getAttributeCount());
     }
 
+    public void testIsXXEVulnerableWithExternalGeneralEntity() throws Exception {
+        try {
+            super.testIsXXEVulnerableWithExternalGeneralEntity();
+            if (JVM.is16()) {
+                fail("Thrown " + XStreamException.class.getName() + " expected");
+            }
+        } catch (final XStreamException e) {
+            final String message = e.getCause().getMessage();
+            if (message.indexOf("DOCTYPE") < 0) {
+                throw e;
+            }
+        } catch (final NullPointerException e) {
+            // NPE only with Sun Java 1.6 runtime
+            if (JVM.is17() || !JVM.is16()) {
+                throw e;
+            }
+        }
+    }
+
+    public void testIsXXEVulnerableWithExternalParameterEntity() throws Exception {
+        try {
+            super.testIsXXEVulnerableWithExternalParameterEntity();
+            fail("Thrown " + XStreamException.class.getName() + " expected");
+        } catch (final XStreamException e) {
+            final String message = e.getCause().getMessage();
+            if (message.indexOf("DOCTYPE") < 0) {
+                // XXE vulnerable with Sun Java 1.6 runtime
+                if (JVM.is16()) {
+                    throw e;
+                } else {
+                    System.err.println("DomReader is vulnerable with Java 5 and 1.4!");
+                }
+            }
+        } catch (final NullPointerException e) {
+            // NPE only with Sun Java 1.6 runtime
+            if (JVM.is17() || !JVM.is16()) {
+                throw e;
+            }
+        }
+    }
 }

@@ -23,7 +23,7 @@ import javax.xml.stream.XMLStreamWriter;
  * A stream writing that outputs to a StAX stream writer
  * 
  * @author James Strachan
- * @version $Revision: 1906 $
+ * @version $Revision$
  */
 public class StaxWriter extends AbstractXmlWriter {
 

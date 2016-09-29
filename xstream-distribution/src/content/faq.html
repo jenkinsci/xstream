@@ -1,7 +1,7 @@
 <html>
 <!--
  Copyright (C) 2005, 2006 Joe Walnes.
- Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014 XStream committers.
+ Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015 XStream committers.
  All rights reserved.
  
  The software in this package is published under the terms of the BSD
@@ -63,6 +63,10 @@
     <!-- ...................................................... -->
     <h2 id="Compatibility_enhanced_mode_advantage">What are the advantages of using enhanced mode over pure Java mode?</h2>
 
+	<p>Currently it is not possible to recreate every instance of a type using the official Java API only. The enhanced mode uses some undocumented, but wide-spread
+	available functionality to recreate such instances nevertheless. However, in a secured secured environment, older Java run times or a limited Java environment might
+	prevent the usage of the enhanced mode and XStream uses the plain Java API as fallback. This mode has some restrictions though:</p> 
+
     <table summary="Comparison of pure Java and enhanced mode">
       <tr><th>Feature</th><th>Pure Java</th><th>Enhanced Mode</th></tr>
       <tr><td>Public classes</td><td>Yes</td><td>Yes</td></tr>
@@ -101,7 +105,7 @@
 	<p>Starting with XStream 1.4.6 it is possible to instantiate an XStream instance in a GAE environment. Nevertheless
 	does GAE set some severe restrictions for XStream and therefore XStream will behave differently. Actually a
 	reflection-based converter cannot handle any type from the JDK itself. Nor is it possible to create an
-	ObjectOnputStream or an ObjectOutputStream. It is not possible to define a field alias for any type within the JDK.
+	ObjectInputStream or an ObjectOutputStream. It is not possible to define a field alias for any type within the JDK.
 	XStream will typically work as general rule, if you process your own objects.</p>
 
     <!-- ...................................................... -->
@@ -114,7 +118,7 @@
 
     <!-- ...................................................... -->
     <h2 id="Compatibility_unsupported_JVM">Are there plans to provide enhanced mode support to other JVMs?</h2>
-    <p>Yes. <a href="list-user.html">Let us know</a> which JVM you would like supported.</p>
+    <p>Yes. <a href="mailing-lists.html">Let us know</a> which JVM you would like supported.</p>
 
     <!-- ...................................................... -->
     <h2 id="Compatibility_no_enhanced_mode">When should I use XStream not in enhanced mode?</h2>
@@ -127,7 +131,7 @@
     <h2 id="Compatibility_SecurityManager">Which permissions does XStream need when running with an active SecurityManager?</h2>
 
     <p>This depends on the mode XStream is running in. Refer to the
-    <a href="http://svn.xstream.codehaus.org/browse/xstream/trunk/xstream/src/test/com/thoughtworks/acceptance/SecurityManagerTest.java">SecurityManagerTest</a>
+    <a href="https://github.com/x-stream/xstream/blob/master/xstream/src/test/com/thoughtworks/acceptance/SecurityManagerTest.java">SecurityManagerTest</a>
     for details. Actually XStream's converters try to check since version 1.4.6 any critical operation, before they
     claim to be able to handle a type. As consequence XStream can behave differently running under a SecurityManager.
     E.g. if the SecurityManager does not permit to create an instance for a derived class of ObjectOutputStream, the 
@@ -167,6 +171,15 @@
     <a href="javadoc/com/thoughtworks/xstream/io/HierarchicalStreamDriver.html">XStream12FieldKeySorter</a> that can be used to 
     <a href="#Serialization_sort_fields">sort the fields</a> according XStream 1.2.2.</p>
 
+    <!-- ...................................................... -->
+    <h2 id="Compatibility_WebSphere_8">WebShere 8 can no longer use XStream 1.4.x?</h2>
+
+    <p>XStream has a long history to support types from recent JDKs without dropping backward compatibility.  Therefore it contains class files targeting different JDKs.
+    However, WebShpere scans by default all JAR files in its classpath for annotations to support CDI independent of the presence of a beans.xml file in META-INF.  This
+    scanning fails for class files targeting a higher JDK runtime as currently used by WebSphere. Please, consult your WebSphere documentation, how to turn off the
+    scanning for individual files by providing an <a href="http://www-01.ibm.com/support/knowledgecenter/SSAW57_8.0.0/com.ibm.websphere.nd.doc/info/ae/ae/trun_app_reduce_annot.html?cp=SSAW57_8.0.0%2F1-8-12-0">amm.filter.proeprties</a>
+    file.</p>
+
 
     <!-- ****************************************************** -->
     <h1 id="Serialization">Serialization</h1>
@@ -200,6 +213,8 @@
     	<li>Inner class types of the JDK can often vary in implementation details between JDK versions and vendors and are therefore only compatible for the same JDK. This
     	includes	collection types returned by the methods of the Collections class that wrap another one (like unmodifiableList) or the collections that are returned by the
     	different Map implementations for the keySet(), entrySet() and values() methods.</li>
+    	<li><a href="#Serialization_lambda_null">Non-serializable lambda expressions</a> cannot be deserialized at all and <a href="#Serialization_lambda_fails">serializable
+    	lambda</a> expression contain compiler and vendor specific information that might cause	deserialization to fail.</li>
     </ol>
 
     <!-- ...................................................... -->
@@ -251,7 +266,7 @@
 	always with the boxed types and converts to primitives types on the fly. However, for method and field type
 	signatures the difference is essential. Nevertheless it is possible to register derived versions of the converters
 	that are able to respect the aliasing with some minor effort. Following lines are taken from the AliasTest in the
-	acceptence tests:</p>
+	acceptance tests:</p>
 <div class="Source Java"><pre>XStream xstream = new XStream();
 Mapper mapper = new MapperWrapper(xstream.getMapper().lookupMapperOfType(ArrayMapper.class)) {
   public Class realClass(String elementName) {
@@ -286,11 +301,40 @@ xstream.registerConverter(new JavaFieldConverter(javaClassConverter, mapper){});
 
     <!-- ...................................................... -->
     <h2 id="Serialization_Serializable">Do my classes have to implement Serializable if XStream is to serialize them?</h2>
-    <p>No, but XStream respects the Java serialization methods even for types not declared as Serializable.</p>
+    <p>No (except for lambda expressions), but XStream respects the Java serialization methods even for types not declared as Serializable.</p>
 
     <!-- ...................................................... -->
     <h2 id="Serialization_proxies">Can dynamic proxies be serialized?</h2>
     <p>Yes.</p>
+
+    <!-- ...................................................... -->
+    <h2 id="Serialization_referencing_immutable_types">Can immutable types be referenced?</h2>
+	<p>Adding a type as immutable implies that a referencing marshaller strategy will write each occurrence of the same
+	instance separately into the stream without referencing it, i.e. instance of those types are normally never referenced
+	at deserialization time. Such referenced can exist though for persisted streams when a type is added as immutable in
+	later versions. In such cases the type can be added as immutable, but still referenceable.</p>
+
+	<p>Any immutable type could be dereferenced before version 1.4.9, but only at the cost of a large memory footprint.
+	Since version 1.4.9 this is only possible if the immutable type has been explicitly declared as referenceable too.
+	This should be done only if backward compatibility is required and a persisted stream may contain a reference of such
+	an instance at all. Any type that has been declared as immutable by XStream itself before version 1.4 will not be
+	referenceable now by default (all primitive types and their boxed counterparts, java.lang.Class, java.lang.String,
+	java.math.BigInteger, java.math.BigDecimal, java.io.File, java.net.URL, and java.awt.font.TextAttribute). All other
+	immutable types (java.util.Currency, java.util.UUID, java.net.URI, java.nio.charset.Charset and the empty collection
+	types) will currently still be referenceable at deserialization time for compatibility reasons. This support by
+	default will be dropped with the next major version of XStream. You can always overwrite the default by adding the same
+	type again as immutable with a different value for the referenceable flag.</p>
+
+	<!-- ...................................................... -->
+    <h2 id="Serialization_lambda_null">My lambda expression is serialized to null!</h2>
+    <p>Non-serializable lambda expressions to not contain any information at all to recreate the instance at a later time again. These instances are treated as temporary
+    objects and as such XStream has no other possibility as to serialize null instead.</p>
+
+    <!-- ...................................................... -->
+    <h2 id="Serialization_lambda_fails">Suddenly the deserialization of my (serializable) lambda expression fails!</h2>
+    <p>Serializable lambda expressions contain information that is specific for compiler and vendor. Even worse, the compiler is free to add information related to the location
+    of the lambda expression in the source i.e. you may not be able to deserialize a lambda expression after source code changes. XStream has no control over this information 
+    and how it is used by native functionality in the JDK. Therefore Oracle strongly discourages the usage of serializable lambda expressions in the JDK documentation.</p>
 
     <!-- ...................................................... -->
     <h2 id="Serialization_CGLIB">Can CGLIB proxies be serialized?</h2>
@@ -515,6 +559,15 @@ xstream = new XStream(new Sun14ReflectionProvider(new FieldDictionary(sorter)));
     path like "/doc/list/elem/field" XStream will then generate "/doc[1]/list[1]/elem[1]/field[1]". The two notations
     are transparent at deserialization time.</p>
 
+    <!-- ...................................................... -->
+    <h2 id="XML_entities">Does XStream support entities?</h2>
+
+	<p>Entity support is completely dependent on the XML parser. XStream uses by default the Xpp3 parser that does not
+	support entities at all (like the kXML2 parser). Other parsers support entities, but they might have been turned
+	off to avoid <a href="#Security_XXEVulnerability">XXE vulnerability</a>. To enable the entities again, you have to
+	overload the individual method of the
+	<a href="javadoc/com/thoughtworks/xstream/io/HierarchicalStreamDriver.html">HierarchicalStreamDriver</a>
+	implementation that generated the parser factory.</p>
 
     <!-- ****************************************************** -->
     <h1 id="JSON">JSON specifics</h1>
@@ -524,7 +577,7 @@ xstream = new XStream(new Sun14ReflectionProvider(new FieldDictionary(sorter)));
 
 	<p>As always, first for historical reasons! Main difference is that the 
 	<a href="javadoc/com/thoughtworks/xstream/io/json/JettisonMappedXmlDriver.html">JettisonMappedXmlDriver</a> is a 
-	thin wrapper around <a href="http://jettison.codehaus.org">Jettison</a> in combination with the 
+	thin wrapper around <a href="https://github.com/jettison-json">Jettison</a> in combination with the 
 	<a href="javadoc/com/thoughtworks/xstream/io/xml/StaxDriver.html">StaxDriver</a>, while the 
 	<a href="javadoc/com/thoughtworks/xstream/io/json/JsonHierarchicalStreamDriver.html">JsonHierarchicalStreamDriver</a>
 	uses an own more flexible implementation, but can only be used to generate JSON, deserialization is not implemented.</p>
@@ -644,12 +697,56 @@ XStream xstream = new XStream(driver);
     <ul>
     <li>Prevent the usage of the reflection-based converters. Register an own converter with priority LOW that claims
     to handle any type and throw a ConversionException in the marshal and unmarshal methods.</li>
-    <li>Overload XStream.setupConverters() and register only converters for the types that are allowd in your object
+    <li>Overload XStream.setupConverters() and register only converters for the types that are allowed in your object
     graph.</li>
     <li>Provide own implementations for ConverterLookup and ConverterRegistry constructing the XStream. Your
     implementation can then select the appropriate converter at lookup time on its own or prevent the registration of
     specific converters.</li>
+    <li>Since XStream 1.4.7 you have the possibility to <a href="security.html">setup rules</a> for the class types
+    that are allowed to be deserialized.</li>
     </ul>
+
+    <!-- ...................................................... -->
+    <h2 id="Security_XXEVulnerability">Is XStream XXE vulnerable?</h2>
+    
+    <p>XStream does not contain an own XML parser, therefore it depends on the parser selected with the 
+    <a href="javadoc/com/thoughtworks/xstream/io/HierarchicalStreamDriver.html">HierarchicalStreamDriver</a>
+    if the current XStream instance is <a href="https://www.owasp.org/index.php/XML_External_Entity_%28XXE%29_Processing">
+    XXE vulnerable</a> at deserialization time. However, XStream tries to deactivate the processing of external
+    entities by default. Status for the different supported XML parsers:</p>
+    
+    <table summary="Comparison of drivers regarding XEE vulnerability">
+		<tr><th>Driver</th><th>Vulnerable</th><th>Explanation</th></tr>
+    	<tr><td>BEAStaxDriver</td><td>yes</td><td>Setting <code>XMLInputFactory.setProperty(
+    	XMLInputFactory.IS_SUPPORTING_EXTERNAL_ENTITIES, false)</code> is only respected for general entities, but not
+    	for parameter entities.</td></tr>
+    	<tr><td>Dom4JDriver</td><td>no</td><td>Driver turns off DOCTYPE processing to suppress handling of external
+    	entities with SAX reader in use.</td></tr>
+    	<tr><td>DomDriver</td><td>no, Java 6 or higher<br/>yes, Java 5</td><td>Driver turns off DOCTYPE processing with
+    	Java 7 runtime or higher to suppress handling of external entities with SAX reader in use. Suppress external
+    	entities only for Java 6 or lower, fails for parameterized entities.</td></tr>
+    	<tr><td>JDomDriver</td><td>no</td><td>Driver turns off DOCTYPE processing to suppress handling of external
+    	entities with SAX reader in use.</td></tr>
+    	<tr><td>JDom2Driver</td><td>no</td><td>Driver turns off DOCTYPE processing to suppress handling of external
+    	entities with SAX reader in use.</td></tr>
+    	<tr><td>KXml2DomDriver</td><td>no</td><td>kXML2 parser does not support entities.</td></tr>
+    	<tr><td>KXml2Driver</td><td>no</td><td>kXML2 parser does not support entities.</td></tr>
+    	<tr><td>SjsxpDriver</td><td>no, Java 7 or higher<br/>yes, Java 6</td><td>Driver turns off support for external
+    	entities for the internal StaX 	parser of the Sun JDK, but fails for parameter entities in a Java 6 runtime.</td></tr>
+    	<tr><td>StandardStaxDriver</td><td>?</td><td>Driver tries to turns off support for external entities for
+    	the internal StaX parser of the Java runtime. Save for Oracle JDK 7 or higher.</td></tr>
+    	<tr><td>StaxDriver</td><td>?</td><td>Driver tries to turns off support for external entities for the
+    	standard StaX parser. However, the finally used StAX implementation is defined externally (see JDK
+    	documentation) and a test should be made on the target platform to ensure that the parser respects the setting.</td></tr>
+    	<tr><td>WstxDriver</td><td>no</td><td>Driver turns off support for external entities for the Woodstox StAX
+    	parser.</td></tr>
+    	<tr><td>XomDriver</td><td>yes</td><td>XOM uses an internal list to test for available SAX parsers on the
+    	classpath and will explicitly enable external entities, even if the SAXBuilder instance is provided manually.</td></tr>
+    </table>
+    
+    <p class="highlight">Note: Only a HierarchicalStreamReader created with the HierarchicalStreamDriver is setup to
+    avoid the XXE vulnerability. If you create such driver instances on your own, it is your task to setup the XML
+    parser instance on your own.</p>
 
     <!-- ****************************************************** -->
     <h1 id="Other_Products">Comparison to other products</h1>

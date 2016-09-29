@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2010, 2011, 2012, 2013, 2014 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2010, 2011, 2012, 2013, 2014, 2015 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -44,6 +44,7 @@ public class JVM implements Caching {
     private static final boolean optimizedTreeSetAddAll;
     private static final boolean optimizedTreeMapPutAll;
     private static final boolean canParseUTCDateFormat;
+    private static final boolean canParseISO8601TimeZoneInDateFormat;
     private static final boolean canCreateDerivedObjectOutputStream;
 
     private static final String vendor = System.getProperty("java.vm.vendor");
@@ -150,6 +151,15 @@ public class JVM implements Caching {
         }
         canParseUTCDateFormat = test;
         try {
+            new SimpleDateFormat("X").parse("Z");
+            test = true;
+        } catch (final ParseException e) {
+            test = false;
+        } catch (final IllegalArgumentException e) {
+            test = false;
+        }
+        canParseISO8601TimeZoneInDateFormat = test;
+        try {
             test = new CustomObjectOutputStream(null) != null;
         } catch (RuntimeException e) {
             test = false;
@@ -217,6 +227,13 @@ public class JVM implements Caching {
      */
     public static boolean is18() {
         return majorJavaVersion >= 1.8f;
+    }
+
+    /**
+     * @since 1.4.8
+     */
+    public static boolean is19() {
+        return majorJavaVersion >= 1.9f;
     }
 
     private static boolean isIBM() {
@@ -440,6 +457,13 @@ public class JVM implements Caching {
 
     public static boolean canParseUTCDateFormat() {
         return canParseUTCDateFormat;
+    }
+
+    /**
+     * @since 1.4.8
+     */
+    public static boolean canParseISO8601TimeZoneInDateFormat() {
+        return canParseISO8601TimeZoneInDateFormat;
     }
 
     /**

@@ -18,7 +18,7 @@ import java.util.List;
  * 
  * @author <a href="mailto:jason@maven.org">Jason van Zyl</a>
  *
- * @version $Id: HandlerManager.java 1345 2007-12-11 01:50:12Z joehni $
+ * @version $Id$
  */
 public class HandlerManager
 {

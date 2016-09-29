@@ -1,7 +1,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <!--
      Copyright (C) 2006 Joe Walnes.
-     Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013 XStream committers.
+     Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016 XStream committers.
      All rights reserved.
      
      The software in this package is published under the terms of the BSD
@@ -14,7 +14,7 @@
   <parent>
     <groupId>com.thoughtworks.xstream</groupId>
     <artifactId>xstream-parent</artifactId>
-    <version>1.4.7</version>
+    <version>1.4.9</version>
   </parent>
   <artifactId>xstream</artifactId>
   <packaging>jar</packaging>
@@ -97,15 +97,14 @@
     </dependency>
 
     <dependency>
-      <groupId>org.json</groupId>
-      <artifactId>json</artifactId>
+      <groupId>org.codehaus.jettison</groupId>
+      <artifactId>jettison</artifactId>
       <optional>true</optional>
     </dependency>
 
     <dependency>
-      <groupId>org.codehaus.jettison</groupId>
-      <artifactId>jettison</artifactId>
-      <optional>true</optional>
+      <groupId>javax.activation</groupId>
+      <artifactId>activation</artifactId>
     </dependency>
 
     <!-- test-scoped -->
@@ -117,6 +116,12 @@
     <dependency>
       <groupId>jmock</groupId>
       <artifactId>jmock</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.json</groupId>
+      <artifactId>json</artifactId>
+      <scope>test</scope>
     </dependency>
 
     <dependency>
@@ -139,21 +144,6 @@
   </dependencies>
 
   <build>
-    <pluginManagement>
-      <plugins>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-javadoc-plugin</artifactId>
-          <configuration>
-            <excludePackageNames>com.thoughtworks.xstream.core.util</excludePackageNames>
-            <source>${version.java.source}</source>
-            <links>
-              <link>${link.javadoc.javase}</link>
-            </links>
-          </configuration>
-          </plugin>
-        </plugins>
-    </pluginManagement>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -216,6 +206,100 @@
 
   <profiles>
     <profile>
+      <id>jdk18ge</id>
+      <activation>
+        <jdk>[1.8,)</jdk>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <configuration>
+              <compilerArgs>
+                <arg>-XDignore.symbol.file</arg>
+              </compilerArgs>
+              <excludes>
+                <exclude>**/Lambda**</exclude>
+              </excludes>
+              <testExcludes>
+                <exclude>**/Lambda**</exclude>
+              </testExcludes>
+            </configuration>
+            <executions>
+              <execution>
+                <id>compile-jdk18</id>
+                <configuration>
+                  <source>1.8</source>
+                  <target>1.8</target>
+                  <excludes>
+                    <exclude>foo</exclude>
+                  </excludes>
+                  <testExcludes>
+                    <exclude>foo</exclude>
+                  </testExcludes>
+                </configuration>
+                <goals>
+                  <goal>compile</goal>
+                  <goal>testCompile</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <configuration>
+              <excludePackageNames>com.thoughtworks.xstream.core.util</excludePackageNames>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+      <reporting>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <version>${version.plugin.maven.javadoc}</version>
+            <configuration>
+              <excludePackageNames>com.thoughtworks.xstream.core.util</excludePackageNames>
+              <additionalparam>${javadoc.xdoclint}</additionalparam>
+              <detectJavaApiLink>false</detectJavaApiLink>
+              <source>${version.java.source}</source>
+              <links>
+                <link>${link.javadoc.javase}</link>
+              </links>
+            </configuration>
+          </plugin>
+        </plugins>
+      </reporting>
+    </profile>
+    <profile>
+      <id>jdk17</id>
+      <activation>
+        <jdk>1.7</jdk>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <configuration>
+              <compilerArgs>
+                <arg>-XDignore.symbol.file</arg>
+              </compilerArgs>
+              <excludes>
+                <exclude>**/Lambda**</exclude>
+              </excludes>
+              <testExcludes>
+                <exclude>**/Lambda**</exclude>
+              </testExcludes>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
       <id>jdk15-16</id>
       <activation>
         <jdk>[1.5,1.7)</jdk>
@@ -226,7 +310,16 @@
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-compiler-plugin</artifactId>
             <configuration>
+              <compilerArgs>
+                <arg>-XDignore.symbol.file</arg>
+              </compilerArgs>
+              <excludes>
+                <exclude>**/Lambda**</exclude>
+                <exclude>**/extended/PathConverter*</exclude>
+              </excludes>
               <testExcludes>
+                <exclude>**/Lambda**</exclude>
+                <exclude>**/acceptance/Extended17TypesTest*</exclude>
                 <exclude>**/extended/*17Test*</exclude>
               </testExcludes>
             </configuration>
@@ -241,19 +334,6 @@
       </activation>
       <build>
         <plugins>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-javadoc-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>attach-javadocs</id>
-                <phase>package</phase>
-                <goals>
-                  <goal>jar</goal>
-                </goals>
-              </execution>
-            </executions>
-          </plugin>
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-jar-plugin</artifactId>
@@ -299,16 +379,20 @@
             <artifactId>maven-compiler-plugin</artifactId>
             <configuration>
               <excludes>
+                <exclude>**/Lambda**</exclude>
                 <exclude>**/annotations/*</exclude>
                 <exclude>**/AnnotationMapper*</exclude>
                 <exclude>**/EnumMapper*</exclude>
                 <exclude>**/enums/*</exclude>
                 <exclude>**/basic/StringBuilder*</exclude>
                 <exclude>**/basic/UUID*</exclude>
+                <exclude>**/core/util/Types*</exclude>
                 <exclude>**/extended/*15*</exclude>
+                <exclude>**/extended/PathConverter*</exclude>
                 <exclude>**/io/xml/JDom2*</exclude>
               </excludes>
               <testExcludes>
+                <exclude>**/Lambda**</exclude>
                 <exclude>**/annotations/*</exclude>
                 <exclude>**/enums/*</exclude>
                 <exclude>**/extended/*17Test*</exclude>
@@ -317,6 +401,7 @@
                 <exclude>**/io/xml/JDom2*Test*</exclude>
                 <exclude>**/acceptance/Basic15TypesTest*</exclude>
                 <exclude>**/acceptance/Concurrent15TypesTest*</exclude>
+                <exclude>**/acceptance/Extended17TypesTest*</exclude>
               </testExcludes>
             </configuration>
           </plugin>
@@ -342,18 +427,6 @@
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-javadoc-plugin</artifactId>
-        <version>${version.plugin.maven.javadoc}</version>
-        <configuration>
-          <excludePackageNames>com.thoughtworks.xstream.core.util</excludePackageNames>
-          <source>${version.java.source}</source>
-          <links>
-            <link>${link.javadoc.javase}</link>
-          </links>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-report-plugin</artifactId>
         <version>${version.plugin.maven.surefire}</version>
       </plugin>
@@ -364,5 +437,9 @@
       </plugin>
     </plugins>
   </reporting>
+
+  <properties>
+    <bundle.export.package>!com.thoughtworks.xstream.core.util,com.thoughtworks.xstream.*;-noimport:=true</bundle.export.package>
+  </properties>
 
 </project>

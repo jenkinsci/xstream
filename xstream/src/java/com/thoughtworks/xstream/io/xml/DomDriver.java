@@ -1,12 +1,12 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2011 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2011, 2014, 2015 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
+ *
  * Created on 07. March 2004 by Joe Walnes
  */
 package com.thoughtworks.xstream.io.xml;
@@ -19,6 +19,8 @@ import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.URL;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -30,6 +32,8 @@ import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
+import com.thoughtworks.xstream.converters.reflection.ObjectAccessException;
+import com.thoughtworks.xstream.core.JVM;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.StreamException;
@@ -39,7 +43,7 @@ import com.thoughtworks.xstream.io.naming.NameCoder;
 public class DomDriver extends AbstractXmlDriver {
 
     private final String encoding;
-    private final DocumentBuilderFactory documentBuilderFactory;
+    private DocumentBuilderFactory documentBuilderFactory;
 
     /**
      * Construct a DomDriver.
@@ -61,7 +65,6 @@ public class DomDriver extends AbstractXmlDriver {
      */
     public DomDriver(String encoding, NameCoder nameCoder) {
         super(nameCoder);
-        documentBuilderFactory = DocumentBuilderFactory.newInstance();
         this.encoding = encoding;
     }
 
@@ -91,7 +94,14 @@ public class DomDriver extends AbstractXmlDriver {
 
     private HierarchicalStreamReader createReader(InputSource source) {
         try {
-            DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+            if (documentBuilderFactory == null) {
+                synchronized (this) {
+                    if (documentBuilderFactory == null) {
+                        documentBuilderFactory = createDocumentBuilderFactory();
+                    }
+                }
+            }
+            final DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
             if (encoding != null) {
                 source.setEncoding(encoding);
             }
@@ -120,5 +130,35 @@ public class DomDriver extends AbstractXmlDriver {
         } catch (UnsupportedEncodingException e) {
             throw new StreamException(e);
         }
+    }
+
+    /**
+     * Create the DocumentBuilderFactory instance.
+     * 
+     * @return the new instance
+     * @since 1.4.9
+     */
+    protected DocumentBuilderFactory createDocumentBuilderFactory() {
+        final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        if (JVM.is15()) {
+            try {
+                Method method = DocumentBuilderFactory.class.getMethod("setFeature",
+                    new Class[]{ String.class, boolean.class });
+                method.invoke(factory, new Object[]{ "http://apache.org/xml/features/disallow-doctype-decl", Boolean.TRUE });
+            } catch (NoSuchMethodException e) {
+                // Ignore
+            } catch (IllegalAccessException e) {
+                throw new ObjectAccessException("Cannot set feature of DocumentBuilderFactory.", e);
+            } catch (InvocationTargetException e) {
+                Throwable cause = e.getCause();
+                if (JVM.is16() 
+                        || (cause instanceof ParserConfigurationException 
+                                &&  cause.getMessage().indexOf("disallow-doctype-decl") < 0)) { 
+                    throw new StreamException(cause);
+                }
+            }
+        }
+        factory.setExpandEntityReferences(false);
+        return factory;
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006, 2007, 2009, 2010, 2013 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2010, 2013, 2015 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -123,6 +123,7 @@ public class SecurityManagerTest extends TestCase {
     }
 
     public void testSerializeWithXppDriverAndPureJavaReflectionProviderAndActiveSecurityManager() {
+        sm.addPermission(source, new RuntimePermission("accessClassInPackage.sun.misc"));
         sm.addPermission(source, new RuntimePermission("accessClassInPackage.sun.text.resources"));
         sm.addPermission(source, new RuntimePermission("accessClassInPackage.sun.util.resources"));
         sm.addPermission(source, new RuntimePermission("accessDeclaredMembers"));
@@ -138,6 +139,7 @@ public class SecurityManagerTest extends TestCase {
         sm.addPermission(source, new PropertyPermission("jaxp.debug", "read"));
         sm.addPermission(source, new PropertyPermission("jdk.util.TimeZone.allowSetDefault", "read"));
         sm.addPermission(source, new PropertyPermission("sun.boot.class.path", "read"));
+        sm.addPermission(source, new PropertyPermission("sun.io.serialization.extendedDebugInfo", "read"));
         sm.addPermission(source, new PropertyPermission("sun.nio.fs.chdirAllowed", "read"));
         sm.addPermission(source, new PropertyPermission("sun.timezone.ids.oldmapping", "read"));
         sm.addPermission(source, new PropertyPermission("user.country", "read"));
@@ -178,9 +180,11 @@ public class SecurityManagerTest extends TestCase {
         sm.addPermission(source, new PropertyPermission("jdk.util.TimeZone.allowSetDefault", "read"));
         sm.addPermission(source, new PropertyPermission("jdk.xml.elementAttributeLimit", "read"));
         sm.addPermission(source, new PropertyPermission("jdk.xml.entityExpansionLimit", "read"));
+        sm.addPermission(source, new PropertyPermission("jdk.xml.maxElementDepth", "read"));
         sm.addPermission(source, new PropertyPermission("jdk.xml.maxGeneralEntitySizeLimit", "read"));
         sm.addPermission(source, new PropertyPermission("jdk.xml.maxParameterEntitySizeLimit", "read"));
         sm.addPermission(source, new PropertyPermission("jdk.xml.maxOccurLimit", "read"));
+        sm.addPermission(source, new PropertyPermission("jdk.xml.maxXMLNameLimit", "read"));
         sm.addPermission(source, new PropertyPermission("jdk.xml.totalEntitySizeLimit", "read"));
         sm.addPermission(source, new PropertyPermission("maxOccurLimit", "read"));
         sm.addPermission(source, new PropertyPermission("sun.boot.class.path", "read"));

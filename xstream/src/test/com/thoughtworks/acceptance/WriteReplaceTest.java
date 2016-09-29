@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2014, 2015 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -26,6 +26,8 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.apache.commons.lang.StringUtils;
 
 public class WriteReplaceTest extends AbstractAcceptanceTest {
 
@@ -131,7 +133,7 @@ public class WriteReplaceTest extends AbstractAcceptanceTest {
         assertBothWays(in, expectedXml);
     }
 
-    public static class ExtenalizableContainer extends StandardObject implements Externalizable {
+    public static class ExternalizableContainer extends StandardObject implements Externalizable {
         Original original;
         
         public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
@@ -144,11 +146,11 @@ public class WriteReplaceTest extends AbstractAcceptanceTest {
     }
     
     public void testAllowsDifferentTypeToBeSubstitutedInExternalizable() {
-        xstream.alias("container", ExtenalizableContainer.class);
+        xstream.alias("container", ExternalizableContainer.class);
         xstream.alias("original-class", Original.class);
         xstream.alias("replaced-class", Replaced.class);
 
-        ExtenalizableContainer in = new ExtenalizableContainer(); 
+        ExternalizableContainer in = new ExternalizableContainer(); 
         in.original = new Original("hello world");
 
         String expectedXml = ""
@@ -211,11 +213,11 @@ public class WriteReplaceTest extends AbstractAcceptanceTest {
     }
     
     public void testAllowsDifferentTypeToBeSubstitutedWithNonExistingClassInExternalizable() {
-        xstream.alias("container", ExtenalizableContainer.class);
+        xstream.alias("container", ExternalizableContainer.class);
         xstream.alias("original-class", Original.class);
         xstream.alias("replaced-class", Replaced.class);
 
-        ExtenalizableContainer in = new ExtenalizableContainer(); 
+        ExternalizableContainer in = new ExternalizableContainer(); 
         in.original = new Original("hello world");
 
         String xml = ""
@@ -280,6 +282,66 @@ public class WriteReplaceTest extends AbstractAcceptanceTest {
                 + "    </default>\n"
                 + "  </replaced-serializable-class>\n"
                 + "</original-serializable-class>";
+
+        assertBothWays(in, expectedXml);
+    }
+
+    public static class OriginalExternalizable extends StandardObject implements Externalizable {
+        String originalValue;
+
+        public OriginalExternalizable() {
+        }
+
+        public OriginalExternalizable(String originalValue) {
+            this.originalValue = originalValue;
+        }
+
+        private Object writeReplace() {
+            return new ReplacedExternalizable(originalValue.toUpperCase());
+        }
+
+        public void writeExternal(ObjectOutput out) throws IOException {
+            out.writeObject(originalValue);
+        }
+
+        public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+            originalValue = (String)in.readObject();
+        }
+    }
+
+    public static class ReplacedExternalizable extends StandardObject implements Externalizable {
+        String replacedValue;
+
+        public ReplacedExternalizable() {
+        }
+
+        public ReplacedExternalizable(String replacedValue) {
+            this.replacedValue = replacedValue;
+        }
+
+        private Object readResolve() {
+            return new OriginalExternalizable(replacedValue.toLowerCase());
+        }
+
+        public void writeExternal(ObjectOutput out) throws IOException {
+            out.writeObject(StringUtils.reverse(replacedValue));
+        }
+
+        public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+            replacedValue = StringUtils.reverse((String)in.readObject());
+        }
+    }
+
+    public void testAllowsDifferentTypeToBeSubstitutedForCustomExternalizableObjects() {
+        xstream.alias("original-externalizable-class", OriginalExternalizable.class);
+        xstream.alias("replaced-externalizable-class", ReplacedExternalizable.class);
+
+        OriginalExternalizable in = new OriginalExternalizable("hello world");
+
+        String expectedXml = ""
+                + "<original-externalizable-class resolves-to=\"replaced-externalizable-class\">\n"
+                + "  <string>DLROW OLLEH</string>\n"
+                + "</original-externalizable-class>";
 
         assertBothWays(in, expectedXml);
     }
