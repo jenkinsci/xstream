@@ -1,6 +1,6 @@
 <?xml version="1.0"?><project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <!--
-     Copyright (C) 2011, 2012, 2013 XStream committers.
+     Copyright (C) 2011, 2012, 2013, 2015 XStream committers.
      All rights reserved.
      
      The software in this package is published under the terms of the BSD
@@ -13,7 +13,7 @@
   <parent>
     <groupId>com.thoughtworks.xstream</groupId>
     <artifactId>xstream-parent</artifactId>
-    <version>1.4.7</version>
+    <version>1.4.9</version>
   </parent>
   <artifactId>xstream-hibernate</artifactId>
   <packaging>jar</packaging>
@@ -24,6 +24,37 @@
 
   <profiles>
     <profile>
+      <id>jdk18-ge</id>
+      <activation>
+        <jdk>[1.8,)</jdk>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-javadoc-plugin</artifactId>
+          </plugin>
+        </plugins>
+      </build>
+      <reporting>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <version>${version.plugin.maven.javadoc}</version>
+            <configuration>
+              <additionalparam>${javadoc.xdoclint}</additionalparam>
+              <detectJavaApiLink>false</detectJavaApiLink>
+              <source>${version.java.source}</source>
+              <links>
+                <link>${link.javadoc.javase}</link>
+              </links>
+            </configuration>
+          </plugin>
+        </plugins>
+      </reporting>
+    </profile>
+    <profile>
       <id>jdk16-ge</id>
       <activation>
         <jdk>[1.6,)</jdk>
@@ -32,29 +63,12 @@
         <plugins>
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-javadoc-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>attach-javadocs</id>
-                <phase>package</phase>
-                <goals>
-                  <goal>jar</goal>
-                </goals>
-              </execution>
-            </executions>
-          </plugin>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-jar-plugin</artifactId>
             <configuration>
               <archive combine.children="append">
                 <manifestFile>${project.build.directory}/OSGi/MANIFEST.MF</manifestFile>
               </archive>
             </configuration>
-          </plugin>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-source-plugin</artifactId>
           </plugin>
           <plugin>
             <groupId>org.apache.felix</groupId>
@@ -71,25 +85,7 @@
   </profiles>
 
   <build>
-    <pluginManagement>
-      <plugins>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-javadoc-plugin</artifactId>
-          <configuration>
-            <source>${version.java.source}</source>
-            <links>
-              <link>${link.javadoc.javase}</link>
-            </links>
-          </configuration>
-        </plugin>
-      </plugins>
-    </pluginManagement>
     <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-dependency-plugin</artifactId>
@@ -108,26 +104,11 @@
           </execution>
         </executions>
       </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-source-plugin</artifactId>
-      </plugin>
     </plugins>
   </build>
 
   <reporting>
     <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-javadoc-plugin</artifactId>
-        <version>${version.plugin.maven.javadoc}</version>
-        <configuration>
-          <source>${version.java.source}</source>
-          <links>
-            <link>${link.javadoc.javase}</link>
-          </links>
-        </configuration>
-      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-report-plugin</artifactId>
@@ -186,4 +167,8 @@
         <artifactId>junit</artifactId>
     </dependency>
   </dependencies>
+
+  <properties>
+    <bundle.export.package>!com.thoughtworks.xstream.hibernate.util,com.thoughtworks.xstream.hibernate.*;-noimport:=true</bundle.export.package>
+  </properties>
 </project>

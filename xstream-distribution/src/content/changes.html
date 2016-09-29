@@ -1,7 +1,7 @@
 <html>
 <!--
  Copyright (C) 2005, 2006 Joe Walnes.
- Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014 XStream committers.
+ Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016 XStream committers.
  All rights reserved.
  
  The software in this package is published under the terms of the BSD
@@ -23,14 +23,131 @@
       <li><b>API changes</b>: Any changes to the API that could impact existing users.</li>
     </ul>
 
-	<p>Full details can be found in Jira's
-	<a href="http://jira.codehaus.org/browse/XSTR?report=com.atlassian.jira.plugin.system.project:roadmap-panel">Roadmap</a> and
-	<a href="http://jira.codehaus.org/browse/XSTR?report=com.atlassian.jira.plugin.system.project:changelog-panel">Change Log</a>.
+	<p>Full details can be found in GitHub's
+	<a href="https://github.com/x-stream/xstream/issues?q=is%3Aissue+is%3Aclosed">Issues</a>, filter for the
+	appropriate milestone.
 	</p>
+	
+<!--
+    <h1 id="upcoming-1.4.x">Upcoming 1.4.x maintenance release</h1>
+
+    <p>Not yet released.</p>
+-->
+
+    <h1 id="1.4.9">1.4.9</h1>
+
+    <p>Released March 15, 2016.</p>
+
+    <h2>Major changes</h2>
+    
+    <ul>
+    	<li>GHI:#25: Fix <a href="https://www.owasp.org/index.php/XML_External_Entity_%28XXE%29_Processing">XXE
+    	vulnerability</a>: Fixed affected drivers were Dom4JDriver, DomDriver, JDomDriver, JDom2Driver, SjsxpDriver,
+    	StandardStaxDriver and WstxDriver. Still vulnerable are BEAStaxDriver and XomDriver. Processing of (external)
+    	entities has been disabled. See <a href="faq.html#Security_XXEVulnerability">FAQ</a> for more information.</li>
+    	<li>Benchmark module has been deprecated in favor of <a href="http://openjdk.java.net/projects/code-tools/jmh/">
+    	JMH (Java Microbenchmarking Harness)</a>.</li>
+    	<li>GHI:#33 and GHPR:#38: Add converter for java.nio.file.Path (by Aaron Jonson).</li>
+    </ul>
+
+    <h2>Minor changes</h2>
+
+    <ul>
+    	<li>GHI:#35: AnnotationMapper dropped silently constructor arguments for converters if they were equal.</li>
+    	<li>Fix: Possible concurrency problem with XomDriver.</li>
+    	<li>JIRA:XSTR-773, GHPR:#3: Minimize memory footprint by not keeping internal references to instances of
+    	immutable types.</li>
+    	<li>Drop automatic reference support at deserialization time for immutable types before version 1.4 (primitive
+    	types and their boxed counterpart, java.lang.Class, java.lang.String, java.math.BigDecimal,
+    	java.math.BigInteger, java.io.File, java.net.URL, and java.awt.font.TextAttribute).</li>
+    	<li>Fix: Implicit collection declaration is erroneously inherited or propagated to hidden field of same name.</li>
+    	<li>XStreamConverter annotation supports null values as arguments for converter instantiation.</li>
+    	<li>GHI:#5: Support null values for JavaBean properties.</li>
+    	<li>GHI:#36: Fix NamedMapConverter, does not use SingleValueConverter of value if value is text of entry element.</li>
+    	<li>GHI:#13: Own converter for javax.activation.ActivationDataFlavor, because ExternalizableConverter cannot handle
+    	a type that violates the Java specification.</li>
+    	<li>GHPR:#18: Minimize synchronized block in FieldDictionary.</li>
+    	<li>JIRA:XSTR-769: Synthetic fields with references to outer class use compiler dependent names.</li>
+    	<li>JIRA:XSTR-771: UUID is an immutable type by default.</li>
+    	<li>GHPR:#23: Constructor of AbstractXppDriver swallows causing exception.</li>
+    	<li>GHI:#28: Fix functionality of ClassAliaslingMapper.itemTypeAsAttributes(Class).</li>
+    	<li>GHI:#37: Historical Java 1.3 support suppresses causing exception of a thrown InvocationTargetException.</li>
+    	<li>GHI:#41: Cannot instantiate ToAttributedValueConverter with null value for valueFieldName using
+    	XStreamConverter annotation.</li>
+    	<li>Fix example code in description of security framework.</li>
+    	<li>Clean-up usage of exceptions.</li>
+    </ul>
+
+    <h2>API changes</h2>
+    
+    <ul>
+    	<li>Added c.t.x.XStream.addImmutableType(Class, boolean) and deprecated c.t.x.XStream.addImmutableType(Class).</li>
+    	<li>Added c.t.x.mapper.Mapper.isReferenceable(Class).</li>
+    	<li>Added c.t.x.mapper.ImmutableTypesMapper.addImmutableType(Class, boolean) and deprecated
+    	c.t.x.mapper.ImmutableTypesMapper.addImmutableType(Class).</li>
+    	<li>Added c.t.x.io.xml.Dom4JDriver.createReader().</li>
+    	<li>Added c.t.x.io.xml.DomDriver.createDocumentBuilderFactory().</li>
+    	<li>Added c.t.x.io.xml.JDomDriver.createBuilder().</li>
+    	<li>Added c.t.x.io.xml.JDom2Driver.createBuilder().</li>
+    	<li>Added c.t.x.io.xml.XomDriver.createBuilder().</li>
+    	<li>Added constructor c.t.x.converter.extended.ToAttributedValueConverter.ToAttributedValueConverter(Class,
+    	Mapper, ReflectionProvider, ConverterLookup).</li>
+    	<li>Added abstract c.t.x.converter.ErrorWritingException as common base for c.t.x.converter.ConversionException
+    	and c.t.x.converter.reflection.ObjectAccessException.</li>
+    	<li>Deprecated c.t.x.io.xml.XomDriver(Builder), c.t.x.io.xml.XomDriver(Builder, NameCoder) and c.t.x.io.xml.XomDriver.getBuilder().</li>
+    	<li>Deprecated c.t.x.mapper.ClassAliaslingMapper.itemTypeAsAttributes(Class) and
+    	c.t.x.mapper.ClassAliaslingMapper.aliasIsAttribute(String). Methods never called, left-over from old refactoring.</li>
+    </ul>
+
+    <h1 id="1.4.8">1.4.8</h1>
+
+    <p>Released February 18, 2015.</p>
+
+    <h2>Major changes</h2>
+
+    <ul>
+    	<li>Support for serializable lambda expressions and handling of non-serializable ones.</li>
+    </ul>
+
+    <h2>Minor changes</h2>
+    
+    <ul>
+    	<li>Detect Java 9 runtime.</li>
+    	<li>JIRA:XSTR-767: Deserialization of referenced lambda expressions fail.</li>
+    	<li>JIRA:XSTR-762: Private method readResolve() called on base classes.</li>
+    	<li>JIRA:XSTR-761: Support ignored serialPersistentField at deserialization time.</li>
+    	<li>JIRA:XSTR-755: ExternalizableConverter does not respect writeReplace and readResolve.</li>
+    	<li>JIRA:XSTR-757: Deserialized TreeSet does not honor remove(Object) return value contract.</li>
+    	<li>JIRA:XSTR-759: Support deserialization of <a href="http://www.w3.org/TR/NOTE-datetime">W3C datetime format</a>
+    	in DateConverter with Java 7 runtime.</li>
+    	<li>Fix: DateConverter ignores provided locale.</li>
+    	<li>JIRA:XSTR-768: ISO8601GregorianCalendarConverter may set invalid time zone for Joda-Time.</li>
+    	<li>Fix: WeakCache.entrySet().iterator().next.setValue(value) returns the reference instead of the old value.</li>
+    	<li>Fix: SqlTimestampConverter throws IllegalArgumentException instead of ConversionException on fromString().</li>
+    	<li>Fix: CGLIBEnhancedConverter does not initialize transient members of parent after deserialization.</li>
+    	<li>JIRA:XSTR-763: Set scope of org.json:json to test instead declaring the dependency as optional.</li>
+    </ul>
+
+    <h2>API changes</h2>
+    
+    <ul>
+    	<li>Added c.t.x.util.JVM.is19().</li>
+    	<li>Added c.t.x.converter.reflection.LambdaConverter and c.t.x.mapper.LambdaMapper.</li>
+    	<li>Declare c.t.x.XStream.ignoreUnknownElements(Pattern) as public.</li>
+    	<li>c.t.x.converters.reflection.AbstractReflectionConverter.readResolve() is protected now.</li>
+    	<li>c.t.x.mapper.AbstractAttributeAliasingMapper.readResolve() is protected now.</li>
+    	<li>Deprecated c.t.x.converters.extended.StackTraceElementFactory, it is an internal helper class.</li>
+    	<li>Deprecated c.t.x.converters.reflection.SerializationMethodInvoker, it is an internal helper class.</li>
+    	<li>Deprecated c.t.x.io.AttributeNameIterator, it is an internal helper class.</li>
+    	<li>Deprecated c.t.x.XStream.useXStream11XmlFriendlyMapper(), corresponding
+    	c.t.x.mapper.XStream11XmlFriendlyMapper has been deprecated long ago.</li>
+    	<li>Deprecated c.t.x.converter.basic.BooleanConverter.shouldConvert(Class,Object), undetected remainder of
+    	ancient XStream version.</li>
+    </ul>
 
     <h1 id="1.4.7">1.4.7</h1>
 
-    <p>Released February 8, 2013.</p>
+    <p>Released February 8, 2014.</p>
 
     <p class="highlight">This maintenance release addresses mainly the security vulnerability CVE-2013-7285, an
     arbitrary execution of commands when unmarshalling.</p>
@@ -162,7 +279,7 @@
     	<li>Current IBM JDK for Java 1.4.2 no longer has a reverse field ordering.</li>
     	<li>LongConverter supports now positive hex and octal numbers over Long.MAX_VALUE within 64 bit.</li>
     	<li>Fix: Sun14RefectionProvider ignores a provided FieldDictionary.</li>
-    	<li>JIRA:XSTR-457: Do not write 'defined-in' attribute it not needed.</li>
+    	<li>JIRA:XSTR-457: Do not write 'defined-in' attribute if not needed.</li>
     	<li>JettisonMappedXmlDriver provides better support to overwrite its create methods.</li>
     	<li>JIRA:XSTR-685: StAX based drivers (StaxDriver and JettisonMappedXmlDriver) are not closing internal input
     	stream reading from file or URL.</li>

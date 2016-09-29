@@ -47,7 +47,7 @@ import junit.framework.TestCase;
 /**
  * Tests {@link ToAttributedValueConverter}.
  * 
- * @author jos / last modified by $Author: joehni $
+ * @author jos / last modified by $Author$
  */
 public class ToAttributedValueConverterTest extends TestCase {
     private HierarchicalStreamDriver driver;

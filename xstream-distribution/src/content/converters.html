@@ -1,7 +1,7 @@
 <html>
 <!--
  Copyright (C) 2005, 2006 Joe Walnes.
- Copyright (C) 2006, 2007, 2008, 2009, 2011, 2013 XStream committers.
+ Copyright (C) 2006, 2007, 2008, 2009, 2011, 2013, 2014, 2015, 2016 XStream committers.
  All rights reserved.
  
  The software in this package is published under the terms of the BSD
@@ -128,7 +128,7 @@
                 <td>normal</td>
             </tr>
             <tr>
-                <td><a href="javadoc/com/thoughtworks/xstream/converters/collections/NamedCollectionConverter.html">NamedArrayConverter</a></td>
+                <td><a href="javadoc/com/thoughtworks/xstream/converters/extended/NamedArrayConverter.html">NamedArrayConverter</a></td>
                 <td>any kind of array</td>
                 <td class="example">
                     &lt;<i>string</i>-array&gt;<br/>
@@ -250,21 +250,21 @@
                 <td>normal</td>
             </tr>
             <tr>
-                <td><a href="javadoc/com/thoughtworks/xstream/converters/collections/NamedCollectionConverter.html">NamedCollectionConverter</a></td>
+                <td><a href="javadoc/com/thoughtworks/xstream/converters/extended/NamedCollectionConverter.html">NamedCollectionConverter</a></td>
                 <td>java.util.ArrayList<br/>java.util.LinkedList<br/>java.util.HashSet<br/>java.util.Vector<br/>java.util.LinkedHashSet</td>
                 <td class="example">
-                    &lt;linked-list&gt;<br/>
-                    &nbsp;&nbsp;&lt;string&gt;apple&lt;/string&gt;<br/>
-                    &nbsp;&nbsp;&lt;string&gt;banana&lt;/string&gt;<br/>
-                    &nbsp;&nbsp;&lt;big-decimal&gt;12345.4555&lt;/big-decimal&gt;<br/>
-                    &lt;/linked-list&gt;
+                    &lt;fruits&gt;<br/>
+                    &nbsp;&nbsp;&lt;fruit&gt;apple&lt;/fruit&gt;<br/>
+                    &nbsp;&nbsp;&lt;fruit&gt;banana&lt;/fruit&gt;<br/>
+                    &nbsp;&nbsp;&lt;fruit&gt;orange&lt;/fruit&gt;<br/>
+                    &lt;/fruits&gt;
                 </td>
-                <td>The objects inside the collection can be any type of objects, including nested collections.  Should
-                be registered locally or for an individual Collection type.</td>
+                <td>The objects inside the collection can be of any type shared between the objects.  Should be
+                registered locally or for an individual Collection type.</td>
                 <td>&nbsp;</td>
             </tr>
             <tr>
-                <td><a href="javadoc/com/thoughtworks/xstream/converters/collections/NamedMapConverter.html">NamedMapConverter</a></td>
+                <td><a href="javadoc/com/thoughtworks/xstream/converters/extended/NamedMapConverter.html">NamedMapConverter</a></td>
                 <td>java.util.HashMap<br/>java.util.Hashtable<br/>java.util.LinkedHashMap<br/>java.util.concurrent.ConcurrentHashMap</td>
                 <td class="example">
                     &lt;map&gt;<br/>
@@ -280,7 +280,8 @@
                 </td>
                 <td>Both key and values can be any type of objects.  If key or value are written as attributes or if
                 the value is written as text of the entry element, those types must be handled by a
-                SingleValueConverter.  Should be registered locally or for an individual Map type.</td>
+                <a href="javadoc/com/thoughtworks/xstream/converters/SingleValueConverter.html">SingleValueConverter</a>.
+                Should be registered locally or for an individual Map type.</td>
                 <td>&nbsp;</td>
             </tr>
             <tr>
@@ -609,6 +610,13 @@
                 <td>Available under Java 1.4 or greater.</td>
                 <td>normal</td>
             </tr>
+            <tr>
+                <td><a href="javadoc/com/thoughtworks/xstream/converters/extended/PathConverter.html">PathConverter</a></td>
+                <td>java.nio.file.Path</td>
+                <td class="example">&lt;path&gt;../dir/file.txt&lt;/path&gt;</td>
+                <td>Available under Java 1.7 or greater.</td>
+                <td>normal</td>
+            </tr>
 
             <!-- .................................................................................................. -->
             <tr>
@@ -745,6 +753,31 @@
             
             <!-- .................................................................................................. -->
             <tr>
+                <td colspan="5" class="headerRow"><h1 id="java.awt.font">java.awt.font</h1></td>
+            </tr>
+            <tr>
+                <th>Converter</th>
+                <th>Supported types</th>
+                <th>Example</th>
+                <th>Notes</th>
+                <th>Prio</th>
+            </tr>
+            <tr>
+                <td><a href="javadoc/com/thoughtworks/xstream/converters/extended/ActivationDataFlavorConverter.html">ActivationDataFlavorConverter</a></td>
+                <td>javax.activation.ActivationDataFlavor</td>
+                <td class="example">
+                    &lt;activation-data-flavor&gt;<br/>
+                    &nbsp;&nbsp;&lt;mimeType&gt;application/x-junit&lt;/mimeType&gt;<br/>
+                    &nbsp;&nbsp;&lt;humanRepresentableName&gt;JUnit&lt;/humanRepresentableName&gt;<br/>
+                    &nbsp;&nbsp;&lt;representationClass&gt;java.io.InputStream&lt;/representationClass&gt;<br/>
+                    &lt;/activation-data-flavor&gt;
+                </td>
+                <td>Available under Java 1.6 or greater. Only automatically registered if runtime has AWT support.<br/>
+                <td>normal</td>
+            </tr>
+            
+            <!-- .................................................................................................. -->
+            <tr>
                 <td colspan="5" class="headerRow"><h1 id="javax.swing">javax.swing</h1></td>
             </tr>
             <tr>
@@ -846,6 +879,16 @@
                 <td>The Converter is used for any JDK-externalizable types, if not handled by a specialized Converter.</td>
                 <td>&nbsp;</td>
                 <td>low</td>
+            </tr>
+            <tr>
+                <td><a href="javadoc/com/thoughtworks/xstream/converters/reflection/LambdaConverter.html">LambdaConverter</a></td>
+                <td>For serializable and non-serializable lambda types. Noon-serialzable lambda instances will be mapped to null, since they
+                contain no information for recreation. Serializable lambda types have such info, but it is specific to compiler vendor and
+                occurrence in the code. Never assume that you can deserialize such an element when you use a different version of your code
+                or a different compiler.</td>
+                <td>&nbsp;</td>
+                <td>Only automatically registered for Java 8.</td>
+                <td>normal</td>
             </tr>
             <tr>
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/extended/ToAttributedValueConverter.html">ToAttributedValueConverter</a></td>

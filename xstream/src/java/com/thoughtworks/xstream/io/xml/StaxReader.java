@@ -24,7 +24,7 @@ import javax.xml.stream.XMLStreamReader;
  * A reader using the StAX API.
  *
  * @author James Strachan
- * @version $Revision: 1861 $
+ * @version $Revision$
  */
 public class StaxReader extends AbstractPullReader {
 
