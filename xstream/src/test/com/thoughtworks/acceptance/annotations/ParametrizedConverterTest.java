@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008, 2009, 2011, 2012, 2013 XStream Committers.
+ * Copyright (C) 2008, 2009, 2011, 2012, 2013, 2015, 2016 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -11,8 +11,11 @@
 package com.thoughtworks.acceptance.annotations;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.thoughtworks.acceptance.AbstractAcceptanceTest;
@@ -24,6 +27,7 @@ import com.thoughtworks.xstream.annotations.XStreamConverters;
 import com.thoughtworks.xstream.annotations.XStreamInclude;
 import com.thoughtworks.xstream.converters.basic.BooleanConverter;
 import com.thoughtworks.xstream.converters.collections.MapConverter;
+import com.thoughtworks.xstream.converters.extended.NamedCollectionConverter;
 import com.thoughtworks.xstream.converters.extended.NamedMapConverter;
 import com.thoughtworks.xstream.converters.extended.ToAttributedValueConverter;
 import com.thoughtworks.xstream.converters.extended.ToStringConverter;
@@ -53,9 +57,13 @@ public class ParametrizedConverterTest extends AbstractAcceptanceTest {
         xstream.alias("decimal", Decimal.class);
         xstream.alias("type", Type.class);
         xstream.processAnnotations(MyMap.class);
+        xstream.processAnnotations(MyType.class);
         xstream.processAnnotations(DerivedType.class);
+        xstream.processAnnotations(DerivedType2.class);
         xstream.processAnnotations(SimpleBean.class);
         xstream.processAnnotations(ContainsMap.class);
+        xstream.processAnnotations(ContainsMap2.class);
+        xstream.processAnnotations(ContainsCollection.class);
     }
 
     public void testAnnotationForConvertersWithParameters() {
@@ -141,6 +149,20 @@ public class ParametrizedConverterTest extends AbstractAcceptanceTest {
         }
     }
 
+    public void testConverterRequiringNull() {
+        final Type value = new DerivedType(new Decimal("1.5"), new Boolean(true), DerivedType.E.FOO);
+        String expected = "<dtype boolean='true' agreement='yes' enum='FOO'>1.5</dtype>".replace('\'', '"');
+        assertBothWays(value, expected);
+    }
+    
+    @XStreamAlias("mytype")
+    @XStreamConverter(value=ToAttributedValueConverter.class, types={Type.class}, nulls={String.class})
+    public static class MyType extends Type {
+        public MyType(Decimal decimal, Boolean bool) {
+            super(decimal, bool);
+        }
+    }
+
     public void testConverterWithSecondTypeParameter() {
         final Type value = new DerivedType(new Decimal("1.5"), new Boolean(true), DerivedType.E.FOO);
         String expected = "<dtype boolean='true' agreement='yes' enum='FOO'>1.5</dtype>".replace('\'', '"');
@@ -155,6 +177,25 @@ public class ParametrizedConverterTest extends AbstractAcceptanceTest {
         private E e;
 
         public DerivedType(Decimal decimal, Boolean bool, E e) {
+            super(decimal, bool);
+            this.e = e;
+        }
+    }
+
+    public void testConverterWithAllAttributes() {
+        final Type value = new DerivedType2(new Decimal("1.5"), new Boolean(true), DerivedType2.E.FOO);
+        String expected = "<dtype2 decimal='1.5' boolean='true' agreement='yes' enum='FOO'/>".replace('\'', '"');
+        assertBothWays(value, expected);
+    }
+    
+    @XStreamAlias("dtype2")
+    @XStreamConverter(value=ToAttributedValueConverter.class)
+    public static class DerivedType2 extends Type {
+        public enum E { FOO, BAR };
+        @XStreamAlias("enum")
+        private E e;
+
+        public DerivedType2(Decimal decimal, Boolean bool, E e) {
             super(decimal, bool);
             this.e = e;
         }
@@ -214,8 +255,62 @@ public class ParametrizedConverterTest extends AbstractAcceptanceTest {
             this.map = map;
         }
     }
+
+    public void testAnnotatedNamedMapConverterWithMultipleSameArguments() {
+        xstream.addDefaultImplementation(LinkedHashMap.class, Map.class);
+        
+        final Map<String, String> map = new LinkedHashMap<String, String>();
+        map.put("FOO", "foo");
+        map.put("BAR", "bar");
+        final ContainsMap2 value = new ContainsMap2(map);
+        String expected = (""
+                + "<container-map>\n"
+                + "  <map>\n"
+                + "    <key>FOO</key>\n"
+                + "    <value>foo</value>\n"
+                + "    <key>BAR</key>\n"
+                + "    <value>bar</value>\n"
+                + "  </map>\n"
+                + "</container-map>").replace('\'', '"');
+        assertBothWays(value, expected);
+    }
+    
+    @XStreamAlias("container-map")
+    public static class ContainsMap2 extends StandardObject {
+        @XStreamConverter(value = NamedMapConverter.class, strings = {"", "key", "value"}, types = {
+            LinkedHashMap.class, String.class, String.class}, booleans = {false, false}, useImplicitType = false)
+        private Map<String, String> map;
+
+        public ContainsMap2(Map<String, String> map) {
+            this.map = map;
+        }
+    }
     
     @XStreamAlias("my-enums")
     public static class MyEnumMap extends LinkedHashMap<ContainsMap.E, String> {
+    }
+    
+    public void testAnnotatedNamedCollectionConverter() {
+        List<String> names = new ArrayList<String>(Arrays.asList("joe", "joerg", "mauro"));
+        final ContainsCollection container = new ContainsCollection(names);
+        String expected = (""
+                + "<CollCont>\n"
+                + "  <names>\n"
+                + "    <name>joe</name>\n"
+                + "    <name>joerg</name>\n"
+                + "    <name>mauro</name>\n"
+                + "  </names>\n"
+                + "</CollCont>").replace('\'', '"');
+        assertBothWays(container, expected);
+    }
+    
+    @XStreamAlias("CollCont")
+    public static class ContainsCollection extends StandardObject {
+        @XStreamConverter(value=NamedCollectionConverter.class, strings={"name"}, types={String.class}, useImplicitType = false)
+        private List<String> names;
+
+        public ContainsCollection(List<String> names) {
+            this.names = names;
+        }
     }
 }

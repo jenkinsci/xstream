@@ -16,7 +16,7 @@ package com.thoughtworks.acceptance.someobjects;
  * 
  * @author <a href="mailto:jason@maven.org">Jason van Zyl</a>
  *
- * @version $Id: Protocol.java 2034 2013-03-12 22:15:00Z joehni $
+ * @version $Id$
  */
 public class Protocol
 {

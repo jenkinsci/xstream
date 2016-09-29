@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2009, 2011 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2011, 2015 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -55,8 +55,8 @@ public class JDomDriver extends AbstractXmlDriver {
 
     public HierarchicalStreamReader createReader(Reader reader) {
         try {
-            SAXBuilder builder = new SAXBuilder();
-            Document document = builder.build(reader);
+            final SAXBuilder builder = createBuilder();
+            final Document document = builder.build(reader);
             return new JDomReader(document, getNameCoder());
         } catch (IOException e) {
             throw new StreamException(e);
@@ -67,8 +67,8 @@ public class JDomDriver extends AbstractXmlDriver {
 
     public HierarchicalStreamReader createReader(InputStream in) {
         try {
-            SAXBuilder builder = new SAXBuilder();
-            Document document = builder.build(in);
+            final SAXBuilder builder = createBuilder();
+            final Document document = builder.build(in);
             return new JDomReader(document, getNameCoder());
         } catch (IOException e) {
             throw new StreamException(e);
@@ -79,8 +79,8 @@ public class JDomDriver extends AbstractXmlDriver {
 
     public HierarchicalStreamReader createReader(URL in) {
         try {
-            SAXBuilder builder = new SAXBuilder();
-            Document document = builder.build(in);
+            final SAXBuilder builder = createBuilder();
+            final Document document = builder.build(in);
             return new JDomReader(document, getNameCoder());
         } catch (IOException e) {
             throw new StreamException(e);
@@ -91,8 +91,8 @@ public class JDomDriver extends AbstractXmlDriver {
 
     public HierarchicalStreamReader createReader(File in) {
         try {
-            SAXBuilder builder = new SAXBuilder();
-            Document document = builder.build(in);
+            final SAXBuilder builder = createBuilder();
+            final Document document = builder.build(in);
             return new JDomReader(document, getNameCoder());
         } catch (IOException e) {
             throw new StreamException(e);
@@ -107,6 +107,18 @@ public class JDomDriver extends AbstractXmlDriver {
 
     public HierarchicalStreamWriter createWriter(OutputStream out) {
         return new PrettyPrintWriter(new OutputStreamWriter(out));
+    }
+
+    /**
+     * Create and initialize the SAX builder.
+     * 
+     * @return the SAX builder instance.
+     * @since 1.4.9
+     */
+    protected SAXBuilder createBuilder() {
+        final SAXBuilder builder = new SAXBuilder();
+        builder.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+        return builder;
     }
 
 }
