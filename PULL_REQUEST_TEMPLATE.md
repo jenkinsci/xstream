@@ -1,0 +1,5 @@
+-- **DEPRECATED REPOSITORY** -- DO NOT FILE PULL REQUEST HERE
+
+PLEASE FILE PULL REQUESTS AGAINST https://github.com/jenkinsci/xstream-fork INSTEAD
+
+Thank you!
